@@ -1,0 +1,28 @@
+{
+  "name": "tosu-backend-node",
+  "version": "1.0.0",
+  "description": "Toimintasuunnitelmasovelluksen node.js backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/partio-scout/tosu-backend-node.git"
+  },
+  "author": "ohtuvartio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/partio-scout/tosu-backend-node/issues"
+  },
+  "homepage": "https://github.com/partio-scout/tosu-backend-node#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
