@@ -1,4 +1,4 @@
-# tosu--backend-node
+# tosu-backend-node
 
 Tosu app backend made with Node.js
 
