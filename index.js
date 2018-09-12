@@ -1,6 +1,14 @@
 const express = require('express')
-const app = express()
 const request = require('request')
+const cors = require('cors')
+const app = express()
+
+var corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true
+}
+
+app.use(cors(corsOptions))
 
 app.get('/api', (req, res) => {
   request.get({
@@ -9,14 +17,25 @@ app.get('/api', (req, res) => {
   }).pipe(res)
 })
 
-app.get('/api/tarpojat', (req, res) => {
+app.get('/filledpof/tarppo', (req, res) => {
   request.get({
     uri: 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi',
     strictSSL: false
   }, function (error, response, body) {
     if (error == null) {
-      const json = JSON.parse(body);
-      res.send(json.program[0].agegroups[2]);
+      const json = JSON.parse(body)
+      var tarpojat = json.program[0].agegroups[2]
+      var statics = {
+        tarppoja: tarpojat.taskgroups.length,
+        tarpot: []
+      }
+      for (let i = 0; i < tarpojat.taskgroups.length; i++) {
+        var tarppo = tarpojat.taskgroups[i]
+        var name = tarppo.languages[0].title
+        var aktiviteetit = tarppo.tasks
+        statics.tarpot.push({name: name, total: aktiviteetit.length})
+      }
+      res.send(statics)
     }
   })
 })
