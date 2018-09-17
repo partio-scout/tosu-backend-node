@@ -21,5 +21,8 @@ module.exports = {
             "error",
             "never"
         ]
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017
     }
 };
