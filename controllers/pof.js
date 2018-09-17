@@ -1,15 +1,28 @@
 const pofRouter = require('express').Router()
 const request = require('request')
 const axios = require('axios')
+var cache = require('memory-cache')
+var cron = require('node-cron');
 
 pofRouter.get('/', async (req, res) => {
   res.send('Hello world')
 })
 
 pofRouter.get('/full', async (req, res) => {
+  const cached = cache.get('filledpof')
+  if (cached != null) {
+    console.log('cache')
+    res.json(JSON.parse(cached))
+  } else {
+    makeFilledPof(res)
+  }
+})
+
+async function makeFilledPof(res) {
   const url = 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi'
   const data = await getContent(url)
   const tarpojat = data.program[0].agegroups[2]
+  taskDetails(tarpojat)
   async function taskDetails() {
     for (const taskgroup of tarpojat.taskgroups) {
       if (taskgroup.taskgroups.length > 0) {
@@ -19,7 +32,8 @@ pofRouter.get('/full', async (req, res) => {
             for (const paussi of suhde.tasks) {
               const details = await getTaskDetails(paussi)
               Object.assign(paussi, details)
-              console.log(paussi.title)
+              paussi.suggestions_details = await getSuggestions(paussi)
+              console.log('   ' + paussi.title)
             }
           }
         }
@@ -33,6 +47,38 @@ pofRouter.get('/full', async (req, res) => {
       }
     }
     //suggestions(true)
+    cache.put('filledpof', JSON.stringify(tarpojat))
+    if (res) {
+      res.json(tarpojat)
+    }
+
+  }
+  async function taskDetails(tarpojat) {
+    console.log('')
+    for (const taskgroup of tarpojat.taskgroups) {
+      if (taskgroup.taskgroups.length > 0) {
+        console.log('--------------PAUSSIT--------------')
+        for (const paussigroup of taskgroup.taskgroups) {
+          for (const suhde of paussigroup.taskgroups) {
+            for (const paussi of suhde.tasks) {
+              const details = await getTaskDetails(paussi)
+              Object.assign(paussi, details)
+              paussi.suggestions_details = await getSuggestions(paussi)
+              console.log('   ' + paussi.title)
+            }
+          }
+        }
+      } else {
+        for (const task of taskgroup.tasks) {
+          const details = await getTaskDetails(task)
+          Object.assign(task, details)
+          task.suggestions_details = await getSuggestions(task)
+          console.log(task.title)
+        }
+      }
+    }
+    //suggestions(true)
+    cache.put('filledpof', JSON.stringify(tarpojat))
     res.json(tarpojat)
   }
   async function suggestions(send) {
@@ -45,8 +91,7 @@ pofRouter.get('/full', async (req, res) => {
       res.json(tarpojat)
     }
   }
-  taskDetails()
-})
+}
 
 const getSuggestions = async task => {
   try {
@@ -100,6 +145,10 @@ pofRouter.get('/tarppo', (req, res) => {
       res.json(statics)
     }
   })
+})
+
+cron.schedule('0 2 * * *', () => {
+  makeFilledPof()
 })
 
 module.exports = pofRouter
