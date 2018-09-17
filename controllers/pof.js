@@ -12,20 +12,38 @@ pofRouter.get('/full', async (req, res) => {
   const tarpojat = data.program[0].agegroups[2]
   async function taskDetails() {
     for (const taskgroup of tarpojat.taskgroups) {
-      for (const task of taskgroup.tasks) {
-        const details = await getTaskDetails(task)
-        Object.assign(task, details)
+      if (taskgroup.taskgroups.length > 0) {
+        console.log('--------------PAUSSIT--------------')
+        for (const paussigroup of taskgroup.taskgroups) {
+          for (const suhde of paussigroup.taskgroups) {
+            for (const paussi of suhde.tasks) {
+              const details = await getTaskDetails(paussi)
+              Object.assign(paussi, details)
+              console.log(paussi.title)
+            }
+          }
+        }
+      } else {
+        for (const task of taskgroup.tasks) {
+          const details = await getTaskDetails(task)
+          Object.assign(task, details)
+          task.suggestions_details = await getSuggestions(task)
+          console.log(task.title)
+        }
       }
     }
-    suggestions()
+    //suggestions(true)
+    res.json(tarpojat)
   }
-  async function suggestions() {
+  async function suggestions(send) {
     for (const taskgroup of tarpojat.taskgroups) {
       for (const task of taskgroup.tasks) {
         task.suggestions_details = await getSuggestions(task)
       }
     }
-    res.json(tarpojat)
+    if (send) {
+      res.json(tarpojat)
+    }
   }
   taskDetails()
 })
