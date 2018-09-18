@@ -10,7 +10,7 @@ pofRouter.get('/', async (req, res) => {
 
 pofRouter.get('/delete', async (req, res) => {
   cache.del('filledpof')
-  res.redirect('/')
+  res.redirect('/filledpof')
 })
 
 pofRouter.get('/tarppo', async (req, res) => {
