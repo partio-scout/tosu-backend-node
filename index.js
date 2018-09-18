@@ -16,7 +16,7 @@ app.use(cors(corsOptions))
 app.use(middleware.logger)
 app.use(bodyParser.json())
 
-app.use('/api/pof', pofRouter)
+app.use('/filledpof', pofRouter)
 
 app.use(middleware.error)
 

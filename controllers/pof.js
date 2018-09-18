@@ -8,7 +8,7 @@ pofRouter.get('/', async (req, res) => {
   res.send('Hello world')
 })
 
-pofRouter.get('/full', async (req, res) => {
+pofRouter.get('/tarppo', async (req, res) => {
   const cached = cache.get('filledpof')
   if (cached != null) {
     console.log('cache')
@@ -54,7 +54,6 @@ async function makeFilledPof(res) {
 
   }
   async function taskDetails(tarpojat) {
-    console.log('')
     for (const taskgroup of tarpojat.taskgroups) {
       if (taskgroup.taskgroups.length > 0) {
         console.log('--------------PAUSSIT--------------')
@@ -78,6 +77,8 @@ async function makeFilledPof(res) {
       }
     }
     //suggestions(true)
+    const date = new Date().toISOString()
+    tarpojat['updateDate'] = date
     cache.put('filledpof', JSON.stringify(tarpojat))
     res.json(tarpojat)
   }
