@@ -8,6 +8,11 @@ pofRouter.get('/', async (req, res) => {
   res.send('Hello world')
 })
 
+pofRouter.get('/delete', async (req, res) => {
+  cache.del('filledpof')
+  res.redirect('/')
+})
+
 pofRouter.get('/tarppo', async (req, res) => {
   const cached = cache.get('filledpof')
   if (cached != null) {
