@@ -6,7 +6,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     // Activity belongs to Event
     return queryInterface.addColumn(
-      'Activities', // Name of the table to be modified
+      'Activities', // Name of the table to be modified (note plural)
       'EventId', { // Name of the column to be added
         type: Sequelize.INTEGER,
         references: {
@@ -20,7 +20,7 @@ module.exports = {
         'Activities',
         'ActivityBufferId', {
           type: Sequelize.INTEGER,
-          onDelete: 'CASCADE',
+          onDelete: 'CASCADE', // When Activityuffer is deleted, so are its Activities
           references: {
             model: 'ActivityBuffers',
             key: 'id'

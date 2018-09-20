@@ -7,6 +7,12 @@ Tosu app backend made with Node.js
 ```sh
 npm install
 ```
+### Initialize database
+
+1. Install PostgreSQL and create database "tosudb" with user "postgres".
+2. Install sequelize-cli globally with `npm install -g sequelize-cli`
+3. Migrate models to the database by running `sequelize db:migrate`
+
 ### Run in development mode (nodemon)
 ```sh
 npm run watch
