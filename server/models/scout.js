@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Scout = sequelize.define('Scout', {
-    googleId: DataTypes.STRING
+    googleId: DataTypes.STRING,
     name: DataTypes.STRING
   }, {})
 

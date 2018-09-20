@@ -10,8 +10,8 @@ npm install
 ### Initialize database
 
 1. Install PostgreSQL and create database "tosudb" with user "postgres".
-2. Install sequelize-cli globally with `npm install -g sequelize-cli`
-3. Migrate models to the database by running `sequelize db:migrate`
+2. Configure settings in config/config.json (TODO: Use env variables)
+3. Migrate models to the database by running `./node_modules/.bin/sequelize db:migrate`
 
 ### Run in development mode (nodemon)
 ```sh
@@ -21,6 +21,12 @@ npm run watch
 ### Start server
 ```sh
 npm start
+```
+
+### Run tests
+
+```sh
+npm test
 ```
 
 # Documentation
