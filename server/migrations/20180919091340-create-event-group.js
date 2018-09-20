@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('EventGroups', {
@@ -7,9 +8,6 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      temp: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -21,7 +19,8 @@ module.exports = {
       }
     });
   },
+
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('EventGroups');
+    return queryInterface.dropTable('EventGroups')
   }
-};
+}

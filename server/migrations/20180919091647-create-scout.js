@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Scouts', {
@@ -11,6 +12,9 @@ module.exports = {
       googleId: {
         type: Sequelize.STRING
       },
+      name: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -21,7 +25,8 @@ module.exports = {
       }
     });
   },
+
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Scouts');
+    return queryInterface.dropTable('Scouts')
   }
-};
+}

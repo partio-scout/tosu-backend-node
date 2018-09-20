@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('ActivityBuffers', {
@@ -8,9 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      temp: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -18,10 +16,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
     });
   },
+
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('ActivityBuffers');
+    return queryInterface.dropTable('ActivityBuffers')
   }
-};
+}
