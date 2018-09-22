@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {})
 
   Plan.associate = (models) => {
-    Plan.belongsTo(models.Activity)
+    Plan.belongsTo(models.Activity, { foreignKey: "activityId" })
   }
 
   return Plan

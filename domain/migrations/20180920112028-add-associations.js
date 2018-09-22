@@ -6,24 +6,24 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     // Activity belongs to Event
     return queryInterface.addColumn(
-      'Activities', // Name of the table to be modified (note plural)
-      'EventId', { // Name of the column to be added
+      'Activities', // Name of the table to be modified (note plural and capitalization)
+      'eventId', { // Name of the column to be added (note capitalization)
         type: Sequelize.INTEGER,
         references: {
           model: 'Events', // Model that the foreign key is referencing (note plural)
-          key: 'id' // Column referenced in Event
+          key: 'id', // Column referenced in Event
         }
       }
     ).then(() => {
       // Activity belongs to ActivityBuffer
       return queryInterface.addColumn(
         'Activities',
-        'ActivityBufferId', {
+        'activityBufferId', {
           type: Sequelize.INTEGER,
-          onDelete: 'CASCADE', // When Activityuffer is deleted, so are its Activities
+          onDelete: 'CASCADE', // When ActivityBuffer is deleted, so are its Activities
           references: {
             model: 'ActivityBuffers',
-            key: 'id'
+            key: 'id',
           }
         }
       )
@@ -31,7 +31,7 @@ module.exports = {
       // ActivityBuffer belongs to Scout
       return queryInterface.addColumn(
         'ActivityBuffers',
-        'ScoutId', {
+        'scoutId', {
           type: Sequelize.INTEGER,
           onDelete: 'CASCADE',
           references: {
@@ -44,7 +44,7 @@ module.exports = {
       // Event belongs to EventGroup
       return queryInterface.addColumn(
         'Events',
-        'EventGroupId', {
+        'eventGroupId', {
           type: Sequelize.INTEGER,
           onDelete: 'CASCADE',
           references: {
@@ -57,7 +57,7 @@ module.exports = {
       // Event belongs to Scout
       return queryInterface.addColumn(
         'Events',
-        'ScoutId', {
+        'scoutId', {
           type: Sequelize.INTEGER,
           onDelete: 'CASCADE',
           references: {
@@ -70,11 +70,11 @@ module.exports = {
       // Plan belongs to Activity
       return queryInterface.addColumn(
         'Plans',
-        'ActivityId', {
+        'activityId', {
           type: Sequelize.INTEGER,
           onDelete: 'CASCADE',
           references: {
-            model: 'ActivityBuffers',
+            model: 'Activities',
             key: 'id',
           }
         }

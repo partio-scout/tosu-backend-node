@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {})
 
   EventGroup.associate = (models) => {
-    EventGroup.hasMany(models.Event)
+    EventGroup.hasMany(models.Event, { foreignKey: "eventGroupId" })
   }
 
   return EventGroup

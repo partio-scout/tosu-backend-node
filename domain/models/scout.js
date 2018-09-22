@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {})
 
   Scout.associate = (models) => {
-    Scout.hasMany(models.Event)
-    Scout.hasOne(models.ActivityBuffer)
+    Scout.hasMany(models.Event, { foreignKey: "scoutId" })
+    Scout.hasOne(models.ActivityBuffer, { foreignKey: "scoutId" })
   }
 
   return Scout
