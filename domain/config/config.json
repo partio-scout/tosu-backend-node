@@ -1,13 +1,13 @@
 {
   "development": {
-    "username": "lasvirt",
+    "username": "postgres",
     "password": null,
     "database": "tosudb",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "lasvirt",
+    "username": "postgres",
     "password": null,
     "database": "tosudb",
     "host": "127.0.0.1",
