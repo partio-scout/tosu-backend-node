@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const sequelize = require('sequelize')
-const models = require('../../domain/models');
-const connection = require('../../domain/models').sequelize; // Needs to be closed after running tests
+const models = require('../../domain/models')
+require('../testDatabase')
 
 test('ActivityBuffer can be created', async () => {
   const buffer = await models.ActivityBuffer.create()
@@ -26,8 +26,4 @@ test('ActivityBuffer can be assigned to Scout', async () => {
   expect(fetchedBuffer.scoutId).toBe(scout.id)
   expect(fetchedBuffer.Scout.id).toBe(scout.id)
   expect(fetchedBuffer.Scout.googleId).toBe("jkgldfög")
-})
-
-afterAll(() => {
-  connection.close()
 })

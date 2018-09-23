@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const sequelize = require('sequelize')
-const models = require('../../domain/models');
-const connection = require('../../domain/models').sequelize; // Needs to be closed after running tests
+const models = require('../../domain/models')
+require('../testDatabase')
 
 test('Activity can be created', async () => {
   // Create Activity with attributes
@@ -49,8 +49,4 @@ test('Activity can be assigned plans', async () => {
   const retrievedActivity = await models.Activity.findById(activity.id, { include: [models.Plan] })
   expect(retrievedActivity.Plans.length).toBe(2)
   expect(retrievedActivity.Plans[0].content).toBe("masterplan")
-})
-
-afterAll(() => {
-  connection.close()
 })
