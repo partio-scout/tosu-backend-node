@@ -8,23 +8,26 @@ pofRouter.get('/', async (req, res) => {
   res.send('Hello world')
 })
 
-pofRouter.get('/full', async (req, res) => {
+pofRouter.get('/delete', async (req, res) => {
+  cache.del('filledpof')
+  res.redirect('/filledpof')
+})
+
+pofRouter.get('/tarppo', async (req, res) => {
   const cached = cache.get('filledpof')
   if (cached != null) {
     console.log('cache')
     res.json(JSON.parse(cached))
   } else {
-    makeFilledPof(res)
+    makeFilledPof(res, 'fd0083b9a325c06430ba29cc6c6d1bac')
   }
 })
 
-async function makeFilledPof(res) {
-  const url = 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi'
-  const data = await getContent(url)
-  const tarpojat = data.program[0].agegroups[2]
-  taskDetails(tarpojat)
-  async function taskDetails() {
-    for (const taskgroup of tarpojat.taskgroups) {
+async function makeFilledPof(res, guid) {
+  const agegroup = await getContent(guid)
+  taskDetails(agegroup)
+  async function taskDetails(agegroup) {
+    for (const taskgroup of agegroup.taskgroups) {
       if (taskgroup.taskgroups.length > 0) {
         console.log('--------------PAUSSIT--------------')
         for (const paussigroup of taskgroup.taskgroups) {
@@ -47,39 +50,12 @@ async function makeFilledPof(res) {
       }
     }
     //suggestions(true)
-    cache.put('filledpof', JSON.stringify(tarpojat))
+    const date = new Date().toISOString()
+    agegroup['updateDate'] = date
+    cache.put('filledpof', JSON.stringify(agegroup))
     if (res) {
-      res.json(tarpojat)
+      res.json(agegroup)
     }
-
-  }
-  async function taskDetails(tarpojat) {
-    console.log('')
-    for (const taskgroup of tarpojat.taskgroups) {
-      if (taskgroup.taskgroups.length > 0) {
-        console.log('--------------PAUSSIT--------------')
-        for (const paussigroup of taskgroup.taskgroups) {
-          for (const suhde of paussigroup.taskgroups) {
-            for (const paussi of suhde.tasks) {
-              const details = await getTaskDetails(paussi)
-              Object.assign(paussi, details)
-              paussi.suggestions_details = await getSuggestions(paussi)
-              console.log('   ' + paussi.title)
-            }
-          }
-        }
-      } else {
-        for (const task of taskgroup.tasks) {
-          const details = await getTaskDetails(task)
-          Object.assign(task, details)
-          task.suggestions_details = await getSuggestions(task)
-          console.log(task.title)
-        }
-      }
-    }
-    //suggestions(true)
-    cache.put('filledpof', JSON.stringify(tarpojat))
-    res.json(tarpojat)
   }
   async function suggestions(send) {
     for (const taskgroup of tarpojat.taskgroups) {
@@ -113,11 +89,19 @@ const getTaskDetails = async task => {
   }
 }
 
-const getContent = async url => {
+const getContent = async guid => {
+  const url = 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi'
   try {
     const response = await axios.get(url)
     const data = response.data
-    return data
+    for (const age of data.program[0].agegroups) {
+      if (age.guid === guid) {
+        const agegroup = age
+        console.log(agegroup.title)
+        return agegroup
+        break
+      }
+    }
   } catch (error) {
     return ''
   }
@@ -148,7 +132,7 @@ pofRouter.get('/tarppo', (req, res) => {
 })
 
 cron.schedule('0 2 * * *', () => {
-  makeFilledPof()
+  makeFilledPof(false, 'fd0083b9a325c06430ba29cc6c6d1bac')
 })
 
 module.exports = pofRouter
