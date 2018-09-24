@@ -2,7 +2,7 @@ const pofRouter = require('express').Router()
 const request = require('request')
 const axios = require('axios')
 var cache = require('memory-cache')
-var cron = require('node-cron');
+var cron = require('node-cron')
 
 pofRouter.get('/', async (req, res) => {
   res.send('Hello world')
