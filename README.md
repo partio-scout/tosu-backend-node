@@ -9,9 +9,25 @@ npm install
 ```
 ### Initialize database
 
-1. Install PostgreSQL and create database "tosudb" with user "postgres".
-2. Configure settings in config/config.json (TODO: Use env variables)
-3. Migrate models to the database by running `./node_modules/.bin/sequelize db:migrate`
+Create a `.env` file in project root with the following variables:
+```sh
+DB_HOST=localhost
+DB_USERNAME=postgres
+DB_PASSWORD=
+
+DB_NAME_DEV=tosudb
+DB_NAME_TEST=tosudb
+DB_NAME_PROD=tosudb
+```
+
+Next:
+
+1. Install PostgreSQL and create databases for development and testing.
+2. Configure settings in `.env`
+3. Migrate models to the database by running:
+```sh
+./node_modules/.bin/sequelize db:migrate
+```
 
 ### Run in development mode (nodemon)
 ```sh
