@@ -16,8 +16,8 @@ DB_USERNAME=postgres
 DB_PASSWORD=
 
 DB_NAME_DEV=tosudb
-DB_NAME_TEST=tosudb
-DB_NAME_PROD=tosudb
+DB_NAME_TEST=tosudb_test
+DB_NAME_PROD=tosudb_prod
 ```
 
 Next:
