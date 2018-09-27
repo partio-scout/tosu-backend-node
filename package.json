@@ -22,10 +22,15 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "memory-cache": "^0.2.0",
     "node-cron": "^2.0.1",
-    "request": "^2.88.0"
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.88.0",
+    "sequelize": "^4.38.1",
+    "sequelize-cli": "^4.1.1"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
