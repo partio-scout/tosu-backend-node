@@ -7,6 +7,7 @@ const config = require('./utils/config')
 const app = express()
 
 const pofRouter = require('./controllers/pof')
+const activityRouter = require('./controllers/activities')
 
 var corsOptions = {
   origin: 'http://localhost:3000',
@@ -17,6 +18,7 @@ app.use(middleware.logger)
 app.use(bodyParser.json())
 
 app.use('/filledpof', pofRouter)
+app.use('/activities', activityRouter)
 
 app.use(middleware.error)
 
