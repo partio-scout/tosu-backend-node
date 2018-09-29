@@ -31,7 +31,7 @@ activityRouter.get('/:activityId/tobuffer', async (req, res) => {
   const buffer = await models.ActivityBuffer.findOne({
     where: { scoutId: scout.id }
   })
-  const activity = await models.Activity.findById({ $eq: activityId })
+  const activity = await models.Activity.findById(activityId)
   await activity.update({ eventId: null })
   await activity.update({ activityBufferId: buffer.id })
 })
