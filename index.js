@@ -9,6 +9,7 @@ var cookieSession = require('cookie-session')
 
 const pofRouter = require('./controllers/pof')
 const activityRouter = require('./controllers/activities')
+const eventRouter = require('./controllers/events')
 
 var corsOptions = {
   origin: 'http://localhost:3000',
@@ -29,6 +30,7 @@ app.use(bodyParser.json())
 
 app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
+app.use('/events', eventRouter)
 
 app.use(middleware.error)
 
