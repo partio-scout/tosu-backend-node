@@ -1,5 +1,9 @@
+
 #!/bin/bash
 set -x
+eval "$(ssh-agent -s)"
+chmod 600 ~/.travis/id_rsa
+ssh-add ~/.travis/id_rsa
 ssh deploy@$IP <<EOF
     if [[ $TRAVIS_BRANCH = 'master' ]]
     then
