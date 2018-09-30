@@ -3,9 +3,8 @@
 set -x
 eval "$(ssh-agent -s)"
 chmod 600 ~/.travis/id_rsa
-ls -la ~/.travis/id_rsa
 ssh-add ~/.travis/id_rsa
-ssh -i tosu_node.pem deploy@$IP <<EOF
+ssh deploy@$IP <<EOF
     if [[ $TRAVIS_BRANCH = 'master' ]]
     then
         cd ~/tosu-backend-node
