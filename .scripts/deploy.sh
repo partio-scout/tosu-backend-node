@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-ssh -i tosu_node.pem ubuntu@$IP <<EOF
+ssh ubuntu@$IP <<EOF
     if [[ $TRAVIS_BRANCH = 'master' ]]
     then
         cd ~/tosu-backend-node
