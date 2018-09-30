@@ -5,7 +5,7 @@ var cache = require('memory-cache')
 var cron = require('node-cron')
 
 pofRouter.get('/', async (req, res) => {
-  res.send('Hello world')
+  res.send('Hello world, Hei maailma')
 })
 
 pofRouter.get('/delete', async (req, res) => {
