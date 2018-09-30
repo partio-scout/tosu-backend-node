@@ -1,9 +1,6 @@
-
 #!/bin/bash
 set -x
-eval $(ssh-agent -s)
-echo "$DEPLOY_KEY" | tr -d '\r' | ssh-add - > ~/.travis/id_rsa
-chmod 600 ~/.travis/id_rsa
-mkdir -p ~/.ssh
-touch ~/.ssh/config
-echo -e "Host *\n\tStrictHostKeyChecking no\n\n" >> ~/.ssh/config
+openssl aes-256-cbc -K $encrypted_key -iv $encrypted_iv -in tosu_node.pem.enc -out deploy.pem -d
+rm deploy.pem.enc
+sudo chmod 600 deploy.pem
+sudo mv deploy.pem ~/.travis/id_rsa
