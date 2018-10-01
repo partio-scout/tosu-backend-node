@@ -2,6 +2,8 @@
 
 Tosu app backend made with Node.js
 
+[![Build Status](https://travis-ci.org/partio-scout/tosu-backend-node.svg?branch=master)](https://travis-ci.org/partio-scout/tosu-backend-node)
+
 # How to use
 ### Install dependencies
 ```sh
