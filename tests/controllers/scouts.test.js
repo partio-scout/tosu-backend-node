@@ -9,7 +9,7 @@ require('../testDatabase')
 var authenticatedSession
 var authScout
 
-beforeEach(function (done) {
+beforeEach( async (done) => {
   api
     .post('/scouts')
     .send({ Authorization: 'foo' })
@@ -23,6 +23,15 @@ beforeEach(function (done) {
 test('Login', async () => {
   expect(authScout.googleId).toBe('foo')
 })
+
+// test('Session has scout', async (done) => {
+//   api
+//     .get('/scouts/session')
+//     .then((result) => {
+//       expect(result.body).toEqual(authScout)
+//       done()
+//     })
+// })
 
 afterAll(() => {
   server.close()

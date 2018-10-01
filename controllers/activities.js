@@ -3,6 +3,7 @@ const request = require('request')
 const axios = require('axios')
 
 const models = require('../domain/models')
+var cookieSession = require('cookie-session')
 
 // TODO: check for logged in
 
@@ -34,6 +35,8 @@ activityRouter.get('/:activityId/tobuffer', async (req, res) => {
   const activity = await models.Activity.findById(activityId)
   await activity.update({ eventId: null })
   await activity.update({ activityBufferId: buffer.id })
+  await activity.reload()
+  res.status(200).send(activity)
 })
 
 module.exports = activityRouter

@@ -6,6 +6,7 @@ const middleware = require('./utils/middleware')
 const config = require('./utils/config')
 const app = express()
 var cookieSession = require('cookie-session')
+var cookieParser = require('cookie-parser')
 
 const pofRouter = require('./controllers/pof')
 const activityRouter = require('./controllers/activities')
@@ -15,6 +16,8 @@ var corsOptions = {
   origin: 'http://localhost:3000',
   credentials: true
 }
+
+app.use(cookieParser());
 
 app.use(cookieSession({
   name: 'session',
@@ -36,9 +39,11 @@ app.use(middleware.error)
 
 const server = http.createServer(app)
 
-server.listen(config.port, () => {
-  console.log(`Server running on port ${config.port}`)
-})
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(config.port, () => {
+    console.log(`Server running on port ${config.port}`)
+  })
+}
 
 module.exports = {
   app, server

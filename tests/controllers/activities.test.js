@@ -9,7 +9,7 @@ require('../testDatabase')
 var authenticatedSession
 var authScout
 
-beforeEach(function (done) {
+beforeEach( async (done) => {
   api
     .post('/scouts')
     .send({ Authorization: 'foo' })
@@ -27,18 +27,23 @@ test('Delete activity', async () => {
   expect(found).toBe(null)
 })
 
-test('Move Activity to buffer', async () => {
+test('Move Activity from event to buffer', async () => {
   const scout = authScout
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
-  // let cookie = JSON.stringify({scout:{id:1}})
-  //
-  // await testSession.get('/activities/' + activity.id + '/tobuffer')
-  //   .set('Cookie', 'scout='+cookie+';')
-  //
+  const event = await models.Event.create()
+  const activity = await models.Activity.create({ eventId: event.id })
+
   await authenticatedSession.get('/activities/' + activity.id + '/tobuffer')
-  const found = await models.Activity.findById(activity.id)
-  expect(found.activityBufferId).toBe(null)
+    .then((result) => {
+      // Returned activity is correct
+      expect(result.body.activityBufferId).toBe(buffer.id)
+      expect(result.body.eventId).toBe(null)
+    })
+
+  // Activity is correct in the database
+  await activity.reload()
+  expect(activity.activityBufferId).toBe(buffer.id)
+  expect(activity.eventId).toBe(null)
 })
 
 afterAll(() => {

@@ -16,4 +16,9 @@ scoutRouter.post('/', async (req, res) => {
   res.send(scout)
 })
 
+// test session
+// scoutRouter.get('/session', async (req, res) => {
+//   res.send(req.session.scout)
+// })
+
 module.exports = scoutRouter
