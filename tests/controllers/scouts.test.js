@@ -1,38 +1,18 @@
 const supertest = require('supertest')
+const mockSession = require('mock-session')
+const Keygrip = require("keygrip")
 const { app, server } = require('../../index')
-var session = require('supertest-session')
-// const api = supertest(app)
-const api = session(app)
+const api = supertest(app)
+
 const models = require('../../domain/models')
-require('../testDatabase')
+require('../handleTestDatabase')
 
-var authenticatedSession
-var authScout
-
-beforeEach( async (done) => {
+test('Login', async (done) => {
   api
     .post('/scouts')
     .send({ Authorization: 'foo' })
     .then((result) => {
-      authenticatedSession = api
-      authScout = result.body
+      expect(result.body.googleId).toBe('foo')
       done()
     })
-})
-
-test('Login', async () => {
-  expect(authScout.googleId).toBe('foo')
-})
-
-// test('Session has scout', async (done) => {
-//   api
-//     .get('/scouts/session')
-//     .then((result) => {
-//       expect(result.body).toEqual(authScout)
-//       done()
-//     })
-// })
-
-afterAll(() => {
-  server.close()
 })

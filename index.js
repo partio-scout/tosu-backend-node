@@ -5,8 +5,8 @@ const bodyParser = require('body-parser')
 const middleware = require('./utils/middleware')
 const config = require('./utils/config')
 const app = express()
-var cookieSession = require('cookie-session')
-var cookieParser = require('cookie-parser')
+const cookieSession = require('cookie-session')
+const cookieParser = require('cookie-parser')
 
 const pofRouter = require('./controllers/pof')
 const activityRouter = require('./controllers/activities')
@@ -17,11 +17,10 @@ var corsOptions = {
   credentials: true
 }
 
-app.use(cookieParser());
-
+app.use(cookieParser())
 app.use(cookieSession({
   name: 'session',
-  keys: ['key'],
+  keys: [process.env.SECRET_KEY],
 
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours

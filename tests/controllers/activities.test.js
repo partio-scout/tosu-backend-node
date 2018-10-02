@@ -1,24 +1,11 @@
 const supertest = require('supertest')
+const mockSession = require('mock-session')
+const Keygrip = require("keygrip")
 const { app, server } = require('../../index')
-var session = require('supertest-session')
-// const api = supertest(app)
-const api = session(app)
+const api = supertest(app)
+
 const models = require('../../domain/models')
-require('../testDatabase')
-
-var authenticatedSession
-var authScout
-
-beforeEach( async (done) => {
-  api
-    .post('/scouts')
-    .send({ Authorization: 'foo' })
-    .then((result) => {
-      authenticatedSession = api
-      authScout = result.body
-      done()
-    })
-})
+require('../handleTestDatabase')
 
 test('Delete activity', async () => {
   const activity = await models.Activity.create()
@@ -28,12 +15,17 @@ test('Delete activity', async () => {
 })
 
 test('Move Activity from event to buffer', async () => {
-  const scout = authScout
+  const scout = await models.Scout.create()
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   const event = await models.Event.create()
   const activity = await models.Activity.create({ eventId: event.id })
 
-  await authenticatedSession.get('/activities/' + activity.id + '/tobuffer')
+  let cookie = mockSession('session', process.env.SECRET_KEY, {
+    "scout": { "id": scout.id }
+  })
+
+  await api.get('/activities/' + activity.id + '/tobuffer')
+    .set('cookie', [cookie])
     .then((result) => {
       // Returned activity is correct
       expect(result.body.activityBufferId).toBe(buffer.id)
@@ -44,8 +36,4 @@ test('Move Activity from event to buffer', async () => {
   await activity.reload()
   expect(activity.activityBufferId).toBe(buffer.id)
   expect(activity.eventId).toBe(null)
-})
-
-afterAll(() => {
-  server.close()
 })
