@@ -1,10 +1,11 @@
 const supertest = require('supertest')
+const mockSession = require('mock-session')
+const Keygrip = require("keygrip")
 const { app, server } = require('../../index')
-var session = require('supertest-session')
-// const api = supertest(app)
-const api = session(app)
+const api = supertest(app)
+
 const models = require('../../domain/models')
-require('../testDatabase')
+require('../handleTestDatabase')
 
 test('Delete activity', async () => {
   const activity = await models.Activity.create()
@@ -13,25 +14,26 @@ test('Delete activity', async () => {
   expect(found).toBe(null)
 })
 
-test('Move Activity to buffer', async () => {
+test('Move Activity from event to buffer', async () => {
   const scout = await models.Scout.create()
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  var testSession = session(app, {
-    before: function (req) {
-      req.set('scout', {id: scout.id});
-    }
-  });
+  const event = await models.Event.create()
+  const activity = await models.Activity.create({ eventId: event.id })
 
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
-  let cookie = JSON.stringify({scout:{id:1}})
+  let cookie = mockSession('session', process.env.SECRET_KEY, {
+    "scout": { "id": scout.id }
+  })
 
-  await testSession.get('/activities/' + activity.id + '/tobuffer')
-    .set('cookie', ['scout='+cookie+';'])
+  await api.get('/activities/' + activity.id + '/tobuffer')
+    .set('cookie', [cookie])
+    .then((result) => {
+      // Returned activity is correct
+      expect(result.body.activityBufferId).toBe(buffer.id)
+      expect(result.body.eventId).toBe(null)
+    })
 
-  const found = await models.Activity.findById(activity.id)
-  expect(found.activityBufferId).toBe(null)
-})
-
-afterAll(() => {
-  server.close()
+  // Activity is correct in the database
+  await activity.reload()
+  expect(activity.activityBufferId).toBe(buffer.id)
+  expect(activity.eventId).toBe(null)
 })

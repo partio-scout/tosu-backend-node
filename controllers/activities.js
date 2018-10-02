@@ -6,6 +6,7 @@ const models = require('../domain/models')
 
 // TODO: check for logged in
 
+// Delete Activity
 activityRouter.delete('/:activityId', async (req, res) => {
   const activityId = parseInt(req.params.activityId)
 
@@ -24,6 +25,7 @@ activityRouter.delete('/:activityId', async (req, res) => {
   })
 })
 
+// Move Activity from Event to Buffer
 activityRouter.get('/:activityId/tobuffer', async (req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
@@ -31,9 +33,11 @@ activityRouter.get('/:activityId/tobuffer', async (req, res) => {
   const buffer = await models.ActivityBuffer.findOne({
     where: { scoutId: scout.id }
   })
-  const activity = await models.Activity.findById({ $eq: activityId })
+  const activity = await models.Activity.findById(activityId)
   await activity.update({ eventId: null })
   await activity.update({ activityBufferId: buffer.id })
+  await activity.reload()
+  res.status(200).send(activity)
 })
 
 module.exports = activityRouter

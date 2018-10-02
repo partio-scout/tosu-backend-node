@@ -7,7 +7,7 @@
     "start": "NODE_ENV=production node index.js",
     "watch": "NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
-    "test": "NODE_ENV=test jest --verbose"
+    "test": "NODE_ENV=test jest pof_api.test.js --verbose"
   },
   "repository": {
     "type": "git",
@@ -21,10 +21,13 @@
   "homepage": "https://github.com/partio-scout/tosu-backend-node#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+    "keygrip": "^1.0.3",
+    "lodash.map": "^4.6.0",
     "memory-cache": "^0.2.0",
     "mock-session": "0.0.5",
     "node-cron": "^2.0.1",
@@ -32,8 +35,7 @@
     "pg-hstore": "^2.3.2",
     "request": "^2.88.0",
     "sequelize": "^4.38.1",
-    "sequelize-cli": "^4.1.1",
-    "supertest-session": "^3.3.0"
+    "sequelize-cli": "^4.1.1"
   },
   "devDependencies": {
     "eslint": "^5.5.0",

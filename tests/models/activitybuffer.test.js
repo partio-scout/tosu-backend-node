@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const sequelize = require('sequelize')
 const models = require('../../domain/models')
-require('../testDatabase')
+require('../handleTestDatabase')
 
 test('ActivityBuffer can be created', async () => {
   const buffer = await models.ActivityBuffer.create()
