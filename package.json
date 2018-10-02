@@ -7,7 +7,7 @@
     "start": "NODE_ENV=production node index.js",
     "watch": "NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
-    "test": "NODE_ENV=test jest --verbose"
+    "test": "NODE_ENV=test jest pof_api.test.js --verbose"
   },
   "repository": {
     "type": "git",
