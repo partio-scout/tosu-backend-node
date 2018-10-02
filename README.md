@@ -2,6 +2,8 @@
 
 Tosu app backend made with Node.js
 
+[![Build Status](https://travis-ci.org/partio-scout/tosu-backend-node.svg?branch=master)](https://travis-ci.org/partio-scout/tosu-backend-node)
+
 # How to use
 ### Install dependencies
 ```sh
@@ -11,6 +13,8 @@ npm install
 
 Create a `.env` file in project root with the following variables:
 ```sh
+NODE_ENV=development
+
 DB_HOST=localhost
 DB_USERNAME=postgres
 DB_PASSWORD=
@@ -18,15 +22,20 @@ DB_PASSWORD=
 DB_NAME_DEV=tosudb
 DB_NAME_TEST=tosudb_test
 DB_NAME_PROD=tosudb_prod
+
+SECRET_KEY=superSecretKeyABC
 ```
+
+SECRET_KEY is used for cookies.
 
 Next:
 
 1. Install PostgreSQL and create databases for development and testing.
 2. Configure settings in `.env`
-3. Migrate models to the database by running:
+3. Migrate models to the development and testing databases by running:
 ```sh
-./node_modules/.bin/sequelize db:migrate
+./node_modules/.bin/sequelize db:migrate --env development
+./node_modules/.bin/sequelize db:migrate --env test
 ```
 
 ### Run in development mode (nodemon)

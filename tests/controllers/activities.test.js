@@ -24,7 +24,7 @@ test('Move Activity from event to buffer', async () => {
     "scout": { "id": scout.id }
   })
 
-  await api.get('/activities/' + activity.id + '/tobuffer')
+  await api.put('/activities/' + activity.id + '/tobuffer')
     .set('cookie', [cookie])
     .then((result) => {
       // Returned activity is correct
