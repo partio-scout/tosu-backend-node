@@ -4,6 +4,7 @@ const axios = require('axios')
 
 const models = require('../domain/models')
 
+// Login with GoogleIdToken
 scoutRouter.post('/', async (req, res) => {
   const idToken = req.body.Authorization
   // TODO: Verify idToken with GoogleIdTokenVerifier

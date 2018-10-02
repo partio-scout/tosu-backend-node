@@ -7,7 +7,7 @@ const models = require('../domain/models')
 const connection = require('../domain/models').sequelize // Needs to be closed after running tests
 const { server } = require('../index')
 
-// TODO: Clear database. Below sometimes works, sometimes doesn't.
+// TODO: Clear database. The code below sometimes works, sometimes doesn't.
 // beforeAll(async (done) => {
 //   // Clear test database before running tests
 //   await Promise.all(
