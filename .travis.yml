@@ -1,14 +1,18 @@
+sudo: required
+dist: trusty
 language: node_js
 node_js:
-  - "iojs"
-  - "7"
+- "stable"
 cache:
   directories:
-    - "node_modules"
+  - "node_modules"
 addons:
   ssh_known_hosts: 18.197.93.24
+branches:
+  only:
+  - master
 before_install:
-  - bash .scripts/install.sh
+- bash .scripts/install.sh
 install:
 - npm install
 before_script:
