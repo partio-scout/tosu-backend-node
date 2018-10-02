@@ -8,6 +8,9 @@ cache:
     - "node_modules"
 addons:
   ssh_known_hosts: 18.197.93.24
+branches:
+  only:
+  - master
 before_install:
   - bash .scripts/install.sh
 install:
