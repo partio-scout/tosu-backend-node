@@ -6,8 +6,9 @@ const models = require('../domain/models')
 
 // Login with GoogleIdToken
 scoutRouter.post('/', async (req, res) => {
-  const idToken = req.body.Authorization
+  const idTokenString = req.body.Authorization
   // TODO: Verify idToken with GoogleIdTokenVerifier
+  const idToken = idTokenString
   const scout = await models.Scout.findOrCreate({
     where: { googleId: idToken },
     defaults: { name: '' } // TODO: set name from verified GoogleIdToken
