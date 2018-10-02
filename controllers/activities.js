@@ -26,7 +26,7 @@ activityRouter.delete('/:activityId', async (req, res) => {
 })
 
 // Move Activity from Event to Buffer
-activityRouter.get('/:activityId/tobuffer', async (req, res) => {
+activityRouter.put('/:activityId/tobuffer', async (req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
 
