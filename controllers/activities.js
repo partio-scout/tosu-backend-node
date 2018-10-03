@@ -3,12 +3,18 @@ const request = require('request')
 const axios = require('axios')
 
 const models = require('../domain/models')
+const verifyService = require('../services/verify')
 
 // TODO: check for logged in
 
 // Delete Activity
 activityRouter.delete('/:activityId', async (req, res) => {
+  const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
+
+  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
+    return res.status(403).send('You are not the owner of this activity.')
+  }
 
   models.Activity.destroy({
     where: {
@@ -16,10 +22,10 @@ activityRouter.delete('/:activityId', async (req, res) => {
     }
   }).then(rowsDeleted => {
     if (rowsDeleted === 1) {
-      console.log('Deleted activity with ID', req.params.activityId)
+      console.log('Deleted activity with ID', activityId)
       res.status(200).send('Deleted')
     } else {
-      console.log('Did not delete activity with ID', req.params.activityId)
+      console.log('Did not delete activity with ID', activityId)
       res.status(404).send('Not deleted')
     }
   })
@@ -30,9 +36,14 @@ activityRouter.put('/:activityId/tobuffer', async (req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
 
+  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
+    return res.status(403).send('You are not the owner of this activity.')
+  }
+
   const buffer = await models.ActivityBuffer.findOne({
     where: { scoutId: scout.id }
   })
+
   const activity = await models.Activity.findById(activityId)
   await activity.update({ eventId: null })
   await activity.update({ activityBufferId: buffer.id })
@@ -47,14 +58,7 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
   const eventId = parseInt(req.params.eventId)
   const activity = await models.Activity.findById(activityId)
 
-  const buffer = await models.ActivityBuffer.findOne({
-    where: {
-      scoutId: { $eq: scout.id }
-    }
-  })
-
-  // Check that scout owns the buffer and activity
-  if (activity.activityBufferId !== buffer.id) {
+  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
