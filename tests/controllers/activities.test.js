@@ -1,11 +1,18 @@
 const supertest = require('supertest')
-const mockSession = require('mock-session')
-const Keygrip = require("keygrip")
 const { app, server } = require('../../index')
 const api = supertest(app)
 
 const models = require('../../domain/models')
+const testUtils = require('../testUtils')
 require('../handleTestDatabase')
+
+var scout
+var cookie
+
+beforeEach(async () => {
+  scout = await models.Scout.create()
+  cookie = testUtils.createCookie({ "scout": { "id": scout.id } })
+})
 
 test('Delete activity', async () => {
   const activity = await models.Activity.create()
@@ -15,14 +22,9 @@ test('Delete activity', async () => {
 })
 
 test('Move Activity from event to buffer', async () => {
-  const scout = await models.Scout.create()
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   const event = await models.Event.create()
   const activity = await models.Activity.create({ eventId: event.id })
-
-  let cookie = mockSession('session', process.env.SECRET_KEY, {
-    "scout": { "id": scout.id }
-  })
 
   await api.put('/activities/' + activity.id + '/tobuffer')
     .set('cookie', [cookie])
@@ -36,4 +38,23 @@ test('Move Activity from event to buffer', async () => {
   await activity.reload()
   expect(activity.activityBufferId).toBe(buffer.id)
   expect(activity.eventId).toBe(null)
+})
+
+test('Move Activity from buffer to event', async () => {
+  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
+  const event = await models.Event.create()
+  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+
+  await api.put('/activities/' + activity.id + '/toevent/' + event.id)
+    .set('cookie', [cookie])
+    .then((result) => {
+      // Returned activity is correct
+      expect(result.body.activityBufferId).toBe(null)
+      expect(result.body.eventId).toBe(event.id)
+    })
+
+  // Activity is correct in the database
+  await activity.reload()
+  expect(activity.activityBufferId).toBe(null)
+  expect(activity.eventId).toBe(event.id)
 })
