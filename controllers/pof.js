@@ -3,6 +3,11 @@ const request = require('request')
 const axios = require('axios')
 var cache = require('memory-cache')
 var cron = require('node-cron')
+const data = require('../pof.json')
+
+const options = {
+  root: './'
+}
 
 pofRouter.get('/', async (req, res) => {
   res.send('Hello world, Hei maailma')
@@ -19,7 +24,8 @@ pofRouter.get('/tarppo', async (req, res) => {
     console.log('cache')
     res.json(JSON.parse(cached))
   } else {
-    makeFilledPof(res, 'fd0083b9a325c06430ba29cc6c6d1bac')
+    makeFilledPof(false, 'fd0083b9a325c06430ba29cc6c6d1bac')
+    res.json(data)
   }
 })
 
