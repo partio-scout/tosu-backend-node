@@ -7,25 +7,40 @@ const models = require('../domain/models')
 //TODO...
 
 eventRouter.get('', async (req, res) => {
-  const scout = req.session.scout // ...
-
-  console.log("YES")
-  res.status(200).send('OK')
+  const scout = req.session.scout
+  console.log(scout.id)
+  if (!scout){//TODO: CHECK here if scout is logged in
+    res.status(403).send('you are not logged in!')
+  }else{
+    models.Event.findAll({
+      where:{
+        scoutId: {$eq:scout.id}
+      }
+    }).then(events => {
+      res.status(200).send(events)
+    })
+  }
 })
 
 eventRouter.post('', async (req, res) => {
-  console.log(req.body)
-  models.Event.create({
-    title: req.body.title,
-    startDate: req.body.startDate,
-    startTime: req.body.startTime,
-    endDate: req.body.endDate,
-    endTime: req.body.endTime,
-    type: req.body.type,
-    information: req.body.information
-  }).then(event =>{
-    res.status(200).send(event)
-  })
+  const scout = req.session.scout
+  console.log(scout)
+  if (!scout){ //TODO: Check here if scout is logged in
+    res.status(403).send('you are not logged in!')
+  }else{
+    models.Event.create({
+      title: req.body.title,
+      startDate: req.body.startDate,
+      startTime: req.body.startTime,
+      endDate: req.body.endDate,
+      endTime: req.body.endTime,
+      type: req.body.type,
+      information: req.body.information,
+      scoutId: scout.id 
+    }).then(event =>{
+      res.status(200).send(event)
+    })
+  }
   //
 })
 
@@ -47,7 +62,7 @@ eventRouter.delete('/:eventId', async (req, res) => {
 
   models.Event.destroy({
     where: {
-      id: { [Op.eq]: eventId }
+      id: { $eq: eventId }
     }
   }).then(rowsDeleted => {
     if (rowsDeleted === 1) {
