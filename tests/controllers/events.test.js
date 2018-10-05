@@ -128,3 +128,22 @@ test('Update event', async () => {
       })
     })
 })
+
+
+test('Delete event', async () => {
+  const scout = await models.Scout.create()
+  const event = await models.Event.create({title:'WOW', scoutId: scout.id})
+  let cookie = mockSession('session', process.env.SECRET_KEY, {
+    'scout': { 'id': scout.id }
+  })
+
+  await api.delete('/events/'+event.id)
+    .set('cookie', [cookie])
+    .then((result) => {
+      console.log(result.body)
+      models.Event.findById(event.id).then(event => {
+        expect(event).toBe(null)
+        console.log(event)
+      })
+    })
+})

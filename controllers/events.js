@@ -65,14 +65,17 @@ eventRouter.put('/:eventId', async (req, res) => {
 })
 
 eventRouter.delete('/:eventId', async (req, res) => {
+  const scout = req.session.scout
   const eventId=req.params.eventId
 
   models.Event.findById(eventId).then(event => {
+    console.log(event)
     if (event === null){
       res.status(404).send('The event does not exist!')
     }if (event.scoutId !== scout.id){ 
       res.status(403).send('You are not the owner of this event!')
     }else{
+      console.log('destroy')
       event.destroy().then(rowsDeleted => {
         if (rowsDeleted === 1) {
           res.status(200).send('The event deleted.')
