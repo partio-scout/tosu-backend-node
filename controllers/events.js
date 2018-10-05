@@ -4,11 +4,9 @@ const axios = require('axios')
 
 const models = require('../domain/models')
 
-//TODO...
 
 eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
-  console.log(scout.id)
   if (!scout){//TODO: CHECK here if scout is logged in
     res.status(403).send('you are not logged in!')
   }else{
@@ -24,9 +22,8 @@ eventRouter.get('', async (req, res) => {
 
 eventRouter.post('', async (req, res) => {
   const scout = req.session.scout
-  console.log(scout)
   if (!scout){ //TODO: Check here if scout is logged in
-    res.status(403).send('you are not logged in!')
+    res.status(403).send('You are not logged in!')
   }else{
     models.Event.create({
       title: req.body.title,
@@ -41,39 +38,50 @@ eventRouter.post('', async (req, res) => {
       res.status(200).send(event)
     })
   }
-  //
 })
 
 eventRouter.put('/:eventId', async (req, res) => {
-  //...
-  console.log(req.body)
+  const scout = req.session.scout
   const eventId=req.params.eventId
   models.Event.findById(eventId).then(event => {
-    console.log(event)
-    res.status(200).send(event)
-
+    if (event === null){
+      res.status(404).send('The event does not exist!')
+    }if (event.scoutId !== scout.id){ 
+      res.status(403).send('You are not the owner of this event!')
+    }else{
+      event.update({
+        title: req.body.title,
+        startDate: req.body.startDate,
+        startTime: req.body.startTime,
+        endDate: req.body.endDate,
+        endTime: req.body.endTime,
+        type: req.body.type,
+        information: req.body.information
+      }).then(event => {
+        res.status(200).send(event)
+      })
+    }
   })
-
-  //
 })
 
 eventRouter.delete('/:eventId', async (req, res) => {
   const eventId=req.params.eventId
 
-  models.Event.destroy({
-    where: {
-      id: { $eq: eventId }
-    }
-  }).then(rowsDeleted => {
-    if (rowsDeleted === 1) {
-      console.log('Deleted event with ID', eventId)
-      res.status(200).send('Deleted')
-    } else {
-      console.log('Did not delete activity with ID', eventId)
-      res.status(404).send('Not deleted')
+  models.Event.findById(eventId).then(event => {
+    if (event === null){
+      res.status(404).send('The event does not exist!')
+    }if (event.scoutId !== scout.id){ 
+      res.status(403).send('You are not the owner of this event!')
+    }else{
+      event.destroy().then(rowsDeleted => {
+        if (rowsDeleted === 1) {
+          res.status(200).send('The event deleted.')
+        } else {
+          res.status(404).send('Not deleted - BUGI!!!')
+        }
+      })
     }
   })
-  //
 })
 
 module.exports = eventRouter
