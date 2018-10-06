@@ -24,8 +24,9 @@ after_script:
 services:
   - postgresql
 env:
-  - SECRET_KEY=keyForRunningTesting
-  - DB_HOST=localhost
-  - DB_USERNAME=postgres
-  - DB_PASSWORD=
-  - DB_NAME_TEST=tosudb_test
+  global:
+    - SECRET_KEY=keyForRunningTesting
+    - DB_HOST=localhost
+    - DB_USERNAME=postgres
+    - DB_PASSWORD=
+    - DB_NAME_TEST=tosudb_test
