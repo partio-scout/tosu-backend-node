@@ -1,18 +1,21 @@
 const { app, server } = require('../../index')
 const supertest = require('supertest')
-const mockSession = require('mock-session')
 const api = supertest(app)
 const models = require('../../domain/models')
+const testUtils = require('../testUtils')
 require('../handleTestDatabase')
 
-test('Get events', async () => {
-  const scout = await models.Scout.create()
-  const event1 = await models.Event.create({scoutId: scout.id, title: 'HAsfgkaeg'})
-  const event2 = await models.Event.create({scoutId: scout.id, title: 'HAsfgkaeg'})
+var scout
+var cookie
 
-  let cookie = mockSession('session', process.env.SECRET_KEY, {
-    'scout': { 'id': scout.id }
-  })
+beforeEach(async () => {
+  scout = await models.Scout.create()
+  cookie = testUtils.createScoutCookieWithId(scout.id)
+})
+
+test('Get events', async () => {
+  await models.Event.create({scoutId: scout.id, title: 'HAsfgkaeg'})
+  await models.Event.create({scoutId: scout.id, title: 'HAsfgkaeg'})
 
   await api.get('/events')
     .set('cookie', [cookie])
@@ -26,12 +29,6 @@ test('Get events', async () => {
 })
 
 test('Get events 2', async () => {
-  const scout = await models.Scout.create()
-
-  let cookie = mockSession('session', process.env.SECRET_KEY, {
-    'scout': { 'id': scout.id }
-  })
-
   await api.get('/events')
     .set('cookie', [cookie])
     .then((result) => {
@@ -41,13 +38,7 @@ test('Get events 2', async () => {
 
 
 test('Create event', async () => {
-  const scout = await models.Scout.create()
-
-  let cookie = mockSession('session', process.env.SECRET_KEY, {
-    "scout": { "id": scout.id }
-  })
-
-  await api.post('/events')
+  const result = await api.post('/events')
     .send({
       title: 'EGasg',
       startDate: '2018-10-19',
@@ -59,39 +50,35 @@ test('Create event', async () => {
       scoutId: scout.id 
     })
     .set('cookie', [cookie])
-    .then((result) => {
-      console.log(result.body)
-      expect(result.body.title).toBe('EGasg')
-      expect(result.body.startDate).toBe('2018-10-19')
-      expect(result.body.startTime).toBe('15:12:42')
-      expect(result.body.endDate).toBe('2018-10-20')
-      expect(result.body.endTime).toBe('21:51:33')
-      expect(result.body.type).toBe('Retki')
-      expect(result.body.information).toBe('eHGAOSGaoe gaEGo')
-      expect(result.body.scoutId).toBe(scout.id)
-      const eventId=result.evendIt
-      models.Event.findById(eventId).then(event => {
-        console.log(event)
-        expect(event.title).toBe('EGasg')
-        expect(event.startDate).toBe('2018-10-19')
-        expect(event.endDate).toBe('2018-10-20')
-        expect(event.startTime).toBe('15:12:42')
-        expect(event.endTime).toBe('21:51:33')
-        expect(event.type).toBe('Retki')
-        expect(event.information).toBe('eHGAOSGaoe gaEGo')
-        expect(event.scoutId).toBe(scout.id)
-      })
-    })
+    .expect(200)
+  // console.log(result.body)
+  expect(result.body.title).toBe('EGasg')
+  expect(result.body.startDate).toBe('2018-10-19')
+  expect(result.body.startTime).toBe('15:12:42')
+  expect(result.body.endDate).toBe('2018-10-20')
+  expect(result.body.endTime).toBe('21:51:33')
+  expect(result.body.type).toBe('Retki')
+  expect(result.body.information).toBe('eHGAOSGaoe gaEGo')
+  expect(result.body.scoutId).toBe(scout.id)
+  const eventId=result.body.id
+  console.log(eventId)
+
+  const dbEvent = await models.Event.findById(eventId)
+
+  expect(dbEvent.title).toBe('EGasg')
+  expect(dbEvent.startDate).toBe('2018-10-19')
+  expect(dbEvent.endDate).toBe('2018-10-20')
+  expect(dbEvent.startTime).toBe('15:12:42')
+  expect(dbEvent.endTime).toBe('21:51:33')
+  expect(dbEvent.type).toBe('Retki')
+  expect(dbEvent.information).toBe('eHGAOSGaoe gaEGo')
+  expect(dbEvent.scoutId).toBe(scout.id)
 })
 
 test('Update event', async () => {
-  const scout = await models.Scout.create()
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
-  let cookie = mockSession('session', process.env.SECRET_KEY, {
-    'scout': { 'id': scout.id }
-  })
 
-  await api.put('/events/'+event.id)
+  const result = await api.put('/events/'+event.id)
     .send({
       title: 'EGasg',
       startDate: '2018-10-19',
@@ -103,39 +90,32 @@ test('Update event', async () => {
       scoutId: scout.id 
     })
     .set('cookie', [cookie])
-    .then((result) => {
-      console.log(result)
-      console.log(result.body)
-      expect(result.body.title).toBe('EGasg')
-      expect(result.body.startDate).toBe('2018-10-19')
-      expect(result.body.startTime).toBe('15:12:42')
-      expect(result.body.endDate).toBe('2018-10-20')
-      expect(result.body.endTime).toBe('21:51:33')
-      expect(result.body.type).toBe('Retki')
-      expect(result.body.information).toBe('eHGAOSGaoe gaEGo')
-      expect(result.body.scoutId).toBe(scout.id)
-      const eventId=result.body.eventId
-      models.Event.findById(eventId).then(event => {
-        console.log(event)
-        expect(event.title).toBe('EGasg')
-        expect(event.startDate).toBe('2018-10-19')
-        expect(event.endDate).toBe('2018-10-20')
-        expect(event.startTime).toBe('15:12:42')
-        expect(event.endTime).toBe('21:51:33')
-        expect(event.type).toBe('Retki')
-        expect(event.information).toBe('eHGAOSGaoe gaEGo')
-        expect(event.scoutId).toBe(scout.id)
-      })
-    })
+    .expect(200)
+
+  expect(result.body.title).toBe('EGasg')
+  expect(result.body.startDate).toBe('2018-10-19')
+  expect(result.body.startTime).toBe('15:12:42')
+  expect(result.body.endDate).toBe('2018-10-20')
+  expect(result.body.endTime).toBe('21:51:33')
+  expect(result.body.type).toBe('Retki')
+  expect(result.body.information).toBe('eHGAOSGaoe gaEGo')
+  expect(result.body.scoutId).toBe(scout.id)
+  const eventId = result.body.id
+
+  const dbEvent = await  models.Event.findById(eventId)
+  expect(dbEvent.title).toBe('EGasg')
+  expect(dbEvent.startDate).toBe('2018-10-19')
+  expect(dbEvent.endDate).toBe('2018-10-20')
+  expect(dbEvent.startTime).toBe('15:12:42')
+  expect(dbEvent.endTime).toBe('21:51:33')
+  expect(dbEvent.type).toBe('Retki')
+  expect(dbEvent.information).toBe('eHGAOSGaoe gaEGo')
+  expect(dbEvent.scoutId).toBe(scout.id)
 })
 
 
 test('Delete event', async () => {
-  const scout = await models.Scout.create()
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
-  let cookie = mockSession('session', process.env.SECRET_KEY, {
-    'scout': { 'id': scout.id }
-  })
 
   await api.delete('/events/'+event.id)
     .set('cookie', [cookie])
