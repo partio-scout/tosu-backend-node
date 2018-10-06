@@ -51,7 +51,6 @@ test('Create event', async () => {
     })
     .set('cookie', [cookie])
     .expect(200)
-  // console.log(result.body)
   expect(result.body.title).toBe('EGasg')
   expect(result.body.startDate).toBe('2018-10-19')
   expect(result.body.startTime).toBe('15:12:42')
@@ -61,7 +60,6 @@ test('Create event', async () => {
   expect(result.body.information).toBe('eHGAOSGaoe gaEGo')
   expect(result.body.scoutId).toBe(scout.id)
   const eventId=result.body.id
-  console.log(eventId)
 
   const dbEvent = await models.Event.findById(eventId)
 
