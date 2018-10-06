@@ -1,6 +1,7 @@
 const models = require('../domain/models')
 
 
+// Returns a list of all scouts events
 async function getAllEvents(scoutId) {
   const event = await models.Event.findAll({
     where:{
@@ -10,6 +11,7 @@ async function getAllEvents(scoutId) {
   return event
 }
 
+//Creates a new event and returns it
 async function createEvent(scoutId, newEvent) {
   const event = await models.Event.create({
     title: newEvent.title,
@@ -24,6 +26,7 @@ async function createEvent(scoutId, newEvent) {
   return event
 }
 
+//Updates an event and returns the updated event
 async function updateEvent(eventId, newEvent) {
   const event = await models.Event.findById(eventId)
   if (event === null){
@@ -53,6 +56,8 @@ async function updateEvent(eventId, newEvent) {
     return updatedEvent
   }
 }
+
+// Deletes an event
 async function deleteEvent(eventId) {
   const rowsDeleted = await models.Event.destroy({
     where: {

@@ -2,8 +2,10 @@ const eventRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const eventService = require('../services/eventService')
 
-// TODO: check if the scout is actually logged in ..?
+// TODO: verify if the scout is actually logged in ..?
 
+
+// Get a list of scouts events
 eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
   if (!scout){
@@ -14,6 +16,7 @@ eventRouter.get('', async (req, res) => {
   }
 })
 
+// Add a new event, return the added event
 eventRouter.post('', async (req, res) => {
   const scout = req.session.scout
   if (!scout){
@@ -24,9 +27,10 @@ eventRouter.post('', async (req, res) => {
   }
 })
 
+// Edit an event, return the edited event
 eventRouter.put('/:eventId', async (req, res) => {
   const scout = req.session.scout
-  const eventId=req.params.eventId
+  const eventId = req.params.eventId
   if (!verifyService.scoutOwnsEvent(scout, eventId)){
     res.status(403).send('You are not the owner of this event!')
   }else{
@@ -39,13 +43,15 @@ eventRouter.put('/:eventId', async (req, res) => {
   }
 })
 
+// Delete an event
+// TODO: Should this actually return the deleted element?
 eventRouter.delete('/:eventId', async (req, res) => {
   const scout = req.session.scout
-  const eventId=req.params.eventId
+  const eventId = req.params.eventId
   if (!verifyService.scoutOwnsEvent(scout, eventId)){
     res.status(403).send('You are not the owner of this event!')
   }else{
-    const succeeded=await eventService.deleteEvent(eventId)
+    const succeeded = await eventService.deleteEvent(eventId)
     if (succeeded) {
       res.status(200).send('The event deleted.')
     }else{ //Should not happen
