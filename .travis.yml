@@ -14,8 +14,19 @@ branches:
 before_install:
   - bash .scripts/install.sh
 install:
-- npm install
+  - npm install
 before_script:
-- export CI=false
+  - export CI=false
+  - psql -c 'create database tosudb_test;' -U postgres
+  - ./node_modules/.bin/sequelize db:migrate --env test
 after_script:
-- bash .scripts/deploy.sh
+  - bash .scripts/deploy.sh
+services:
+  - postgresql
+env:
+  global:
+    - SECRET_KEY=keyForRunningTesting
+    - DB_HOST=localhost
+    - DB_USERNAME=postgres
+    - DB_PASSWORD=
+    - DB_NAME_TEST=tosudb_test
