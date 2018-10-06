@@ -115,9 +115,11 @@ test('Update event', async () => {
 test('Delete event', async () => {
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
 
-  await api.delete('/events/'+event.id)
+  const result = await api.delete('/events/'+event.id)
     .set('cookie', [cookie])
     .expect(200)
+  expect(result.body.id).toBe(event.id)
+  expect(result.body.title).toBe(event.title)
 
   const dbEvent = await models.Event.findById(event.id)
   expect(dbEvent).toBe(null)

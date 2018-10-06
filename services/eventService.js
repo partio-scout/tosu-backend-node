@@ -11,6 +11,11 @@ async function getAllEvents(scoutId) {
   return event
 }
 
+// Returns an event
+async function getEvent(eventId) {
+  return await models.Event.findById(eventId)
+}
+
 //Creates a new event and returns it
 async function createEvent(scoutId, newEvent) {
   const event = await models.Event.create({
@@ -73,6 +78,7 @@ async function deleteEvent(eventId) {
 
 module.exports = {
   getAllEvents,
+  getEvent,
   createEvent,
   updateEvent,
   deleteEvent

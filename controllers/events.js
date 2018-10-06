@@ -51,9 +51,10 @@ eventRouter.delete('/:eventId', async (req, res) => {
   if (!verifyService.scoutOwnsEvent(scout, eventId)){
     res.status(403).send('You are not the owner of this event!')
   }else{
+    const event = await eventService.getEvent(eventId)
     const succeeded = await eventService.deleteEvent(eventId)
     if (succeeded) {
-      res.status(200).send('The event deleted.')
+      res.status(200).send(event)
     }else{ //Should not happen
       res.status(404).send('The event was not deleted.')
     }
