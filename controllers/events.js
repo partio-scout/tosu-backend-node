@@ -44,7 +44,6 @@ eventRouter.put('/:eventId', async (req, res) => {
 })
 
 // Delete an event
-// TODO: Should this actually return the deleted element?
 eventRouter.delete('/:eventId', async (req, res) => {
   const scout = req.session.scout
   const eventId = req.params.eventId
