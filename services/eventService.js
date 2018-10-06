@@ -1,6 +1,8 @@
 const models = require('../domain/models')
 
 
+// TODO: Add tests
+
 async function getAllEvents(scoutId) {
   const event = await models.Event.findAll({
     where:{
@@ -54,7 +56,7 @@ async function updateEvent(eventId, newEvent) {
   }
 }
 async function deleteEvent(eventId) {
-  const rowsDeleted = await models.Activity.destroy({
+  const rowsDeleted = await models.Event.destroy({
     where: {
       id: { $eq: eventId }
     }

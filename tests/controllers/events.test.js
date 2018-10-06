@@ -119,11 +119,8 @@ test('Delete event', async () => {
 
   await api.delete('/events/'+event.id)
     .set('cookie', [cookie])
-    .then((result) => {
-      console.log(result.body)
-      models.Event.findById(event.id).then(event => {
-        expect(event).toBe(null)
-        console.log(event)
-      })
-    })
+    .expect(200)
+
+  const dbEvent = await models.Event.findById(event.id)
+  expect(dbEvent).toBe(null)
 })
