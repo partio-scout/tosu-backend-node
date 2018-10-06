@@ -125,5 +125,41 @@ test('Cannot move activity from buffer to event when event does not exist', asyn
   await activity.reload()
   expect(activity.activityBufferId).toBe(buffer.id)
   expect(activity.eventId).toBe(null)
+})
 
+test('Add plan to activity', async () => {
+  const event = await models.Event.create({ scoutId: scout.id })
+  const activity = await models.Activity.create({ eventId: event.id }) // Scout owns activity
+  const plan = {
+    title: 'Plänni',
+    guid: 'gfjggrdgd',
+    content: 'semmosta ja tämmöstä'
+  }
+
+  await api.post('/activities/' + activity.id + '/plan')
+    .set('cookie', [cookie])
+    .send(plan)
+    .expect(200)
+    .then((result) => {
+      // Returned plan is correct
+      expect(result.body.title).toBe('Plänni')
+      expect(result.body.guid).toBe('gfjggrdgd')
+      expect(result.body.content).toBe('semmosta ja tämmöstä')
+    })
+})
+
+test('Does not add plan to activity scout does not own', async () => {
+  const otherScout = await models.Scout.create()
+  const event = await models.Event.create({ scoutId: otherScout.id })
+  const activity = await models.Activity.create({ eventId: event.id }) // Scout does not own activity
+  const plan = {
+    title: 'Plänni',
+    guid: 'gfjggrdgd',
+    content: 'semmosta ja tämmöstä'
+  }
+
+  await api.post('/activities/' + activity.id + '/plan')
+    .set('cookie', [cookie])
+    .send(plan)
+    .expect(403)
 })

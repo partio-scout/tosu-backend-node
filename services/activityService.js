@@ -51,8 +51,22 @@ async function moveActivityFromBufferToEvent(activityId, eventId) {
   return activity
 }
 
+// Adds a Plan to the Activity
+// Returns the added plan if successful, errorObject containing an error message if failed.
+async function addPlanToActivity(activityId, plan) {
+  const createdPlan = await models.Plan.create(plan)
+  const activity = await models.Activity.findById(activityId)
+
+  if (!createdPlan) return { error: 'Could not create plan from given data.' }
+  if (!activity) return { error: 'Activity does not exist.' }
+
+  await createdPlan.update({ activityId: activityId })
+  return createdPlan
+}
+
 module.exports = {
   deleteActivity,
   moveActivityFromEventToBuffer,
-  moveActivityFromBufferToEvent
+  moveActivityFromBufferToEvent,
+  addPlanToActivity
 }

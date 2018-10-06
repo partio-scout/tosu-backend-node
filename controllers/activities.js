@@ -35,13 +35,9 @@ activityRouter.put('/:activityId/tobuffer', async (req, res) => {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  var movedActivity = await activityService.moveActivityFromEventToBuffer(activityId, scout)
+  const movedActivity = await activityService.moveActivityFromEventToBuffer(activityId, scout)
 
-  if (movedActivity.error) {
-    res.status(500).send(movedActivity.error)
-  } else {
-    res.status(200).send(movedActivity)
-  }
+  sendResponse(res, movedActivity)
 })
 
 // Move Activity from Buffer to Event
@@ -54,13 +50,37 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  var movedActivity = await activityService.moveActivityFromBufferToEvent(activityId, eventId)
+  const movedActivity = await activityService.moveActivityFromBufferToEvent(activityId, eventId)
 
-  if (movedActivity.error) {
-    res.status(500).send(movedActivity.error)
-  } else {
-    res.status(200).send(movedActivity)
-  }
+  sendResponse(res, movedActivity)
 })
+
+// Add Plan to Activity
+activityRouter.post('/:activityId/plan', async(req, res) => {
+  const scout = req.session.scout
+  const activityId = parseInt(req.params.activityId)
+  const plan = req.body
+
+  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
+    return res.status(403).send('You are not the owner of this activity.')
+  }
+
+  // TODO: Validate (some?) of plan's attributes before adding it to the database?
+
+  const addedPlan = await activityService.addPlanToActivity(activityId, plan)
+
+  sendResponse(res, addedPlan)
+})
+
+// Checks if the object is an error message (has object.error)
+// or sends the object as a 200 OK response.
+function sendResponse(res, responseObject) {
+  if (responseObject.error) {
+    console.log('Error:', responseObject.error)
+    res.status(500).send(responseObject.error)
+  } else {
+    res.status(200).send(responseObject)
+  }
+}
 
 module.exports = activityRouter
