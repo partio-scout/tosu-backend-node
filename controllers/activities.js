@@ -3,7 +3,8 @@ const request = require('request')
 const axios = require('axios')
 
 const models = require('../domain/models')
-const verifyService = require('../services/verify')
+const verifyService = require('../services/verifyService')
+const activityService = require('../services/activityService')
 
 // TODO: check for logged in
 
@@ -16,19 +17,13 @@ activityRouter.delete('/:activityId', async (req, res) => {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  models.Activity.destroy({
-    where: {
-      id: { $eq: activityId }
-    }
-  }).then(rowsDeleted => {
-    if (rowsDeleted === 1) {
-      console.log('Deleted activity with ID', activityId)
-      res.status(200).send('Deleted')
-    } else {
-      console.log('Did not delete activity with ID', activityId)
-      res.status(404).send('Not deleted')
-    }
-  })
+  if (! await activityService.deleteActivity(activityId)) {
+    console.log('Deleted activity with ID', activityId)
+    res.status(200).send('Deleted')
+  } else {
+    console.log('Did not delete activity with ID', activityId)
+    res.status(404).send('Did not delete')
+  }
 })
 
 // Move Activity from Event to Buffer
@@ -40,15 +35,13 @@ activityRouter.put('/:activityId/tobuffer', async (req, res) => {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  const buffer = await models.ActivityBuffer.findOne({
-    where: { scoutId: scout.id }
-  })
+  var movedActivity = await activityService.moveActivityFromEventToBuffer(activityId, scout)
 
-  const activity = await models.Activity.findById(activityId)
-  await activity.update({ eventId: null })
-  await activity.update({ activityBufferId: buffer.id })
-  await activity.reload()
-  res.status(200).send(activity)
+  if (movedActivity.error) {
+    res.status(500).send(movedActivity.error)
+  } else {
+    res.status(200).send(movedActivity)
+  }
 })
 
 // Move Activity from Buffer to Event
@@ -56,21 +49,18 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
   const eventId = parseInt(req.params.eventId)
-  const activity = await models.Activity.findById(activityId)
 
   if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  // Check that event exists
-  const event = await models.Event.findById(eventId)
-  if (!event) {
-    return res.status(403).send('Event does not exist.')
-  }
+  var movedActivity = await activityService.moveActivityFromBufferToEvent(activityId, eventId)
 
-  await activity.update({ activityBufferId: null })
-  await activity.update({ eventId: eventId })
-  res.status(200).send(activity)
+  if (movedActivity.error) {
+    res.status(500).send(movedActivity.error)
+  } else {
+    res.status(200).send(movedActivity)
+  }
 })
 
 module.exports = activityRouter

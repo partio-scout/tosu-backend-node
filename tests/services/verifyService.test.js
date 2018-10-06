@@ -1,5 +1,5 @@
 const models = require('../../domain/models')
-const verifyService = require('../../services/verify')
+const verifyService = require('../../services/verifyService')
 require('../handleTestDatabase')
 
 test('Verify scout owns activity through event', async () => {

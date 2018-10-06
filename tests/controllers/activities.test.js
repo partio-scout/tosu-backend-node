@@ -11,7 +11,7 @@ var cookie
 
 beforeEach(async () => {
   scout = await models.Scout.create()
-  cookie = testUtils.createCookie({ "scout": { "id": scout.id } })
+  cookie = testUtils.createScoutCookieWithId(scout.id)
 })
 
 test('Delete activity', async () => {
@@ -119,7 +119,7 @@ test('Cannot move activity from buffer to event when event does not exist', asyn
 
   await api.put('/activities/' + activity.id + '/toevent/' + deletedEventId)
     .set('cookie', [cookie])
-    .expect(403)
+    .expect(500)
 
   // Activity is correct in the database (nothing changed)
   await activity.reload()
