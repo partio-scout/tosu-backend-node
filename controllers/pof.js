@@ -4,6 +4,7 @@ const axios = require('axios')
 var cache = require('memory-cache')
 var cron = require('node-cron')
 const data = require('../pof.json')
+var fs = require('fs')
 
 const options = {
   root: './'
@@ -59,18 +60,15 @@ async function makeFilledPof(res, guid) {
     const date = new Date().toISOString()
     agegroup['updateDate'] = date
     cache.put('filledpof', JSON.stringify(agegroup))
+    fs.writeFile('pof.json', JSON.stringify(agegroup), function (err) {
+      if (err) {
+        return console.log(err)
+      }
+
+      console.log('The file was saved!')
+    })
     if (res) {
       res.json(agegroup)
-    }
-  }
-  async function suggestions(send) {
-    for (const taskgroup of tarpojat.taskgroups) {
-      for (const task of taskgroup.tasks) {
-        task.suggestions_details = await getSuggestions(task)
-      }
-    }
-    if (send) {
-      res.json(tarpojat)
     }
   }
 }
