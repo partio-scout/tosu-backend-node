@@ -4,6 +4,7 @@ const axios = require('axios')
 var cache = require('memory-cache')
 var cron = require('node-cron')
 const data = require('../pof.json')
+const jsonfile = require('jsonfile')
 var fs = require('fs')
 
 const options = {
@@ -59,14 +60,10 @@ async function makeFilledPof(res, guid) {
     //suggestions(true)
     const date = new Date().toISOString()
     agegroup['updateDate'] = date
-    cache.put('filledpof', JSON.stringify(agegroup))
-    fs.writeFile('pof.json', JSON.stringify(agegroup), function (err) {
-      if (err) {
-        return console.log(err)
-      }
-
-      console.log('The file was saved!')
+    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 }, function (err) {
+      console.log(err)
     })
+    cache.put('filledpof', JSON.stringify(agegroup))
     if (res) {
       res.json(agegroup)
     }
@@ -103,37 +100,12 @@ const getContent = async guid => {
         const agegroup = age
         console.log(agegroup.title)
         return agegroup
-        break
       }
     }
   } catch (error) {
     return ''
   }
 }
-
-
-pofRouter.get('/tarppo', (req, res) => {
-  request.get({
-    uri: 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi',
-    strictSSL: false
-  }, function (error, response, body) {
-    if (error == null) {
-      const json = JSON.parse(body)
-      var tarpojat = json.program[0].agegroups[2]
-      var statics = {
-        tarppoja: tarpojat.taskgroups.length,
-        tarpot: []
-      }
-      for (let i = 0; i < tarpojat.taskgroups.length; i++) {
-        var tarppo = tarpojat.taskgroups[i]
-        var name = tarppo.languages[0].title
-        var aktiviteetit = tarppo.tasks
-        statics.tarpot.push({ name: name, total: aktiviteetit.length })
-      }
-      res.json(statics)
-    }
-  })
-})
 
 cron.schedule('0 2 * * *', () => {
   makeFilledPof(false, 'fd0083b9a325c06430ba29cc6c6d1bac')
