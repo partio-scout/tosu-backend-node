@@ -13,7 +13,7 @@ beforeEach(async () => {
   cookie = testUtils.createScoutCookieWithId(scout.id)
 })
 
-test('Get events', async () => {
+test('Test get events', async () => {
   await models.Event.create({scoutId: scout.id, title: 'HAsfgkaeg'})
   await models.Event.create({scoutId: scout.id, title: 'HAsfgkaeg'})
 
@@ -28,7 +28,7 @@ test('Get events', async () => {
     })
 })
 
-test('Get events 2', async () => {
+test('Test that no event are returned on get events when there are none.', async () => {
   await api.get('/events')
     .set('cookie', [cookie])
     .then((result) => {
@@ -37,7 +37,7 @@ test('Get events 2', async () => {
 })
 
 
-test('Create event', async () => {
+test('Create an event', async () => {
   const result = await api.post('/events')
     .send({
       title: 'EGasg',
@@ -111,6 +111,18 @@ test('Update event', async () => {
   expect(dbEvent.scoutId).toBe(scout.id)
 })
 
+test('Cannot update an event that is not owned', async () => {
+  const anotherScout = await models.Scout.create()
+  const event = await models.Event.create({title:'WOW', scoutId: anotherScout.id})
+
+  await api.put('/events/'+event.id)
+    .send({
+      title: 'EGasg'
+    })
+    .set('cookie', [cookie])
+    .expect(403)
+})
+
 
 test('Delete event', async () => {
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
@@ -123,4 +135,17 @@ test('Delete event', async () => {
 
   const dbEvent = await models.Event.findById(event.id)
   expect(dbEvent).toBe(null)
+})
+
+
+test('Cannot delete an event that is not owned', async () => {
+  const anotherScout = await models.Scout.create()
+  const event = await models.Event.create({title:'WOW', scoutId: anotherScout.id})
+
+  await api.delete('/events/'+event.id)
+    .send({
+      title: 'EGasg'
+    })
+    .set('cookie', [cookie])
+    .expect(403)
 })

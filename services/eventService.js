@@ -1,11 +1,13 @@
 const models = require('../domain/models')
 
+//TODO: validations
+
 
 // Returns a list of all scouts events
 async function getAllEvents(scoutId) {
   const event = await models.Event.findAll({
-    where:{
-      scoutId: {$eq:scoutId}
+    where: {
+      scoutId: { $eq : scoutI d}
     }
   })
   return event

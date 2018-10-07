@@ -31,15 +31,15 @@ eventRouter.post('', async (req, res) => {
 eventRouter.put('/:eventId', async (req, res) => {
   const scout = req.session.scout
   const eventId = req.params.eventId
-  if (!verifyService.scoutOwnsEvent(scout, eventId)){
-    res.status(403).send('You are not the owner of this event!')
+  if (!await verifyService.scoutOwnsEvent(scout, eventId)){
+    return res.status(403).send('You are not the owner of this event!')
+  }
+
+  const event = await eventService.updateEvent(eventId, req.body)
+  if (event.error){ //Should never really happen since verifyService should prevent all errors
+    res.status(404).send(event.error)
   }else{
-    const event=await eventService.updateEvent(eventId, req.body)
-    if (event.error){ //Should never really happen since verifyService should prevent all errors
-      res.status(404).send(event.error)
-    }else{
-      res.status(200).send(event)
-    }
+    res.status(200).send(event)
   }
 })
 
@@ -47,7 +47,7 @@ eventRouter.put('/:eventId', async (req, res) => {
 eventRouter.delete('/:eventId', async (req, res) => {
   const scout = req.session.scout
   const eventId = req.params.eventId
-  if (!verifyService.scoutOwnsEvent(scout, eventId)){
+  if (!await verifyService.scoutOwnsEvent(scout, eventId)){
     res.status(403).send('You are not the owner of this event!')
   }else{
     const event = await eventService.getEvent(eventId)
