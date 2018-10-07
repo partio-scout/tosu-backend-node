@@ -7,7 +7,7 @@ const models = require('../domain/models')
 async function getAllEvents(scoutId) {
   const event = await models.Event.findAll({
     where: {
-      scoutId: { $eq : scoutI d}
+      scoutId: { $eq : scoutId }
     }
   })
   return event
