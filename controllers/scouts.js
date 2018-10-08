@@ -10,8 +10,12 @@ const scoutService = require('../services/scoutService')
 scoutRouter.post('/', async (req, res) => {
   const idTokenString = req.body.Authorization
   const idToken = await verifyService.verifyId(idTokenString)
-  const scout = await scoutService.findOrCreateScout(idToken)
 
+  if (!idToken) {
+    return res.status(403).send('Unable to verify idToken')
+  }
+
+  const scout = await scoutService.findOrCreateScout(idToken)
   req.session.scout = scout
   res.status(200).send(scout)
 })

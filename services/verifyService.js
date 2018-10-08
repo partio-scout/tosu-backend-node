@@ -5,15 +5,21 @@ const CLIENT_ID = '7360124073-8f1bq4mul415hr3kdm154vq3c65lp36d.apps.googleuserco
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(CLIENT_ID)
 
-// Verify token as a GoogleIdToken
+// Verify token as a GoogleIdToken.
+// Unsuccessful verification returns null.
 // https://developers.google.com/identity/sign-in/web/backend-auth
 async function verifyId(token) {
-  const ticket = await client.verifyIdToken({
-    idToken: token,
-    audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-    // Or, if multiple clients access the backend:
-    //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-  })
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      // Or, if multiple clients access the backend:
+      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    })
+  } catch (e) {
+    console.log('Could not verify idToken:', e)
+    return null
+  }
   const payload = ticket.getPayload()
   const userid = payload['sub']
   // If request specified a G Suite domain:
