@@ -13,6 +13,7 @@ eventgroupRouter.delete('/:id', async (req,res) => {
       id: { $eq: groupId }
     }
   }).then(rowsDeleted => {
+    //TODO: Delete events with this grooupId
     if (rowsDeleted === 1) {
       console.log('Deleted activity with ID', req.params.id)
       res.status(204).send('Deleted')
