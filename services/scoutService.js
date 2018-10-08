@@ -11,7 +11,7 @@ async function findOrCreateScout(googleIdToken) {
     defaults: {
       googleId: userId,
       name: name
-    } // TODO: set name from verified GoogleIdToken
+    }
   }).spread((user, created) => user) // user: first found result, created: whether user was created or found
 
   return scout
