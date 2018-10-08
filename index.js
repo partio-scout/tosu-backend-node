@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser')
 
 const pofRouter = require('./controllers/pof')
 const activityRouter = require('./controllers/activities')
+const eventgroupRouter = require('./controllers/eventgroups')
 const scoutRouter = require('./controllers/scouts')
 
 var corsOptions = {
@@ -32,6 +33,7 @@ app.use(bodyParser.json())
 
 app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
+app.use('/eventgroup', eventgroupRouter)
 app.use('/scouts', scoutRouter)
 
 app.use(middleware.error)
