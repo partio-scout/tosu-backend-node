@@ -1,5 +1,25 @@
 const models = require('../domain/models')
 
+const CLIENT_ID = '7360124073-8f1bq4mul415hr3kdm154vq3c65lp36d.apps.googleusercontent.com'
+
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(CLIENT_ID)
+
+async function verifyId(token) {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+    // Or, if multiple clients access the backend:
+    //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+  })
+  const payload = ticket.getPayload()
+  const userid = payload['sub']
+  // If request specified a G Suite domain:
+  //const domain = payload['hd'];
+
+  return ticket
+}
+
 // Check that scout owns the activity (activity.event/buffer.scoutId = scout.id)
 async function scoutOwnsActivity(scout, activityId) {
   const activity = await models.Activity.findById(activityId, { include: [models.Event, models.ActivityBuffer] })
@@ -17,5 +37,6 @@ async function scoutOwnsActivity(scout, activityId) {
 }
 
 module.exports = {
-  scoutOwnsActivity
+  scoutOwnsActivity,
+  verifyId
 }
