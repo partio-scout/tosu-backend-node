@@ -1,5 +1,6 @@
 const models = require('../domain/models')
 
+// Finds or creates a scout with given googleIdToken and returns it.
 async function findOrCreateScout(googleIdToken) {
   const userId = googleIdToken.getPayload()['sub']
   const name = googleIdToken.getPayload()['name']

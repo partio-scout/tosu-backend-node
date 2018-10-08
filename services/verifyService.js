@@ -5,6 +5,8 @@ const CLIENT_ID = '7360124073-8f1bq4mul415hr3kdm154vq3c65lp36d.apps.googleuserco
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(CLIENT_ID)
 
+// Verify token as a GoogleIdToken
+// https://developers.google.com/identity/sign-in/web/backend-auth
 async function verifyId(token) {
   const ticket = await client.verifyIdToken({
     idToken: token,
