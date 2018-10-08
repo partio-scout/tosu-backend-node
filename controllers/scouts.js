@@ -13,7 +13,7 @@ scoutRouter.post('/', async (req, res) => {
   const scout = await scoutService.findOrCreateScout(idToken)
 
   req.session.scout = scout
-  res.send(scout)
+  res.status(200).send(scout)
 })
 
 module.exports = scoutRouter

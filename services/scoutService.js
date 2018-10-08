@@ -1,8 +1,8 @@
 const models = require('../domain/models')
 
 async function findOrCreateScout(googleIdToken) {
-  const userId = idToken.getPayload()['sub']
-  const name = idToken.getPayload()['name']
+  const userId = googleIdToken.getPayload()['sub']
+  const name = googleIdToken.getPayload()['name']
 
   const scout = await models.Scout.findOrCreate({
     where: {
@@ -18,5 +18,5 @@ async function findOrCreateScout(googleIdToken) {
 }
 
 module.exports = {
-
+  findOrCreateScout
 }
