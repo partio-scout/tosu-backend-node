@@ -1,6 +1,4 @@
 const eventgroupRouter = require('express').Router()
-const request = require('request')
-const axios = require('axios')
 const models = require('../domain/models')
 
 eventgroupRouter.post('/', async (req,res) => {
@@ -9,8 +7,20 @@ eventgroupRouter.post('/', async (req,res) => {
 })
 
 eventgroupRouter.delete('/:id', async (req,res) => {
-  const id = req.params.id
-  res.send(id)
+  const groupId = req.params.id
+  models.EventGroup.destroy({
+    where: {
+      id: { $eq: groupId }
+    }
+  }).then(rowsDeleted => {
+    if (rowsDeleted === 1) {
+      console.log('Deleted activity with ID', req.params.id)
+      res.status(204).send('Deleted')
+    } else {
+      console.log('No eventgroup with ID', req.params.id)
+      res.status(404).send('Not deleted')
+    }
+  })
 })
 
 module.exports = eventgroupRouter
