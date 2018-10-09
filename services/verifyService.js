@@ -9,8 +9,9 @@ const client = new OAuth2Client(CLIENT_ID)
 // Unsuccessful verification returns null.
 // https://developers.google.com/identity/sign-in/web/backend-auth
 async function verifyId(token) {
+  let ticket = null
   try {
-    const ticket = await client.verifyIdToken({
+    ticket = await client.verifyIdToken({
       idToken: token,
       audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
       // Or, if multiple clients access the backend:
