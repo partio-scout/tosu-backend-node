@@ -4,7 +4,6 @@ var cache = require('memory-cache')
 var cron = require('node-cron')
 const data = require('../pof.json')
 var makingPof = false
-const jsonfile = require('jsonfile')
 
 pofRouter.get('/', async (req, res) => {
   res.send('Hello world, Hei maailma')
@@ -58,9 +57,6 @@ async function makeFilledPof(res, guid) {
     }
     const date = new Date().toISOString()
     agegroup['updateDate'] = date
-    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 }, function (err) {
-      console.log(err)
-    })
     cache.put('filledpof', JSON.stringify(agegroup))
     makingPof = false
     if (res) {
@@ -99,6 +95,7 @@ const getContent = async guid => {
         const agegroup = age
         console.log(agegroup.title)
         return agegroup
+        break
       }
     }
   } catch (error) {
