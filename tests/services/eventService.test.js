@@ -32,6 +32,16 @@ test('Test update event', async () => {
   expect(dbEvent.title).toBe('Asdf')
 })
 
+test('Test add activity to event', async () => {
+  const activity = await eventService.addActivityToEvent(event.id, {guid: 'asgasg'})
+  const dbActivity = await models.Activity.findById(activity.id)
+  expect(activity.eventId).toBe(event.id)
+  expect(activity.guid).toBe('asgasg')
+  expect(dbActivity.eventId).toBe(event.id)
+  expect(dbActivity.guid).toBe('asgasg')
+})
+
+
 test('Delete event', async () => {
   const result = await eventService.deleteEvent(event.id)
   expect(result).toBe(true)
