@@ -95,7 +95,7 @@ function sendResponse(res, responseObject) {
     console.log('Error:', responseObject.error)
     res.status(500).send(responseObject.error)
   } else {
-    res.status(200).send(responseObject)
+    res.status(200).json(responseObject)
   }
 }
 

@@ -58,6 +58,7 @@ test('Move activity from event to buffer', async () => {
 
   await api.put('/activities/' + activity.id + '/tobuffer')
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       // Returned activity is correct
       expect(result.body.activityBufferId).toBe(buffer.id)
@@ -102,6 +103,7 @@ test('Move activity from buffer to event', async () => {
 
   await api.put('/activities/' + activity.id + '/toevent/' + event.id)
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       // Returned activity is correct
       expect(result.body.activityBufferId).toBe(null)
@@ -183,6 +185,7 @@ test('Add plan to activity', async () => {
   await api.post('/activities/' + activity.id + '/plan')
     .set('cookie', [cookie])
     .send(plan)
+    .expect('Content-Type', /json/)
     .expect(200)
     .then((result) => {
       // Returned plan is correct

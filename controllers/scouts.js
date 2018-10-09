@@ -15,7 +15,7 @@ scoutRouter.post('/', async (req, res) => {
   }).spread((user, created) => user) // user: first found result, created: whether user was created or found
 
   req.session.scout = scout
-  res.send(scout)
+  res.json(scout)
 })
 
 module.exports = scoutRouter
