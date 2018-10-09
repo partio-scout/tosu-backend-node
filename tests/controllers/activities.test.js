@@ -14,9 +14,12 @@ beforeEach(async () => {
   cookie = testUtils.createScoutCookieWithId(scout.id)
 })
 
+// DELETE /activities/id
+
 test('Delete activity', async () => {
   const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id }) // Scout owns activity
+
   await api
     .delete('/activities/' + activity.id)
     .set('cookie', [cookie])
@@ -38,6 +41,15 @@ test('Cannot delete an activity that scout does not own', async () => {
 
   expect(await models.Activity.findById(activity.id)).not.toBe(null)
 })
+
+test('Invalid (noninteger) id is handled when trying to delete', async () => {
+  await api
+    .delete('/activities/hu4hlgd43kf')
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+// PUT /activities/id/tobuffer
 
 test('Move activity from event to buffer', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
@@ -73,6 +85,15 @@ test('Cannot move activity that scout does not own to buffer', async () => {
   expect(activity.activityBufferId).toBe(null)
   expect(activity.eventId).toBe(event.id) // Still in otherScout's event, not stolen D:
 })
+
+test('Invalid (noninteger) id is handled when trying to move activity to buffer', async () => {
+  await api
+    .put('/activities/fjhsu4t8unv4dr/tobuffer')
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+// PUT /activities/id/toevent
 
 test('Move activity from buffer to event', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
@@ -127,6 +148,29 @@ test('Cannot move activity from buffer to event when event does not exist', asyn
   expect(activity.eventId).toBe(null)
 })
 
+test('Invalid (noninteger) id is handled when trying to move activity to event', async () => {
+  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
+  const event = await models.Event.create()
+  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+
+  await api
+    .put('/activities/jfsom48m/toevent/fhsu3')
+    .set('cookie', [cookie])
+    .expect(404)
+
+  await api
+    .put('/activities/' + activity.id + '/toevent/fhsu3')
+    .set('cookie', [cookie])
+    .expect(404)
+
+  await api
+    .put('/activities/gs4gf/toevent/' + buffer.id)
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+// POST /activities/id/plan
+
 test('Add plan to activity', async () => {
   const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id }) // Scout owns activity
@@ -162,4 +206,11 @@ test('Does not add plan to activity scout does not own', async () => {
     .set('cookie', [cookie])
     .send(plan)
     .expect(403)
+})
+
+test('Invalid (noninteger) id is handled when trying to add plan to activity', async () => {
+  await api
+    .post('/activities/gd5ybfhf7ik/plan')
+    .set('cookie', [cookie])
+    .expect(404)
 })

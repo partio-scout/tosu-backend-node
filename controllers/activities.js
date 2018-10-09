@@ -13,6 +13,10 @@ activityRouter.delete('/:activityId', async (req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
 
+  if (isNaN(activityId)) {
+    return res.status(404).send('Invalid activity id!')
+  }
+
   if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
     return res.status(403).send('You are not the owner of this activity.')
   }
@@ -31,6 +35,10 @@ activityRouter.put('/:activityId/tobuffer', async (req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
 
+  if (isNaN(activityId)) {
+    return res.status(404).send('Invalid activity id!')
+  }
+
   if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
     return res.status(403).send('You are not the owner of this activity.')
   }
@@ -46,6 +54,10 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
   const activityId = parseInt(req.params.activityId)
   const eventId = parseInt(req.params.eventId)
 
+  if (isNaN(activityId) || isNaN(eventId)) {
+    return res.status(404).send('Invalid activity or event id!')
+  }
+
   if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
     return res.status(403).send('You are not the owner of this activity.')
   }
@@ -60,6 +72,10 @@ activityRouter.post('/:activityId/plan', async(req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
   const plan = req.body
+
+  if (isNaN(activityId)) {
+    return res.status(404).send('Invalid activity id!')
+  }
 
   if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
     return res.status(403).send('You are not the owner of this activity.')
