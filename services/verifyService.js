@@ -54,8 +54,18 @@ async function scoutOwnsEvent(scout, eventId) {
   return false
 }
 
+// Checks weather the scout is logged in.
+// TODO: Other checks than just querying database?
+async function isLoggedIn(scout) {
+  if (!scout) {
+    return false
+  }
+  return await models.Scout.findById(scout.id) !== null
+}
+
 module.exports = {
   scoutOwnsActivity,
   verifyId,
-  scoutOwnsEvent
+  scoutOwnsEvent,
+  isLoggedIn,
 }
