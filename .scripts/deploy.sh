@@ -10,6 +10,7 @@ ssh ubuntu@$IP <<EOF
         cd ~/tosu-backend-node
         git pull
         npm install
+        pm2 restart process.json
 	echo "Frontside ollie ftw!"
     fi
 EOF

@@ -9,9 +9,6 @@
     "lint": "eslint .",
     "test": "NODE_ENV=test jest --verbose"
   },
-  "nodemonConfig": {
-    "ignore": ["pof.json"]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/partio-scout/tosu-backend-node.git"
