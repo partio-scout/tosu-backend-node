@@ -15,7 +15,7 @@ const scoutRouter = require('./controllers/scouts')
 const planRouter = require('./controllers/plans')
 
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'https://suunnittelu.partio-ohjelma.fi'],
   credentials: true
 }
 

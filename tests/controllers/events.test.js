@@ -149,3 +149,26 @@ test('Cannot delete an event that is not owned', async () => {
     .set('cookie', [cookie])
     .expect(403)
 })
+
+
+test('Invalid (noninteger) event id is handled properly when trying to update', async () => {
+  const anotherScout = await models.Scout.create()
+  const event = await models.Event.create({title:'WOW', scoutId: anotherScout.id})
+
+  await api.put('/events/asgGShG!')
+    .send({
+      title: 'EGasg'
+    })
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+
+test('Invalid (noninteger) event id is handled properly when trying to delete', async () => {
+  const anotherScout = await models.Scout.create()
+  const event = await models.Event.create({title:'WOW', scoutId: anotherScout.id})
+
+  await api.delete('/events/GSGaghhq')
+    .set('cookie', [cookie])
+    .expect(404)
+})
