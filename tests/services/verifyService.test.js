@@ -80,7 +80,6 @@ test('Verify scout owns the plan through activity through buffer', async () => {
 })
 
 
-
 test('Verify the scout does not own the plan when the scout or the plan does not exist', async () => {
   const scout = await models.Scout.create()
   const scoutId = scout.id
@@ -88,21 +87,13 @@ test('Verify the scout does not own the plan when the scout or the plan does not
   const activity = await models.Activity.create({ eventId: event.id })
   const plan = await models.Plan.create({activityId: activity.id})
   const planId = plan.id
-  const scout2 = await models.Scout.create()
-  const scout2Id = scout2.id
-  const event2 = await models.Event.create({ scoutId: scout2.id })
-  const activity2 = await models.Activity.create({ eventId: event2.id })
-  const plan2 = await models.Plan.create({activityId: activity2.id})
 
-  expect(await verifyService.scoutOwnsPlan(scout, plan.id)).toBe(true)
-  expect(await verifyService.scoutOwnsPlan(scout2, plan2.id)).toBe(true)
+  expect(await verifyService.scoutOwnsPlan(scout, planId)).toBe(true)
+  plan.destroy()
+  expect(await verifyService.scoutOwnsPlan(scout, planId)).toBe(false)
   expect(await verifyService.scoutOwnsPlan(scout, null)).toBe(false)
   expect(await verifyService.scoutOwnsPlan(null, plan.id)).toBe(false)
   expect(await verifyService.scoutOwnsPlan(null, null)).toBe(false)
-  plan.destroy()
-  scout2.destroy()
-  expect(await verifyService.scoutOwnsPlan(scout.id, planId)).toBe(false)
-  expect(await verifyService.scoutOwnsPlan(scout2Id, plan2.id)).toBe(false)
   scout.destroy()
   expect(await verifyService.scoutOwnsPlan(scoutId, planId)).toBe(false)
 })

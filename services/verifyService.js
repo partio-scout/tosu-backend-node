@@ -59,7 +59,7 @@ async function scoutOwnsEvent(scout, eventId) {
 async function scoutOwnsPlan(scout, planId) {
   const plan = await models.Plan.findById(
     planId,
-    { 
+    {
       include: [{
         model : models.Activity,
         include: [models.Event, models.ActivityBuffer]
@@ -75,7 +75,6 @@ async function scoutOwnsPlan(scout, planId) {
   if (plan.Activity.ActivityBuffer && plan.Activity.ActivityBuffer.scoutId === scout.id) {
     return true
   }
-  console.log("CASE 2")
   return false
 }
 
