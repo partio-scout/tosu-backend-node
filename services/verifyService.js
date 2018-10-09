@@ -16,6 +16,16 @@ async function scoutOwnsActivity(scout, activityId) {
   return false
 }
 
+// Check that scout owns the event
+async function scoutOwnsEvent(scout, eventId) {
+  const event = await models.Event.findById(eventId)
+  if (scout && event && event.scoutId === scout.id){
+    return true
+  }
+  return false
+}
+
 module.exports = {
-  scoutOwnsActivity
+  scoutOwnsActivity,
+  scoutOwnsEvent
 }
