@@ -8,5 +8,15 @@ module.exports = (sequelize, DataTypes) => {
     ActivityBuffer.belongsTo(models.Scout, { foreignKey: "scoutId" })
   }
 
+  // Define a class method
+  // Usage: await models.ActivityBuffer.findByScout(scout)
+  ActivityBuffer.findByScout = async (scout) => {
+    return await ActivityBuffer.findOne({
+      where: {
+        scoutId: { $eq: scout.id }
+      }
+    })
+  }
+
   return ActivityBuffer
 }
