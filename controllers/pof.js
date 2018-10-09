@@ -2,11 +2,12 @@ const pofRouter = require('express').Router()
 const axios = require('axios')
 var cache = require('memory-cache')
 var cron = require('node-cron')
-const data = require('../pof.json')
+const jsonfile = require('jsonfile')
+var path = require('path')
 var makingPof = false
 
 pofRouter.get('/', async (req, res) => {
-  res.send('Hello world, Hei maailma')
+  res.send('Hello world')
 })
 
 pofRouter.get('/delete', async (req, res) => {
@@ -23,7 +24,11 @@ pofRouter.get('/tarppo', async (req, res) => {
     if (!makingPof){
       makeFilledPof(false, 'fd0083b9a325c06430ba29cc6c6d1bac')
     }
-    res.json(data)
+    res.sendFile(path.resolve('pof.json'), function(err) {
+      if(err) {
+        res.status(409).send('generating pof, wait a sec')
+      }
+    })
   }
 })
 
@@ -57,6 +62,9 @@ async function makeFilledPof(res, guid) {
     }
     const date = new Date().toISOString()
     agegroup['updateDate'] = date
+    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 }, function (err) {
+      var data = require('../pof.json')
+    })
     cache.put('filledpof', JSON.stringify(agegroup))
     makingPof = false
     if (res) {
