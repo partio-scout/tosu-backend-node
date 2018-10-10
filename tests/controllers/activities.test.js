@@ -14,9 +14,12 @@ beforeEach(async () => {
   cookie = testUtils.createScoutCookieWithId(scout.id)
 })
 
+// DELETE /activities/id
+
 test('Delete activity', async () => {
   const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id }) // Scout owns activity
+
   await api
     .delete('/activities/' + activity.id)
     .set('cookie', [cookie])
@@ -39,6 +42,21 @@ test('Cannot delete an activity that scout does not own', async () => {
   expect(await models.Activity.findById(activity.id)).not.toBe(null)
 })
 
+test('Invalid (noninteger) id is handled when trying to delete', async () => {
+  await api
+    .delete('/activities/hu4hlgd43kf')
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+test('Cannot delete when not logged in', async () => {
+  await api
+    .delete('/activities/5')
+    .expect(403)
+})
+
+// PUT /activities/id/tobuffer
+
 test('Move activity from event to buffer', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   const event = await models.Event.create({ scoutId: scout.id })
@@ -46,6 +64,7 @@ test('Move activity from event to buffer', async () => {
 
   await api.put('/activities/' + activity.id + '/tobuffer')
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       // Returned activity is correct
       expect(result.body.activityBufferId).toBe(buffer.id)
@@ -74,6 +93,21 @@ test('Cannot move activity that scout does not own to buffer', async () => {
   expect(activity.eventId).toBe(event.id) // Still in otherScout's event, not stolen D:
 })
 
+test('Invalid (noninteger) id is handled when trying to move activity to buffer', async () => {
+  await api
+    .put('/activities/fjhsu4t8unv4dr/tobuffer')
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+test('Cannot move activity from event to buffer when not logged in', async () => {
+  await api
+    .put('/activities/666/tobuffer')
+    .expect(403)
+})
+
+// PUT /activities/id/toevent
+
 test('Move activity from buffer to event', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   const event = await models.Event.create()
@@ -81,6 +115,7 @@ test('Move activity from buffer to event', async () => {
 
   await api.put('/activities/' + activity.id + '/toevent/' + event.id)
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       // Returned activity is correct
       expect(result.body.activityBufferId).toBe(null)
@@ -127,6 +162,35 @@ test('Cannot move activity from buffer to event when event does not exist', asyn
   expect(activity.eventId).toBe(null)
 })
 
+test('Invalid (noninteger) id is handled when trying to move activity to event', async () => {
+  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
+  const event = await models.Event.create()
+  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+
+  await api
+    .put('/activities/jfsom48m/toevent/fhsu3')
+    .set('cookie', [cookie])
+    .expect(404)
+
+  await api
+    .put('/activities/' + activity.id + '/toevent/fhsu3')
+    .set('cookie', [cookie])
+    .expect(404)
+
+  await api
+    .put('/activities/gs4gf/toevent/' + buffer.id)
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+test('Cannot move activity from buffer to event when not logged in', async () => {
+  await api
+    .put('/activities/999/toevent')
+    .expect(403)
+})
+
+// POST /activities/id/plan
+
 test('Add plan to activity', async () => {
   const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id }) // Scout owns activity
@@ -139,6 +203,7 @@ test('Add plan to activity', async () => {
   await api.post('/activities/' + activity.id + '/plan')
     .set('cookie', [cookie])
     .send(plan)
+    .expect('Content-Type', /json/)
     .expect(200)
     .then((result) => {
       // Returned plan is correct
@@ -161,5 +226,18 @@ test('Does not add plan to activity scout does not own', async () => {
   await api.post('/activities/' + activity.id + '/plan')
     .set('cookie', [cookie])
     .send(plan)
+    .expect(403)
+})
+
+test('Invalid (noninteger) id is handled when trying to add plan to activity', async () => {
+  await api
+    .post('/activities/gd5ybfhf7ik/plan')
+    .set('cookie', [cookie])
+    .expect(404)
+})
+
+test('Cannot add plan to activity when not logged in', async () => {
+  await api
+    .post('/activities/666/tobuffer')
     .expect(403)
 })
