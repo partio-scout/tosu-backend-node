@@ -209,7 +209,7 @@ test('Invalid (noninteger) event id is handled properly when trying to update', 
 })
 
 
-test('Invalid (noninteger) event id is handled properly when trying add an event', async () => {
+test('Invalid (noninteger) event id is handled properly when trying add an activity to event', async () => {
   await api.post('/events/GSGaghhq/activities')
     .send({
       guid: 'EGasg'
