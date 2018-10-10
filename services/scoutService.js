@@ -19,5 +19,5 @@ async function findOrCreateScout(googleIdToken) {
 }
 
 module.exports = {
-  findOrCreateScout
+  findOrCreateScout,
 }

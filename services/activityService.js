@@ -68,5 +68,5 @@ module.exports = {
   deleteActivity,
   moveActivityFromEventToBuffer,
   moveActivityFromBufferToEvent,
-  addPlanToActivity
+  addPlanToActivity,
 }

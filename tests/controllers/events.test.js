@@ -38,6 +38,10 @@ test('Test that no event are returned on get events when there are none.', async
     })
 })
 
+test('Cannot get events when not logged in', async () => {
+  await api.get('/events')
+    .expect(403)
+})
 
 test('Create an event', async () => {
   const result = await api.post('/events')
@@ -74,6 +78,11 @@ test('Create an event', async () => {
   expect(dbEvent.type).toBe('Retki')
   expect(dbEvent.information).toBe('eHGAOSGaoe gaEGo')
   expect(dbEvent.scoutId).toBe(scout.id)
+})
+
+test('Cannot get events when not logged in', async () => {
+  await api.post('/events')
+    .expect(403)
 })
 
 test('Update event', async () => {
@@ -127,6 +136,10 @@ test('Cannot update an event that is not owned', async () => {
     .expect(403)
 })
 
+test('Cannot update event when not logged in', async () => {
+  await api.put('/events/4')
+    .expect(403)
+})
 
 test('Delete event', async () => {
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
@@ -154,6 +167,10 @@ test('Cannot delete an event that is not owned', async () => {
     .expect(403)
 })
 
+test('Cannot delete event when not logged in', async () => {
+  await api.delete('/events/456')
+    .expect(403)
+})
 
 test('Invalid (noninteger) event id is handled properly when trying to update', async () => {
   const anotherScout = await models.Scout.create()
