@@ -2,7 +2,6 @@
   "apps": [{
       "name": "TosuBackend",
       "script": "./index.js",
-      "watch": true,
-      "ignore_watch" : ["node_modules"]
+      "watch": false
   }]
 }
