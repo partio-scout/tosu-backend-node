@@ -8,9 +8,6 @@ const eventService = require('../services/eventService')
 // Get a list of scouts events
 eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
-  if (!scout) {
-    return res.status(403).send('you are not logged in!')
-  }
   const events = await eventService.getAllEvents(scout.id)
   res.status(200).json(events)
 })
@@ -18,9 +15,6 @@ eventRouter.get('', async (req, res) => {
 // Add a new event, return the added event
 eventRouter.post('', async (req, res) => {
   const scout = req.session.scout
-  if (!scout) {
-    return res.status(403).send('You are not logged in!')
-  }
   const event = await eventService.createEvent(scout.id, req.body)
   res.status(200).json(event)
 })
@@ -54,9 +48,9 @@ eventRouter.post('/:eventId/activities', async (req, res) => {
   }
   const event = await eventService.addActivityToEvent(eventId, req.body)
   if (event.error){ //Should never really happen since verifyService should prevent all errors
-    return res.status(404).send(event.error)
+    return res.status(500).send(event.error)
   }
-  res.status(200).send(event)
+  res.status(200).json(event)
 })
 
 
