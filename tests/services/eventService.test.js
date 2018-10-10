@@ -32,7 +32,7 @@ test('Update an event', async () => {
   expect(dbEvent.title).toBe('Asdf')
 })
 
-test('Add activity to event', async () => {
+test('Add activity to an event', async () => {
   const activity = await eventService.addActivityToEvent(event.id, {guid: 'asgasg'})
   const dbActivity = await models.Activity.findById(activity.id)
   expect(activity.eventId).toBe(event.id)
@@ -41,14 +41,14 @@ test('Add activity to event', async () => {
   expect(dbActivity.guid).toBe('asgasg')
 })
 
-test('Do not add activity to event when event does not exist', async () => {
+test('Do not add activity to an event when the event does not exist', async () => {
   const result = await eventService.addActivityToEvent(-555, {guid: 'asgasg'})
   expect(result.error).not.toBeNull()
   expect(result.error).not.toBeUndefined()
 })
 
 
-test('Delete event', async () => {
+test('Delete an event', async () => {
   const result = await eventService.deleteEvent(event.id)
   expect(result).toBe(true)
   expect(await models.Event.findById(event.id)).toBeNull()
