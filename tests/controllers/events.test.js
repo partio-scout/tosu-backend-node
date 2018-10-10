@@ -19,6 +19,7 @@ test('Test get events', async () => {
 
   await api.get('/events')
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       expect(result.body.length).toBe(2)
       expect(result.body[0].scoutId).toBe(scout.id)
@@ -31,6 +32,7 @@ test('Test get events', async () => {
 test('Test that no event are returned on get events when there are none.', async () => {
   await api.get('/events')
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       expect(result.body.length).toBe(0)
     })
@@ -47,9 +49,10 @@ test('Create an event', async () => {
       endTime: '21:51:33',
       type: 'Retki',
       information: 'eHGAOSGaoe gaEGo',
-      scoutId: scout.id 
+      scoutId: scout.id
     })
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .expect(200)
   expect(result.body.title).toBe('EGasg')
   expect(result.body.startDate).toBe('2018-10-19')
@@ -85,9 +88,10 @@ test('Update event', async () => {
       endTime: '21:51:33',
       type: 'Retki',
       information: 'eHGAOSGaoe gaEGo',
-      scoutId: scout.id 
+      scoutId: scout.id
     })
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .expect(200)
 
   expect(result.body.title).toBe('EGasg')

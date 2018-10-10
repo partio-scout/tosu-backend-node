@@ -14,7 +14,7 @@ scoutRouter.post('/', async (req, res) => {
 
   const scout = await scoutService.findOrCreateScout(idToken)
   req.session.scout = scout
-  res.status(200).send(scout)
+  res.status(200).json(scout)
 })
 
 scoutRouter.post('/logout', async (req, res) => {
