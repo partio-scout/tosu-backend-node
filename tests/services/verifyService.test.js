@@ -34,8 +34,6 @@ test('Verify scout does not own activity when scout or activity does not exist',
   expect(await verifyService.scoutOwnsActivity(null, null)).toBe(false)
 })
 
-
-
 test('Verify scout owns event', async () => {
   const scoutOwner = await models.Scout.create()
   const scoutImposter = await models.Scout.create()
@@ -50,9 +48,25 @@ test('Verify scout does not own event when scout or event does not exist', async
   const event = await models.Event.create()
   const id = event.id
   await event.destroy()
-  
+
   expect(await verifyService.scoutOwnsEvent(scout, id)).toBe(false)
   expect(await verifyService.scoutOwnsEvent(scout, null)).toBe(false)
   expect(await verifyService.scoutOwnsEvent(null, id)).toBe(false)
   expect(await verifyService.scoutOwnsEvent(null, null)).toBe(false)
+})
+
+test('Scout is logged in (found in database)', async () => {
+  const scout = await models.Scout.create()
+  expect(await verifyService.isLoggedIn(scout)).toBe(true)
+})
+
+test('Scout is logged in (not found in database)', async () => {
+  const scout = await models.Scout.create()
+  await scout.destroy()
+  expect(await verifyService.isLoggedIn(scout)).toBe(false)
+})
+
+test('Scout is logged in (scout is null)', async () => {
+  const scout = null
+  expect(await verifyService.isLoggedIn(scout)).toBe(false)
 })

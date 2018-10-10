@@ -19,6 +19,7 @@ test('Test get events', async () => {
 
   await api.get('/events')
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       expect(result.body.length).toBe(2)
       expect(result.body[0].scoutId).toBe(scout.id)
@@ -31,11 +32,16 @@ test('Test get events', async () => {
 test('Test that no event are returned on get events when there are none.', async () => {
   await api.get('/events')
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .then((result) => {
       expect(result.body.length).toBe(0)
     })
 })
 
+test('Cannot get events when not logged in', async () => {
+  await api.get('/events')
+    .expect(403)
+})
 
 test('Create an event', async () => {
   const result = await api.post('/events')
@@ -47,9 +53,10 @@ test('Create an event', async () => {
       endTime: '21:51:33',
       type: 'Retki',
       information: 'eHGAOSGaoe gaEGo',
-      scoutId: scout.id 
+      scoutId: scout.id
     })
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .expect(200)
   expect(result.body.title).toBe('EGasg')
   expect(result.body.startDate).toBe('2018-10-19')
@@ -73,6 +80,11 @@ test('Create an event', async () => {
   expect(dbEvent.scoutId).toBe(scout.id)
 })
 
+test('Cannot get events when not logged in', async () => {
+  await api.post('/events')
+    .expect(403)
+})
+
 test('Update event', async () => {
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
 
@@ -85,9 +97,10 @@ test('Update event', async () => {
       endTime: '21:51:33',
       type: 'Retki',
       information: 'eHGAOSGaoe gaEGo',
-      scoutId: scout.id 
+      scoutId: scout.id
     })
     .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
     .expect(200)
 
   expect(result.body.title).toBe('EGasg')
@@ -123,6 +136,10 @@ test('Cannot update an event that is not owned', async () => {
     .expect(403)
 })
 
+test('Cannot update event when not logged in', async () => {
+  await api.put('/events/4')
+    .expect(403)
+})
 
 test('Test add activity to event', async () => {
   const event = await models.Event.create({scoutId: scout.id})
@@ -177,6 +194,10 @@ test('Cannot delete an event that is not owned', async () => {
     .expect(403)
 })
 
+test('Cannot delete event when not logged in', async () => {
+  await api.delete('/events/456')
+    .expect(403)
+})
 
 test('Invalid (noninteger) event id is handled properly when trying to update', async () => {
   await api.put('/events/asgGShG!')
