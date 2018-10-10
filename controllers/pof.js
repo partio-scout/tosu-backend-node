@@ -62,9 +62,7 @@ async function makeFilledPof(res, guid) {
     }
     const date = new Date().toISOString()
     agegroup['updateDate'] = date
-    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 }, function (err) {
-      var data = require('../pof.json')
-    })
+    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 } )
     cache.put('filledpof', JSON.stringify(agegroup))
     makingPof = false
     if (res) {
