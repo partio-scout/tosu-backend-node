@@ -38,11 +38,6 @@ test('Test that no event are returned on get events when there are none.', async
     })
 })
 
-test('Cannot get events when not logged in', async () => {
-  await api.get('/events')
-    .expect(403)
-})
-
 test('Create an event', async () => {
   const result = await api.post('/events')
     .send({
