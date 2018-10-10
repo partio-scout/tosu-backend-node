@@ -27,3 +27,11 @@ test('ActivityBuffer can be assigned to Scout', async () => {
   expect(fetchedBuffer.Scout.id).toBe(scout.id)
   expect(fetchedBuffer.Scout.googleId).toBe("jkgldfög")
 })
+
+test('Can find buffer by scout id', async () => {
+  const scout = await models.Scout.create()
+  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
+
+  const fetchedBuffer = await models.ActivityBuffer.findByScout(scout)
+  expect(fetchedBuffer.scoutId).toBe(scout.id)
+})

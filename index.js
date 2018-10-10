@@ -12,6 +12,7 @@ const pofRouter = require('./controllers/pof')
 const activityRouter = require('./controllers/activities')
 const eventRouter = require('./controllers/events')
 const scoutRouter = require('./controllers/scouts')
+const activityBufferRouter = require('./controllers/activitybuffers')
 
 var corsOptions = {
   origin: ['http://localhost:3000', 'https://suunnittelu.partio-ohjelma.fi'],
@@ -35,6 +36,7 @@ app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
 app.use('/events', eventRouter)
 app.use('/scouts', scoutRouter)
+app.use('/activitybuffers', activityBufferRouter)
 
 app.use(middleware.error)
 

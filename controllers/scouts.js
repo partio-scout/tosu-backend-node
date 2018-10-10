@@ -1,7 +1,4 @@
 const scoutRouter = require('express').Router()
-const request = require('request')
-const axios = require('axios')
-
 const models = require('../domain/models')
 const verifyService = require('../services/verifyService')
 const scoutService = require('../services/scoutService')
