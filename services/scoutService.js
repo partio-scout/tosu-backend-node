@@ -1,4 +1,5 @@
 const models = require('../domain/models')
+const bufferService = require('./activitybufferService')
 
 // Finds or creates a scout with given googleIdToken and returns it.
 async function findOrCreateScout(googleIdToken) {
@@ -13,7 +14,13 @@ async function findOrCreateScout(googleIdToken) {
       googleId: userId,
       name: name
     }
-  }).spread((user, created) => user) // user: first found result, created: whether user was created or found
+  }).spread(async (user, created) => { // user: first found result, created: whether user was created or found
+    // If the scout logged in for the first time, create buffer
+    if (created) {
+      await bufferService.createBufferForScout(user)
+    }
+    return user
+  })
 
   return scout
 }

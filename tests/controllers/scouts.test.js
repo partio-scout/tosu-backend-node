@@ -29,9 +29,12 @@ test('Logging in with a valid token works', async () => {
 })
 */
 
-
 test('Logout works', async () => {
   await api
     .post('/scouts/logout')
     .expect(200)
+})
+
+test('Registering new scout creates buffer', async () => {
+  expect(false).toBe(true)
 })

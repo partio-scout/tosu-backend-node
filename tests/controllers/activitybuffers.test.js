@@ -56,14 +56,15 @@ test('Get buffer when scout has no buffer', async () => {
   const response = await api
     .get('/activitybuffers')
     .set('cookie', [cookie])
-    .expect(200)
-
-  expect(response.body).toBeNull()
+    .expect(404)
 })
 
-// TODO: When logged in check implemented
-// test('Buffer is not returned when not logged in (no session)', async () => {
-//   await api
-//     .get('/activitybuffers')
-//     .expect(403)
-// })
+test('Buffer is not returned when not logged in (no session)', async () => {
+  await api
+    .get('/activitybuffers')
+    .expect(403)
+})
+
+test('Returned buffer has activities and id', async () => {
+  expect(false).toBe(true)
+})
