@@ -2,20 +2,16 @@ const models = require('../domain/models')
 
 
 // Modifies a plan
-async function modifyPlan(planId, plan) {
+async function modifyPlan(planId, planData) {
   await models.Plan.update(
-    {
-      title: plan.title,
-      guid: plan.guid,
-      content: plan.content
-    },
+    planData,
     {
       where: {
         id: { $eq: planId }
       }
     }
   )
-  const updatedPlan= await models.Plan.findById(planId)
+  const updatedPlan = await models.Plan.findById(planId)
   return updatedPlan
 }
 
