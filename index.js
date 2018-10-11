@@ -42,7 +42,6 @@ const loggedIn = async (req,res,next) => {
   }
 }
 
-
 app.use('/activities', loggedIn)
 app.use('/events', loggedIn)
 app.use('/plans', loggedIn)

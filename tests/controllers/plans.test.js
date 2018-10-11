@@ -39,7 +39,7 @@ test('Cannot modify a plan that does not exist', async () => {
       title: 'EGasg'
     })
     .set('cookie', [cookie])
-    .expect(403) // Should
+    .expect(403)
 })
 
 test('User cannot modify a plan that that he does not own', async () => {
@@ -71,14 +71,14 @@ test('User cannot delete a plan that that he does not own', async () => {
 })
 
 
-test('Invalid planID is handled plan modify', async () => {
+test('Invalid (noninteger) planID is handled when trying to modify a plan', async () => {
   await api.put('/plans/asgasASg')
     .set('cookie', [cookie])
     .expect(404)
 })
 
 
-test('Invalid planID is handled on delete', async () => {
+test('Invalid (noninteger) planID is handled when trying to delete a plan', async () => {
   await api.delete('/plans/asgasg')
     .set('cookie', [cookie])
     .expect(404)

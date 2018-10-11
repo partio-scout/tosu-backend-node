@@ -16,7 +16,7 @@ async function modifyPlan(planId, planData) {
 }
 
 
-// Deletes an event
+// Deletes a plan
 async function deletePlan(planId) {
   const rowsDeleted = await models.Plan.destroy({
     where: {
