@@ -14,6 +14,7 @@ const activityRouter = require('./controllers/activities')
 const eventgroupRouter = require('./controllers/eventgroups')
 const eventRouter = require('./controllers/events')
 const scoutRouter = require('./controllers/scouts')
+const planRouter = require('./controllers/plans')
 const activityBufferRouter = require('./controllers/activitybuffers')
 
 var corsOptions = {
@@ -44,12 +45,14 @@ const loggedIn = async (req,res,next) => {
 
 app.use('/activities', loggedIn)
 app.use('/events', loggedIn)
+app.use('/plans', loggedIn)
 
 app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
 app.use('/eventgroups', eventgroupRouter)
 app.use('/events', eventRouter)
 app.use('/scouts', scoutRouter)
+app.use('/plans', planRouter)
 app.use('/activitybuffers', activityBufferRouter)
 
 app.use(middleware.error)
