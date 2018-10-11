@@ -47,7 +47,7 @@ app.use('/events', loggedIn)
 
 app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
-app.use('/eventgroup', eventgroupRouter)
+app.use('/eventgroups', eventgroupRouter)
 app.use('/events', eventRouter)
 app.use('/scouts', scoutRouter)
 app.use('/activitybuffers', activityBufferRouter)
