@@ -2,7 +2,6 @@ const planRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const planService = require('../services/planService')
 
-// TODO: logged in checks
 
 // Modify a plan
 planRouter.put('/:planId', async (req, res) => {

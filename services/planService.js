@@ -33,5 +33,5 @@ async function deletePlan(planId) {
 
 module.exports = {
   modifyPlan,
-  deletePlan
+  deletePlan,
 }
