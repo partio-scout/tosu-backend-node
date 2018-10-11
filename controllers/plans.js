@@ -8,9 +8,6 @@ const planService = require('../services/planService')
 planRouter.put('/:planId', async (req, res) => {
   const scout = req.session.scout
   const planId = parseInt(req.params.planId)
-  if (!scout){
-    return res.status(403).send('You are not logged in!')
-  }
   if (isNaN(planId)){
     return res.status(404).send('Invalid plan id!')
   }
@@ -25,9 +22,6 @@ planRouter.put('/:planId', async (req, res) => {
 planRouter.delete('/:planId', async (req, res) => {
   const scout = req.session.scout
   const planId = parseInt(req.params.planId)
-  if (!scout){
-    return res.status(403).send('You are not logged in!')
-  }
   if (isNaN(planId)){
     return res.status(404).send('Invalid plan id!')
   }
