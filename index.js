@@ -42,9 +42,10 @@ const loggedIn = async (req,res,next) => {
   }
 }
 
-activityRouter.use(loggedIn)
-eventRouter.use(loggedIn)
-planRouter.use(loggedIn)
+
+app.use('/activities', loggedIn)
+app.use('/events', loggedIn)
+app.use('/plans', loggedIn)
 
 app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)

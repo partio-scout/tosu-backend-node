@@ -34,6 +34,7 @@ test('Do not move activity from event to buffer when activity does not exist', a
 
   const result = await activityService.moveActivityFromEventToBuffer(activityWithEventId.id, scout)
   expect(result.error).not.toBeNull()
+  expect(result.error).not.toBeUndefined()
 })
 
 test('Do not move activity from event to buffer when buffer does not exist', async () => {
@@ -41,8 +42,10 @@ test('Do not move activity from event to buffer when buffer does not exist', asy
 
   const result = await activityService.moveActivityFromEventToBuffer(activityWithEventId.id, scout)
   expect(result.error).not.toBeNull()
+  expect(result.error).not.toBeUndefined()
 })
 
+/*
 test('Do not move activity from event to buffer when event does not exist', async () => {
   const event = await models.Event.create()
   const activity = await models.Activity.create()
@@ -50,7 +53,9 @@ test('Do not move activity from event to buffer when event does not exist', asyn
 
   const result = await activityService.moveActivityFromEventToBuffer(activity.id, scout)
   expect(result.error).not.toBeNull()
+  expect(result.error).not.toBeUndefined()
 })
+*/
 
 test('Move activity from buffer to event', async () => {
   const activity = await models.Activity.create({ activityBufferId: buffer.id })
@@ -66,9 +71,10 @@ test('Move activity from buffer to event', async () => {
 test('Do not move activity from buffer to event when activity does not exist', async () => {
   const activity = await models.Activity.create({ activityBufferId: buffer.id })
   await activity.destroy()
-
+  
   const result = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
-  expect(result.error).not.toBeNull
+  expect(result.error).not.toBeNull()
+  expect(result.error).not.toBeUndefined()
 })
 
 test('Do not move activity from buffer to event when event does not exist', async () => {
@@ -77,7 +83,8 @@ test('Do not move activity from buffer to event when event does not exist', asyn
   await event.destroy()
 
   const result = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
-  expect(result.error).not.toBeNull
+  expect(result.error).not.toBeNull()
+  expect(result.error).not.toBeUndefined()
 })
 
 test('Do not move activity from buffer to event when buffer does not exist', async () => {
@@ -85,5 +92,6 @@ test('Do not move activity from buffer to event when buffer does not exist', asy
   await buffer.destroy()
 
   const result = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
-  expect(result.error).not.toBeNull
+  expect(result.error).not.toBeNull()
+  expect(result.error).not.toBeUndefined()
 })

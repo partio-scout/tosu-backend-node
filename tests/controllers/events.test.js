@@ -38,11 +38,6 @@ test('Test that no event are returned on get events when there are none.', async
     })
 })
 
-test('Cannot get events when not logged in', async () => {
-  await api.get('/events')
-    .expect(403)
-})
-
 test('Create an event', async () => {
   const result = await api.post('/events')
     .send({
@@ -141,6 +136,33 @@ test('Cannot update event when not logged in', async () => {
     .expect(403)
 })
 
+test('Test add activity to event', async () => {
+  const event = await models.Event.create({scoutId: scout.id})
+  const result = await api.post('/events/'+event.id+'/activities')
+    .set('cookie', [cookie])
+    .send({
+      guid: 'asgas'
+    })
+    .expect(200)
+  expect(result.body.eventId).toBe(event.id)
+  expect(result.body.guid).toBe('asgas')
+  const dbActivity = await models.Activity.findById(result.body.id)
+  expect(dbActivity.eventId).toBe(event.id)
+  expect(dbActivity.guid).toBe('asgas')
+})
+
+test('Cannot add activity to a event that is not owned', async () => {
+  const anotherScout = await models.Scout.create()
+  const event = await models.Event.create({scoutId: anotherScout.id})
+  const result = await api.post('/events/'+event.id+'/activities')
+    .set('cookie', [cookie])
+    .send({
+      guid: 'asgas'
+    })
+    .expect(403)
+})
+
+
 test('Delete event', async () => {
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
 
@@ -173,9 +195,6 @@ test('Cannot delete event when not logged in', async () => {
 })
 
 test('Invalid (noninteger) event id is handled properly when trying to update', async () => {
-  const anotherScout = await models.Scout.create()
-  const event = await models.Event.create({title:'WOW', scoutId: anotherScout.id})
-
   await api.put('/events/asgGShG!')
     .send({
       title: 'EGasg'
@@ -185,10 +204,16 @@ test('Invalid (noninteger) event id is handled properly when trying to update', 
 })
 
 
-test('Invalid (noninteger) event id is handled properly when trying to delete', async () => {
-  const anotherScout = await models.Scout.create()
-  const event = await models.Event.create({title:'WOW', scoutId: anotherScout.id})
+test('Invalid (noninteger) event id is handled properly when trying add an activity to event', async () => {
+  await api.post('/events/GSGaghhq/activities')
+    .send({
+      guid: 'EGasg'
+    })
+    .set('cookie', [cookie])
+    .expect(404)
+})
 
+test('Invalid (noninteger) event id is handled properly when trying to delete', async () => {
   await api.delete('/events/GSGaghhq')
     .set('cookie', [cookie])
     .expect(404)
