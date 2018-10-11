@@ -10,13 +10,13 @@ beforeEach(async () => {
   event = await models.Event.create({ scoutId: scout.id })
 })
 
-test('Test getAllEvents', async () => {
+test('Get all events', async () => {
   const events = await eventService.getAllEvents(scout.id)
   expect(events.length).toBe(1)
   expect(events[0].id).toBe(event.id)
 })
 
-test('Test create event', async () => {
+test('Create an event', async () => {
   const newEvent = await eventService.createEvent(scout.id, {title:'Asdf'})
   expect(newEvent.title).toBe('Asdf')
   const dbEvent = await models.Event.findById(newEvent.id)
@@ -24,7 +24,7 @@ test('Test create event', async () => {
   expect(dbEvent.title).toBe('Asdf')
 })
 
-test('Test update event', async () => {
+test('Update an event', async () => {
   const updatedEvent = await eventService.updateEvent(event.id, {title: 'Asdf'})
   expect(updatedEvent.id).toBe(event.id)
   expect(updatedEvent.title).toBe('Asdf')
@@ -32,7 +32,23 @@ test('Test update event', async () => {
   expect(dbEvent.title).toBe('Asdf')
 })
 
-test('Delete event', async () => {
+test('Add activity to an event', async () => {
+  const activity = await eventService.addActivityToEvent(event.id, {guid: 'asgasg'})
+  const dbActivity = await models.Activity.findById(activity.id)
+  expect(activity.eventId).toBe(event.id)
+  expect(activity.guid).toBe('asgasg')
+  expect(dbActivity.eventId).toBe(event.id)
+  expect(dbActivity.guid).toBe('asgasg')
+})
+
+test('Do not add activity to an event when the event does not exist', async () => {
+  const result = await eventService.addActivityToEvent(-555, {guid: 'asgasg'})
+  expect(result.error).not.toBeNull()
+  expect(result.error).not.toBeUndefined()
+})
+
+
+test('Delete an event', async () => {
   const result = await eventService.deleteEvent(event.id)
   expect(result).toBe(true)
   expect(await models.Event.findById(event.id)).toBeNull()

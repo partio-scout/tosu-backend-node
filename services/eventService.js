@@ -19,36 +19,21 @@ async function getEvent(eventId) {
 }
 
 //Creates a new event and returns it
-async function createEvent(scoutId, newEvent) {
-  const event = await models.Event.create({
-    title: newEvent.title,
-    startDate: newEvent.startDate,
-    startTime: newEvent.startTime,
-    endDate: newEvent.endDate,
-    endTime: newEvent.endTime,
-    type: newEvent.type,
-    information: newEvent.information,
-    scoutId: scoutId
-  })
+async function createEvent(scoutId, eventData) {
+  eventData.scoutId=scoutId
+  const event = await models.Event.create(eventData)
   return event
 }
 
 //Updates an event and returns the updated event
-async function updateEvent(eventId, newEvent) {
+async function updateEvent(eventId, eventData) {
   const event = await models.Event.findById(eventId)
   if (event === null){
     return { error : 'Event was not found' }
   }
+  eventData.scoutId=event.scoutId
   const updated = await models.Event.update(
-    {
-      title: newEvent.title,
-      startDate: newEvent.startDate,
-      startTime: newEvent.startTime,
-      endDate: newEvent.endDate,
-      endTime: newEvent.endTime,
-      type: newEvent.type,
-      information: newEvent.information
-    },
+    eventData,
     {
       where: {
         id: { $eq: event.id }
@@ -62,6 +47,20 @@ async function updateEvent(eventId, newEvent) {
   const updatedEvent = await models.Event.findById(event.id)
   return updatedEvent
 }
+
+
+// Add activity to event
+async function addActivityToEvent(eventId, activityData) {
+  const event = await models.Event.findById(eventId)
+  if (!event){
+    return {error: 'Event could not be found'}
+  }
+  const activity = await models.Activity.create(activityData)
+  await activity.update({ activityBufferId: null })
+  await activity.update({ eventId: eventId })
+  return activity
+}
+
 
 // Deletes an event
 async function deleteEvent(eventId) {
@@ -82,5 +81,6 @@ module.exports = {
   getEvent,
   createEvent,
   updateEvent,
+  addActivityToEvent,
   deleteEvent,
 }
