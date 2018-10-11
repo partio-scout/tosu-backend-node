@@ -9,6 +9,7 @@ module.exports = {
       'Activities', // Name of the table to be modified (note plural and capitalization)
       'eventId', { // Name of the column to be added (note capitalization)
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'Events', // Model that the foreign key is referencing (note plural)
           key: 'id', // Column referenced in Event

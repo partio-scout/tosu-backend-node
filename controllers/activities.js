@@ -65,7 +65,7 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
 })
 
 // Add Plan to Activity
-activityRouter.post('/:activityId/plan', async(req, res) => {
+activityRouter.post('/:activityId/plans', async(req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
   const plan = req.body

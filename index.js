@@ -14,6 +14,7 @@ const activityRouter = require('./controllers/activities')
 const eventgroupRouter = require('./controllers/eventgroups')
 const eventRouter = require('./controllers/events')
 const scoutRouter = require('./controllers/scouts')
+const planRouter = require('./controllers/plans')
 const activityBufferRouter = require('./controllers/activitybuffers')
 
 var corsOptions = {
@@ -34,7 +35,7 @@ app.use(cors(corsOptions))
 app.use(middleware.logger)
 app.use(bodyParser.json())
 
-const loggedIn = async (req,res,next) => {
+const loggedIn = async (req, res, next) => {
   if (await verifyService.isLoggedIn(req.session.scout)) {
     next()
   } else {
@@ -52,12 +53,15 @@ app.get('/', function (req, res) {
 
 app.use('/activities', loggedIn)
 app.use('/events', loggedIn)
+app.use('/activitybuffers', loggedIn)
+app.use('/plans', loggedIn)
 
 app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
 app.use('/eventgroups', eventgroupRouter)
 app.use('/events', eventRouter)
 app.use('/scouts', scoutRouter)
+app.use('/plans', planRouter)
 app.use('/activitybuffers', activityBufferRouter)
 
 app.use(middleware.error)

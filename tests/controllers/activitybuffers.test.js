@@ -14,13 +14,14 @@ beforeEach(async () => {
   cookie = testUtils.createScoutCookieWithId(scout.id)
 })
 
+// TODO: Add tests for when buffer does not exist (should be created), and when it does exist (correct buffer.id used)
 test('Add activity to buffer', async () => {
   const activity = {
     guid: 'fjsfsh4hsifldfjlksfh'
   }
 
   const response = await api
-    .post('/activitybuffers/activity')
+    .post('/activitybuffers/activities')
     .set('cookie', [cookie])
     .send(activity)
     .expect(201)
@@ -56,14 +57,24 @@ test('Get buffer when scout has no buffer', async () => {
   const response = await api
     .get('/activitybuffers')
     .set('cookie', [cookie])
-    .expect(200)
-
-  expect(response.body).toBeNull()
+    .expect(404)
 })
 
-// TODO: When logged in check implemented
-// test('Buffer is not returned when not logged in (no session)', async () => {
-//   await api
-//     .get('/activitybuffers')
-//     .expect(403)
-// })
+test('Buffer is not returned when not logged in (no session)', async () => {
+  await api
+    .get('/activitybuffers')
+    .expect(403)
+})
+
+test('Returned buffer has activities and id', async () => {
+  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
+  const activity1 = await models.Activity.create({ activityBufferId: buffer.id })
+  const activity2 = await models.Activity.create({ activityBufferId: buffer.id })
+
+  const response = await api
+    .get('/activitybuffers')
+    .set('cookie', [cookie])
+    .expect(200)
+
+  expect(response.body.activities.length).toBe(2)
+})

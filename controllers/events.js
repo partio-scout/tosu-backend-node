@@ -2,9 +2,6 @@ const eventRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const eventService = require('../services/eventService')
 
-// TODO: verify if the scout is actually logged in ..?
-
-
 // Get a list of scouts events
 eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
