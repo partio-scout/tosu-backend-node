@@ -16,7 +16,7 @@ activityBufferRouter.get('', async (req, res) => {
 })
 
 // Add an activity to the scout's buffer
-activityBufferRouter.post('/activity', async (req, res) => {
+activityBufferRouter.post('/activities', async (req, res) => {
   const scout = req.session.scout
   const activity = req.body
 

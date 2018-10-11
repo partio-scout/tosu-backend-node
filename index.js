@@ -43,7 +43,7 @@ const loggedIn = async (req, res, next) => {
 
 activityRouter.use(loggedIn)
 eventRouter.use(loggedIn)
-activityBufferRouter.use(loggedIn)
+app.use('/activitybuffers', loggedIn)
 
 app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
