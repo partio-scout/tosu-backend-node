@@ -200,7 +200,7 @@ test('Add plan to activity', async () => {
     content: 'semmosta ja tämmöstä'
   }
 
-  await api.post('/activities/' + activity.id + '/plan')
+  await api.post('/activities/' + activity.id + '/plans')
     .set('cookie', [cookie])
     .send(plan)
     .expect('Content-Type', /json/)
@@ -223,7 +223,7 @@ test('Does not add plan to activity scout does not own', async () => {
     content: 'semmosta ja tämmöstä'
   }
 
-  await api.post('/activities/' + activity.id + '/plan')
+  await api.post('/activities/' + activity.id + '/plans')
     .set('cookie', [cookie])
     .send(plan)
     .expect(403)
@@ -231,7 +231,7 @@ test('Does not add plan to activity scout does not own', async () => {
 
 test('Invalid (noninteger) id is handled when trying to add plan to activity', async () => {
   await api
-    .post('/activities/gd5ybfhf7ik/plan')
+    .post('/activities/gd5ybfhf7ik/plans')
     .set('cookie', [cookie])
     .expect(404)
 })

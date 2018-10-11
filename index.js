@@ -35,7 +35,7 @@ app.use(cors(corsOptions))
 app.use(middleware.logger)
 app.use(bodyParser.json())
 
-const loggedIn = async (req,res,next) => {
+const loggedIn = async (req, res, next) => {
   if (await verifyService.isLoggedIn(req.session.scout)) {
     next()
   } else {
@@ -45,6 +45,7 @@ const loggedIn = async (req,res,next) => {
 
 app.use('/activities', loggedIn)
 app.use('/events', loggedIn)
+app.use('/activitybuffers', loggedIn)
 app.use('/plans', loggedIn)
 
 app.use('/filledpof', pofRouter)
