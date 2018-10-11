@@ -1,11 +1,13 @@
 const pofRouter = require('express').Router()
-const request = require('request')
 const axios = require('axios')
 var cache = require('memory-cache')
 var cron = require('node-cron')
+const jsonfile = require('jsonfile')
+var path = require('path')
+var makingPof = false
 
 pofRouter.get('/', async (req, res) => {
-  res.send('Hello world, Hei maailma')
+  res.send('Hello world')
 })
 
 pofRouter.get('/delete', async (req, res) => {
@@ -19,11 +21,20 @@ pofRouter.get('/tarppo', async (req, res) => {
     console.log('cache')
     res.json(JSON.parse(cached))
   } else {
-    makeFilledPof(res, 'fd0083b9a325c06430ba29cc6c6d1bac')
+    if (!makingPof){
+      makeFilledPof(false, 'fd0083b9a325c06430ba29cc6c6d1bac')
+    }
+    res.sendFile(path.resolve('pof.json'), function(err) {
+      if(err) {
+        res.status(409).send('generating pof, wait a sec')
+      }
+    })
   }
 })
 
 async function makeFilledPof(res, guid) {
+  console.log('START MAKING POF')
+  makingPof = true
   const agegroup = await getContent(guid)
   taskDetails(agegroup)
   async function taskDetails(agegroup) {
@@ -49,22 +60,13 @@ async function makeFilledPof(res, guid) {
         }
       }
     }
-    //suggestions(true)
     const date = new Date().toISOString()
     agegroup['updateDate'] = date
+    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 } )
     cache.put('filledpof', JSON.stringify(agegroup))
+    makingPof = false
     if (res) {
       res.json(agegroup)
-    }
-  }
-  async function suggestions(send) {
-    for (const taskgroup of tarpojat.taskgroups) {
-      for (const task of taskgroup.tasks) {
-        task.suggestions_details = await getSuggestions(task)
-      }
-    }
-    if (send) {
-      res.json(tarpojat)
     }
   }
 }
@@ -106,30 +108,6 @@ const getContent = async guid => {
     return ''
   }
 }
-
-
-pofRouter.get('/tarppo', (req, res) => {
-  request.get({
-    uri: 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi',
-    strictSSL: false
-  }, function (error, response, body) {
-    if (error == null) {
-      const json = JSON.parse(body)
-      var tarpojat = json.program[0].agegroups[2]
-      var statics = {
-        tarppoja: tarpojat.taskgroups.length,
-        tarpot: []
-      }
-      for (let i = 0; i < tarpojat.taskgroups.length; i++) {
-        var tarppo = tarpojat.taskgroups[i]
-        var name = tarppo.languages[0].title
-        var aktiviteetit = tarppo.tasks
-        statics.tarpot.push({ name: name, total: aktiviteetit.length })
-      }
-      res.json(statics)
-    }
-  })
-})
 
 cron.schedule('0 2 * * *', () => {
   makeFilledPof(false, 'fd0083b9a325c06430ba29cc6c6d1bac')
