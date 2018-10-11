@@ -41,6 +41,14 @@ const loggedIn = async (req,res,next) => {
     res.status(403).send('You are not logged in')
   }
 }
+var options_sendfile = {
+  root: __dirname + '/build/',
+}
+
+app.get('/', function (req, res) {
+  res.sendFile('index.html', options_sendfile)
+})
+
 
 app.use('/activities', loggedIn)
 app.use('/events', loggedIn)
