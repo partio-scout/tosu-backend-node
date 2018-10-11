@@ -54,6 +54,31 @@ async function scoutOwnsEvent(scout, eventId) {
   return false
 }
 
+
+
+// Check that scout owns the plan
+async function scoutOwnsPlan(scout, planId) {
+  const plan = await models.Plan.findById(
+    planId,
+    {
+      include: [{
+        model : models.Activity,
+        include: [models.Event, models.ActivityBuffer]
+      }]
+    }
+  )
+  if (!scout || !plan || !plan.Activity){
+    return false
+  }
+  if (plan.Activity.Event && plan.Activity.Event.scoutId === scout.id) {
+    return true
+  }
+  if (plan.Activity.ActivityBuffer && plan.Activity.ActivityBuffer.scoutId === scout.id) {
+    return true
+  }
+  return false
+}
+
 // Checks weather the scout is logged in.
 // TODO: Other checks than just querying database?
 async function isLoggedIn(scout) {
@@ -64,8 +89,9 @@ async function isLoggedIn(scout) {
 }
 
 module.exports = {
-  scoutOwnsActivity,
   verifyId,
+  scoutOwnsActivity,
   scoutOwnsEvent,
+  scoutOwnsPlan,
   isLoggedIn,
 }
