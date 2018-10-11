@@ -2,7 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../../index')
 const api = supertest(app)
 
-test('Backend works', async () => {
+test('Pof backend works', async () => {
   await api
     .get('/filledpof')
     .expect(200)
