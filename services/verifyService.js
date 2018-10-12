@@ -1,6 +1,6 @@
 const models = require('../domain/models')
 
-const CLIENT_ID = '7360124073-8f1bq4mul415hr3kdm154vq3c65lp36d.apps.googleusercontent.com'
+const CLIENT_ID = '1059818174105-9p207ggii6rt2mld491mdbhqfvor2poc.apps.googleusercontent.com'
 
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(CLIENT_ID)
