@@ -50,3 +50,18 @@ test('Activity can be assigned plans', async () => {
   expect(retrievedActivity.Plans.length).toBe(2)
   expect(retrievedActivity.Plans[0].content).toBe("masterplan")
 })
+
+test('Activities can be searched by event id', async () => {
+  const event = await models.Event.create({ title: "title" })
+  const activity1 = await models.Activity.create({ guid: "gfdjgfdgd", eventId: event.id })
+  const activity2 = await models.Activity.create({ guid: "gfasg12", eventId: event.id })
+  const events = await models.Activity.findByEvent(event)
+  expect(events.length).toBe(2)
+  if (events[0].id === activity1.id) {
+    expect(events[0].id).toBe(activity1.id)
+    expect(events[1].id).toBe(activity2.id)
+  } else {
+    expect(events[1].id).toBe(activity1.id)
+    expect(events[0].id).toBe(activity2.id)
+  }
+})
