@@ -11,5 +11,15 @@ module.exports = (sequelize, DataTypes) => {
     Activity.belongsTo(models.ActivityBuffer, { foreignKey: "activityBufferId" })
   }
 
+
+  Activity.findByEvent = async (event) => {
+    return await Activity.findAll({
+      where: {
+        eventId: { $eq: event.id }
+      }
+    })
+  }
+
+
   return Activity
 }

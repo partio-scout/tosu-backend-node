@@ -1,16 +1,19 @@
 const models = require('../domain/models')
 
-//TODO: validations
-
 
 // Returns a list of all scouts events
 async function getAllEvents(scoutId) {
-  const event = await models.Event.findAll({
+  const events = await models.Event.findAll({
     where: {
       scoutId: { $eq : scoutId }
     }
   })
-  return event
+  // TODO: better solution to this...
+  for (var i=0; i<events.length; i+=1){
+    events[i].dataValues.activities = await models.Activity.findByEvent(events[i])
+    events[i] = events[i].dataValues
+  }
+  return events
 }
 
 // Returns an event
@@ -31,7 +34,7 @@ async function updateEvent(eventId, eventData) {
   if (event === null){
     return { error : 'Event was not found' }
   }
-  eventData.scoutId=event.scoutId
+  eventData.scoutId = event.scoutId
   const updated = await models.Event.update(
     eventData,
     {
