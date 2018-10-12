@@ -8,8 +8,10 @@ async function getAllEvents(scoutId) {
       scoutId: { $eq : scoutId }
     }
   })
+  // TODO: better solution to this...
   for (var i=0; i<events.length; i+=1){
     events[i].dataValues.activities = await models.Activity.findByEvent(events[i])
+    events[i] = events[i].dataValues
   }
   return events
 }
