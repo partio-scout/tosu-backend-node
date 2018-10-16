@@ -42,7 +42,7 @@ activityRouter.put('/:activityId/tobuffer', async (req, res) => {
 
   const movedActivity = await activityService.moveActivityFromEventToBuffer(activityId, scout)
 
-  sendResponse(res, movedActivity)
+  await sendResponse(res, movedActivity, activityService.prepareActivity)
 })
 
 // Move Activity from Buffer to Event
@@ -61,7 +61,7 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
 
   const movedActivity = await activityService.moveActivityFromBufferToEvent(activityId, eventId)
 
-  sendResponse(res, movedActivity)
+  await sendResponse(res, movedActivity, activityService.prepareActivity)
 })
 
 // Add Plan to Activity
@@ -82,17 +82,18 @@ activityRouter.post('/:activityId/plans', async(req, res) => {
 
   const addedPlan = await activityService.addPlanToActivity(activityId, plan)
 
-  sendResponse(res, addedPlan)
+  await sendResponse(res, addedPlan)
 })
 
 // Checks if the object is an error message (has object.error)
 // or sends the object as a 200 OK response.
-function sendResponse(res, responseObject) {
+async function sendResponse(res, responseObject, modifierFunction = (async v => v)) {
   if (responseObject.error) {
     console.log('Error:', responseObject.error)
     res.status(500).send(responseObject.error)
   } else {
-    res.status(200).json(responseObject)
+    const response = await modifierFunction(responseObject)
+    res.status(200).json(response)
   }
 }
 

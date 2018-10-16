@@ -8,11 +8,6 @@ async function getAllEvents(scoutId) {
       scoutId: { $eq : scoutId }
     }
   })
-  // TODO: better solution to this...
-  for (var i=0; i<events.length; i+=1){
-    events[i].dataValues.activities = await models.Activity.findByEvent(events[i])
-    events[i] = events[i].dataValues
-  }
   return events
 }
 
@@ -79,6 +74,24 @@ async function deleteEvent(eventId) {
   }
 }
 
+// Returns a frontend-friendly version of the event
+// with activities and lower case attributes.
+async function prepareEvent(eventr) {
+  const event = await models.Event.findById(eventr.id, {
+    include: [{model: models.Activity, name: 'activities'}],
+  })
+  event.dataValues.activities = event.dataValues.Activities
+  delete event.dataValues.Activities
+  return event.dataValues
+}
+
+async function prepareEvents(events) {
+  for (var i=0; i<events.length; i++){
+    events[i] = await prepareEvent(events[i])
+  }
+  return events
+}
+
 module.exports = {
   getAllEvents,
   getEvent,
@@ -86,4 +99,6 @@ module.exports = {
   updateEvent,
   addActivityToEvent,
   deleteEvent,
+  prepareEvent,
+  prepareEvents,
 }

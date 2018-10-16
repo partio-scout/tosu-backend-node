@@ -1,5 +1,6 @@
 const activityBufferRouter = require('express').Router()
 const bufferService = require('../services/activitybufferService')
+const activityService = require('../services/activityService')
 
 // TODO: check for logged in
 
@@ -26,7 +27,7 @@ activityBufferRouter.post('/activities', async (req, res) => {
     return res.status(500).send(addedActivity.error)
   }
 
-  res.status(201).json(addedActivity)
+  res.status(201).json(await activityService.prepareActivity(addedActivity))
 })
 
 module.exports = activityBufferRouter

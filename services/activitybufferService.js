@@ -1,4 +1,5 @@
 const models = require('../domain/models')
+const activityService = require('./activityService')
 
 // Creates an activity from the given data and adds it to scout's buffer,
 // or creates a new buffer if none found.
@@ -42,10 +43,9 @@ async function prepareBuffer(sequelizeBuffer) {
   const buffer = await models.ActivityBuffer.findById(sequelizeBuffer.id, {
     include: [models.Activity]
   })
-
   return {
     id: buffer.id,
-    activities: buffer.Activities, // change to lower case
+    activities: await activityService.prepareActivities(buffer.Activities), // change to lower case
   }
 }
 

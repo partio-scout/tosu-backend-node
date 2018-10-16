@@ -64,9 +64,30 @@ async function addPlanToActivity(activityId, plan) {
   return createdPlan
 }
 
+// Returns a frontend-friendly version of the activity
+async function prepareActivity(activityr) {
+  const activity = await models.Activity.findById(activityr.id, {
+    include: [models.Plan]
+  })
+  activity.dataValues.plans = activity.dataValues.Plans
+  delete activity.dataValues.Plans
+  return activity.dataValues
+}
+
+// Returns a frontend-friendly versions of an array of activities
+async function prepareActivities(activities) {
+  for (var i=0; i<activities.length; i++){
+    activities[i] = await prepareActivity(activities[i])
+  }
+  return activities
+}
+
+
 module.exports = {
   deleteActivity,
   moveActivityFromEventToBuffer,
   moveActivityFromBufferToEvent,
   addPlanToActivity,
+  prepareActivity,
+  prepareActivities,
 }

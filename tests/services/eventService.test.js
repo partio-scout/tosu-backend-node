@@ -17,12 +17,9 @@ test('Get all events', async () => {
 })
 
 test('Get all events returns activities assigned to events', async () => {
-  const activity = await models.Activity.create({eventId: event.id})
   const events = await eventService.getAllEvents(scout.id)
   expect(events.length).toBe(1)
   expect(events[0].id).toBe(event.id)
-  expect(events[0].activities.length).toBe(1)
-  expect(events[0].activities[0].id).toBe(activity.id)
 })
 
 test('Create an event', async () => {
@@ -61,4 +58,24 @@ test('Delete an event', async () => {
   const result = await eventService.deleteEvent(event.id)
   expect(result).toBe(true)
   expect(await models.Event.findById(event.id)).toBeNull()
+})
+
+
+
+test('Prepare an event front-end friendly', async () => {
+  await models.Activity.create({eventId: event.id})
+  await models.Activity.create({eventId: event.id})
+  await models.Activity.create({eventId: event.id})
+  const result = await eventService.prepareEvent(event)
+  expect(result.activities.length).toBe(3)
+})
+
+
+test('Prepare an array of events front-end friendly', async () => {
+  await models.Activity.create({eventId: event.id})
+  await models.Activity.create({eventId: event.id})
+  await models.Activity.create({eventId: event.id})
+  await models.Activity.create({eventId: event.id})
+  const result = await eventService.prepareEvents([event])
+  expect(result[0].activities.length).toBe(4)
 })
