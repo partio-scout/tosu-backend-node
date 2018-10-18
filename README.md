@@ -50,8 +50,19 @@ npm start
 
 ### Run tests
 
+Run all tests:
 ```sh
 npm test
+```
+
+Run one test class:
+```sh
+npm test activities
+```
+
+Code coverage. Prints a report to console and generates an html report to /coverage.
+```sh
+npm test --coverage
 ```
 
 # Documentation
