@@ -8,6 +8,7 @@ ssh ubuntu@$IP <<EOF
     if [[ $TRAVIS_BRANCH = 'master' ]]
     then
         cd ~/tosu-backend-node
+        rm package-lock.json
         git pull
         npm install
         pm2 restart process.json
