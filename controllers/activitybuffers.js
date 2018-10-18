@@ -1,6 +1,5 @@
 const activityBufferRouter = require('express').Router()
 const bufferService = require('../services/activitybufferService')
-const activityService = require('../services/activityService')
 
 // TODO: check for logged in
 

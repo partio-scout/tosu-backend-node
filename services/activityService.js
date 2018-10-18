@@ -65,8 +65,6 @@ async function addPlanToActivity(activityId, plan) {
   return createdPlan
 }
 
-
-
 module.exports = {
   deleteActivity,
   moveActivityFromEventToBuffer,

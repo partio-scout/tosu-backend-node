@@ -1,7 +1,6 @@
 const eventRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const eventService = require('../services/eventService')
-const activityService = require('../services/activityService')
 
 // Get a list of scouts events
 eventRouter.get('', async (req, res) => {
