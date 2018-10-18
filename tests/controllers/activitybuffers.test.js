@@ -28,6 +28,7 @@ test('Add activity to buffer', async () => {
 
   expect(response.body.guid).toBe(activity.guid)
   expect(response.body.id).not.toBeUndefined()
+  expect(response.body.plans.length).toBe(0)
   // Saved to DB
   const found = await models.Activity.findById(parseInt(response.body.id))
   expect(found).not.toBeNull()
@@ -77,20 +78,4 @@ test('Returned buffer has activities and id', async () => {
     .expect(200)
 
   expect(response.body.activities.length).toBe(2)
-})
-
-test('Returned buffer has activities and the activities have plans', async () => {
-  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
-  const plan = await models.Plan.create({ activityId: activity.id })
-
-  const response = await api
-    .get('/activitybuffers')
-    .set('cookie', [cookie])
-    .expect(200)
-
-  expect(response.body.activities.length).toBe(1)
-  expect(response.body.activities[0].id).toBe(activity.id)
-  expect(response.body.activities[0].plans.length).toBe(1)
-  expect(response.body.activities[0].plans[0].id).toBe(plan.id)
 })
