@@ -106,6 +106,7 @@ test('Update event', async () => {
   expect(result.body.type).toBe('Retki')
   expect(result.body.information).toBe('eHGAOSGaoe gaEGo')
   expect(result.body.scoutId).toBe(scout.id)
+  expect(result.body.activities.length).toBe(0)
   const eventId = result.body.id
 
   const dbEvent = await  models.Event.findById(eventId)
@@ -217,4 +218,71 @@ test('Invalid (noninteger) event id is handled properly when trying to delete', 
   await api.delete('/events/GSGaghhq')
     .set('cookie', [cookie])
     .expect(404)
+})
+
+// GET /events returns a list of users events
+// Check that the activities of the events and the the plans for the activities are also returned
+test('Activities and the plans of activities are returned on GET /events', async () => {
+  const event = await models.Event.create({scoutId: scout.id})
+  const activity = await models.Activity.create({eventId: event.id})
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const result = await api.get('/events')
+    .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
+    .expect(200)
+  expect(result.body.length).toBe(1)
+  expect(result.body[0].activities.length).toBe(1)
+  expect(result.body[0].activities[0].id).toBe(activity.id)
+  expect(result.body[0].activities[0].plans.length).toBe(1)
+  expect(result.body[0].activities[0].plans[0].id).toBe(plan.id)
+})
+
+// PUT /events/:eventId edits an event and returns the edited event
+// Check that the returned event has .activities
+test('Activities and the plans of activities are returned on PUT /events/:eventId', async () => {
+  const event = await models.Event.create({scoutId: scout.id})
+  const activity = await models.Activity.create({eventId: event.id})
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const result = await api.put('/events/'+event.id)
+    .send({
+      title: 'EGasg',
+    })
+    .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
+    .expect(200)
+  expect(result.body.activities.length).toBe(1)
+  expect(result.body.activities[0].id).toBe(activity.id)
+  expect(result.body.activities[0].plans.length).toBe(1)
+  expect(result.body.activities[0].plans[0].id).toBe(plan.id)
+})
+
+// POST /events/:eventId/activities adds activity to an event and returns the activity
+// test that there is a field for plans in the returned activity
+test('Plans are returned on POST /events/:eventId/activities', async () => {
+  const event = await models.Event.create({scoutId: scout.id})
+  const activity = await models.Activity.create({eventId: event.id})
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const result = await api.post('/events/'+event.id+'/activities')
+    .send({guid: 'asgas'})
+    .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
+    .expect(200)
+  expect(result.body.plans.length).toBe(0)
+})
+
+
+// DELETE /events/:eventId deletes an activity
+// test that the activities of the event are returned also
+test('Plans are returned on DELETE /events/:eventId/activities', async () => {
+  const event = await models.Event.create({scoutId: scout.id})
+  const activity = await models.Activity.create({eventId: event.id})
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const result = await api.delete('/events/'+event.id)
+    .set('cookie', [cookie])
+    .expect('Content-Type', /json/)
+    .expect(200)
+  expect(result.body.activities.length).toBe(1)
+  expect(result.body.activities[0].id).toBe(activity.id)
+  expect(result.body.activities[0].plans.length).toBe(1)
+  expect(result.body.activities[0].plans[0].id).toBe(plan.id)
 })

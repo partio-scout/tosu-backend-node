@@ -1,5 +1,5 @@
 const models = require('../domain/models')
-
+const activityService = require('./activityService')
 
 // Returns a list of all scouts events
 async function getAllEvents(scoutId) {
@@ -80,7 +80,7 @@ async function prepareEvent(eventr) {
   const event = await models.Event.findById(eventr.id, {
     include: [{model: models.Activity, name: 'activities'}],
   })
-  event.dataValues.activities = event.dataValues.Activities
+  event.dataValues.activities = await activityService.prepareActivities(event.dataValues.Activities)
   delete event.dataValues.Activities
   return event.dataValues
 }
