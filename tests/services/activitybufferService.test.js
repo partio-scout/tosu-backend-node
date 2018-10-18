@@ -59,3 +59,22 @@ test('Find buffer by scout returns null when no buffer or scout found', async ()
   const found = await bufferService.findByScout(scout)
   expect(found).toBeNull()
 })
+
+test('Prepare a buffer to be front-end friendly returns activities', async () => {
+  await models.Activity.create({activityBufferId: buffer.id})
+  await models.Activity.create({activityBufferId: buffer.id})
+  await models.Activity.create({activityBufferId: buffer.id})
+  const result = await bufferService.prepareBuffer(buffer)
+  expect(result.activities.length).toBe(3)
+})
+
+test('Prepare a buffer to be front-end friendly returns plans', async () => {
+  const activity = await models.Activity.create({activityBufferId: buffer.id})
+  await models.Plan.create({activityId: activity.id})
+  await models.Plan.create({activityId: activity.id})
+  await models.Plan.create({activityId: activity.id})
+  await models.Plan.create({activityId: activity.id})
+  const result = await bufferService.prepareBuffer(buffer)
+  expect(result.activities.length).toBe(1)
+  expect(result.activities[0].plans.length).toBe(4)
+})

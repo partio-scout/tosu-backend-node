@@ -16,12 +16,6 @@ test('Get all events', async () => {
   expect(events[0].id).toBe(event.id)
 })
 
-test('Get all events returns activities assigned to events', async () => {
-  const events = await eventService.getAllEvents(scout.id)
-  expect(events.length).toBe(1)
-  expect(events[0].id).toBe(event.id)
-})
-
 test('Create an event', async () => {
   const newEvent = await eventService.createEvent(scout.id, {title:'Asdf'})
   expect(newEvent.title).toBe('Asdf')
@@ -62,7 +56,7 @@ test('Delete an event', async () => {
 
 
 
-test('Prepare an event front-end friendly', async () => {
+test('Prepare an event front-end friendly returns activities', async () => {
   await models.Activity.create({eventId: event.id})
   await models.Activity.create({eventId: event.id})
   await models.Activity.create({eventId: event.id})
@@ -70,8 +64,17 @@ test('Prepare an event front-end friendly', async () => {
   expect(result.activities.length).toBe(3)
 })
 
+test('Prepare an event to be front-end friendly returns plans', async () => {
+  const activity = await models.Activity.create({eventId: event.id})
+  await models.Plan.create({activityId: activity.id})
+  await models.Plan.create({activityId: activity.id})
+  const result = await eventService.prepareEvent(event)
+  expect(result.activities.length).toBe(1)
+  expect(result.activities[0].plans.length).toBe(2)
+})
 
-test('Prepare an array of events front-end friendly', async () => {
+
+test('Prepare an array of events to be front-end friendly works', async () => {
   await models.Activity.create({eventId: event.id})
   await models.Activity.create({eventId: event.id})
   await models.Activity.create({eventId: event.id})
