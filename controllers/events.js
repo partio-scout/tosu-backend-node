@@ -7,14 +7,14 @@ const activityService = require('../services/activityService')
 eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
   const events = await eventService.getAllEvents(scout.id)
-  res.status(200).json(await eventService.prepareEvents(events))
+  res.status(200).json(events)
 })
 
 // Add a new event, return the added event
 eventRouter.post('', async (req, res) => {
   const scout = req.session.scout
   const event = await eventService.createEvent(scout.id, req.body)
-  res.status(200).json(await eventService.prepareEvent(event))
+  res.status(200).json(event)
 })
 
 // Edit an event, return the edited event
@@ -31,7 +31,7 @@ eventRouter.put('/:eventId', async (req, res) => {
   if (event.error) { //Should never really happen since verifyService should prevent all errors
     return res.status(404).send(event.error)
   }
-  res.status(200).json(await eventService.prepareEvent(event))
+  res.status(200).json(event)
 })
 
 // Add a new activity to the event
@@ -48,7 +48,7 @@ eventRouter.post('/:eventId/activities', async (req, res) => {
   if (activity.error){ //Should never really happen since verifyService should prevent all errors
     return res.status(500).send(activity.error)
   }
-  res.status(200).json(await activityService.prepareActivity(activity))
+  res.status(200).json(activity)
 })
 
 
@@ -62,7 +62,7 @@ eventRouter.delete('/:eventId', async (req, res) => {
   if (!await verifyService.scoutOwnsEvent(scout, eventId)) {
     return res.status(403).send('You are not the owner of this event!')
   }
-  const event = await eventService.prepareEvent(await eventService.getEvent(eventId))
+  const event = await eventService.getEvent(eventId)
   const succeeded = await eventService.deleteEvent(eventId)
   if (!succeeded) { // Should not happen
     return res.status(404).send('The event was not deleted.')

@@ -95,15 +95,3 @@ test('Do not move activity from buffer to event when buffer does not exist', asy
   expect(result.error).not.toBeNull()
   expect(result.error).not.toBeUndefined()
 })
-
-
-test('Prepare activity to be front-end friendly', async () => {
-  const activity = await models.Activity.create()
-  await models.Plan.create({activityId: activity.id})
-  await models.Plan.create({activityId: activity.id})
-  const result = await activityService.prepareActivity(activity)
-  expect(result.plans.length).toBe(2)
-})
-
-
-

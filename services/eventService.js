@@ -1,5 +1,5 @@
 const models = require('../domain/models')
-const activityService = require('./activityService')
+const prepareService = require('./prepareService')
 
 // Returns a list of all scouts events
 async function getAllEvents(scoutId) {
@@ -8,19 +8,19 @@ async function getAllEvents(scoutId) {
       scoutId: { $eq : scoutId }
     }
   })
-  return events
+  return await prepareService.prepareEvents(events)
 }
 
 // Returns an event
 async function getEvent(eventId) {
-  return await models.Event.findById(eventId)
+  return await prepareService.prepareEvent(await models.Event.findById(eventId))
 }
 
 //Creates a new event and returns it
 async function createEvent(scoutId, eventData) {
   eventData.scoutId=scoutId
   const event = await models.Event.create(eventData)
-  return event
+  return await prepareService.prepareEvent(event)
 }
 
 //Updates an event and returns the updated event
@@ -43,7 +43,7 @@ async function updateEvent(eventId, eventData) {
     return { error : 'Something went wrong o_O' }
   }
   const updatedEvent = await models.Event.findById(event.id)
-  return updatedEvent
+  return await prepareService.prepareEvent(updatedEvent)
 }
 
 
@@ -56,7 +56,7 @@ async function addActivityToEvent(eventId, activityData) {
   const activity = await models.Activity.create(activityData)
   await activity.update({ activityBufferId: null })
   await activity.update({ eventId: eventId })
-  return activity
+  return await prepareService.prepareActivity(activity)
 }
 
 
@@ -74,24 +74,6 @@ async function deleteEvent(eventId) {
   }
 }
 
-// Returns a frontend-friendly version of the event
-// with activities and lower case attributes.
-async function prepareEvent(eventr) {
-  const event = await models.Event.findById(eventr.id, {
-    include: [{model: models.Activity, name: 'activities'}],
-  })
-  event.dataValues.activities = await activityService.prepareActivities(event.dataValues.Activities)
-  delete event.dataValues.Activities
-  return event.dataValues
-}
-
-async function prepareEvents(events) {
-  for (var i=0; i<events.length; i++){
-    events[i] = await prepareEvent(events[i])
-  }
-  return events
-}
-
 module.exports = {
   getAllEvents,
   getEvent,
@@ -99,6 +81,4 @@ module.exports = {
   updateEvent,
   addActivityToEvent,
   deleteEvent,
-  prepareEvent,
-  prepareEvents,
 }

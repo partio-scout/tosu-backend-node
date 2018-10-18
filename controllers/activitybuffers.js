@@ -13,7 +13,7 @@ activityBufferRouter.get('', async (req, res) => {
     return res.status(404).send('Buffer not found')
   }
 
-  res.json(await bufferService.prepareBuffer(buffer))
+  res.json(buffer)
 })
 
 // Add an activity to the scout's buffer
@@ -27,7 +27,7 @@ activityBufferRouter.post('/activities', async (req, res) => {
     return res.status(500).send(addedActivity.error)
   }
 
-  res.status(201).json(await activityService.prepareActivity(addedActivity))
+  res.status(201).json(addedActivity)
 })
 
 module.exports = activityBufferRouter
