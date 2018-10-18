@@ -60,10 +60,7 @@ Run one test class:
 npm test activities
 ```
 
-Code coverage. Prints a report to console and generates an html report to /coverage.
-```sh
-npm test --coverage
-```
+Code coverage is generated when tests are run. A report is printed to the console and an html report generated to /coverage.
 
 # Documentation
 
