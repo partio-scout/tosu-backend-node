@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       content: {
-        type: Sequelize.STRING(8191)
+        type: Sequelize.STRING(32767)
       },
       createdAt: {
         allowNull: false,
