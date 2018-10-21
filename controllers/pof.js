@@ -7,11 +7,13 @@ var path = require('path')
 var makingPof = false
 
 pofRouter.get('/', async (req, res) => {
-  res.send('Hello world')
+  res.json({
+    'makingPof': makingPof
+  })
 })
 
 pofRouter.get('/delete', async (req, res) => {
-  cache.del('filledpof')
+  cache.del('filledpof')                              
   res.redirect('/filledpof')
 })
 
