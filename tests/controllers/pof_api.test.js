@@ -8,6 +8,15 @@ test('Pof backend works', async () => {
     .expect(200)
 })
 
+test('Pof generation starts', async () => {
+  await api
+    .get('/filledpof/tarppo')
+    .expect(409)
+  const response = await api
+    .get('/filledpof')
+  expect(response.body.makingPof).toBe(true)
+})
+
 afterAll(() => {
   server.close()
 })
