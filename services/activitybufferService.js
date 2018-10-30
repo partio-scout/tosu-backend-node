@@ -1,4 +1,5 @@
 const models = require('../domain/models')
+const prepareService = require('./prepareService')
 
 // Creates an activity from the given data and adds it to scout's buffer,
 // or creates a new buffer if none found.
@@ -23,35 +24,21 @@ async function addActivityToBuffer(activityData, scout) {
   await activity.update({ activityBufferId: buffer.id })
   await activity.update({ eventId: null })
 
-  return activity
+  return await prepareService.prepareActivity(activity)
 }
 
 // Finds the scout's buffer and returns it
 async function findByScout(scout) {
-  return await models.ActivityBuffer.findByScout(scout)
+  return await prepareService.prepareBuffer(await models.ActivityBuffer.findByScout(scout))
 }
 
 // Creates a buffer for scout
 async function createBufferForScout(scout) {
-  return await models.ActivityBuffer.create({ scoutId: scout.id })
-}
-
-// Returns a frontend-friendly version of the buffer
-// with activities and lower case attributes.
-async function prepareBuffer(sequelizeBuffer) {
-  const buffer = await models.ActivityBuffer.findById(sequelizeBuffer.id, {
-    include: [models.Activity]
-  })
-
-  return {
-    id: buffer.id,
-    activities: buffer.Activities, // change to lower case
-  }
+  return await prepareService.prepareBuffer(await models.ActivityBuffer.create({ scoutId: scout.id }))
 }
 
 module.exports = {
   addActivityToBuffer,
   findByScout,
   createBufferForScout,
-  prepareBuffer,
 }

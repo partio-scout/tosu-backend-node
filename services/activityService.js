@@ -1,4 +1,5 @@
 const models = require('../domain/models')
+const prepareService = require('./prepareService')
 
 // Deletes Activity.
 // Returns true if deleted, false if no rows deleted.
@@ -33,7 +34,7 @@ async function moveActivityFromEventToBuffer(activityId, scout) {
   await activity.update({ eventId: null })
   await activity.update({ activityBufferId: buffer.id })
   await activity.reload()
-  return activity
+  return await prepareService.prepareActivity(activity)
 }
 
 // Moves Activity from the Scout's ActivityBuffer to Event.
@@ -48,7 +49,7 @@ async function moveActivityFromBufferToEvent(activityId, eventId) {
 
   await activity.update({ activityBufferId: null })
   await activity.update({ eventId: eventId })
-  return activity
+  return await prepareService.prepareActivity(activity)
 }
 
 // Adds a Plan to the Activity

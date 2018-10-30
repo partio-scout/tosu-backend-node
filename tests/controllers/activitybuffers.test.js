@@ -28,6 +28,7 @@ test('Add activity to buffer', async () => {
 
   expect(response.body.guid).toBe(activity.guid)
   expect(response.body.id).not.toBeUndefined()
+  expect(response.body.plans.length).toBe(0)
   // Saved to DB
   const found = await models.Activity.findById(parseInt(response.body.id))
   expect(found).not.toBeNull()
