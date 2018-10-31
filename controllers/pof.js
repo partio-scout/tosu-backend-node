@@ -62,8 +62,7 @@ async function makeFilledPof(res, guid) {
         }
       }
     }
-    const date = new Date().toISOString()
-    agegroup['updateDate'] = date
+    agegroup['updateDate'] = new Date().toISOString()
     jsonfile.writeFile('pof.json', agegroup, { spaces: 2 } )
     cache.put('filledpof', JSON.stringify(agegroup))
     makingPof = false
@@ -103,7 +102,6 @@ const getContent = async guid => {
         const agegroup = age
         console.log(agegroup.title)
         return agegroup
-        break
       }
     }
   } catch (error) {
