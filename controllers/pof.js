@@ -34,11 +34,15 @@ pofRouter.get('/tarppo', async (req, res) => {
   }
 })
 
-async function makeFilledPof(res, guid) {
+pofRouter.get('/test', async (req, res) => {
+  makeFilledPof(res, 'fd0083b9a325c06430ba29cc6c6d1bac', true)
+})
+
+async function makeFilledPof(res, guid, test) {
   console.log('START MAKING POF')
   makingPof = true
-  const agegroup = await getContent(guid)
-  taskDetails(agegroup)
+  const agegroup = await getContent(guid, test)
+  await taskDetails(agegroup)
   async function taskDetails(agegroup) {
     for (const taskgroup of agegroup.taskgroups) {
       if (taskgroup.taskgroups.length > 0) {
@@ -63,7 +67,9 @@ async function makeFilledPof(res, guid) {
       }
     }
     agegroup['updateDate'] = new Date().toISOString()
-    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 } )
+    if(!test){
+      jsonfile.writeFile('pof.json', agegroup, { spaces: 2 } )
+    }
     cache.put('filledpof', JSON.stringify(agegroup))
     makingPof = false
     if (res) {
@@ -92,7 +98,7 @@ const getTaskDetails = async task => {
   }
 }
 
-const getContent = async guid => {
+const getContent = async (guid, test) => {
   const url = 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi'
   try {
     const response = await axios.get(url)
@@ -101,6 +107,11 @@ const getContent = async guid => {
       if (age.guid === guid) {
         const agegroup = age
         console.log(agegroup.title)
+        if(test){
+          agegroup.taskgroups = agegroup.taskgroups.slice(6,7)
+          agegroup.taskgroups[0].tasks = agegroup.taskgroups[0].tasks.slice(0,2)
+          console.log(agegroup)
+        }
         return agegroup
       }
     }
