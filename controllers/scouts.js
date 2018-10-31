@@ -14,12 +14,12 @@ scoutRouter.post('/', async (req, res) => {
 
   const scout = await scoutService.findOrCreateScout(idToken)
   req.session.scout = scout
-  res.status(200).json(scout)
+  res.json(scout)
 })
 
 scoutRouter.post('/logout', async (req, res) => {
   req.session = null
-  res.status(200).send('Logout successful')
+  res.send('Logout successful')
 })
 
 module.exports = scoutRouter
