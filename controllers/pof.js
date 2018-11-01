@@ -112,6 +112,7 @@ const getContent = async (guid, test) => {
           agegroup.taskgroups[0].tasks = agegroup.taskgroups[0].tasks.slice(0,2)
           agegroup.taskgroups[1].taskgroups = agegroup.taskgroups[1].taskgroups.slice(0,1)
           agegroup.taskgroups[1].taskgroups[0].taskgroups = agegroup.taskgroups[1].taskgroups[0].taskgroups.slice(0,1)
+          agegroup.taskgroups[1].taskgroups[0].taskgroups[0].tasks = agegroup.taskgroups[1].taskgroups[0].taskgroups[0].tasks.slice(0,2)
           console.log(agegroup)
         }
         return agegroup
