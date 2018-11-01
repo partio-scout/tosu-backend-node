@@ -39,6 +39,13 @@ test('Get suggestions', async () => {
   expect(response.body.taskgroups[0].tasks[0].suggestions_details.length > 1).toBe(true)
 })
 
+test('Get paussit', async () => {
+  const response = await api
+    .get('/filledpof/tarppo')
+    .expect(200)
+  expect(response.body.taskgroups[1].taskgroups[0].taskgroups[0].tasks[0].task_term.name).toBe('paussi')
+})
+
 afterAll(() => {
   server.close()
 })

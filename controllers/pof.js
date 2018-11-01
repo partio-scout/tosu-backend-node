@@ -108,8 +108,10 @@ const getContent = async (guid, test) => {
         const agegroup = age
         console.log(agegroup.title)
         if(test){
-          agegroup.taskgroups = agegroup.taskgroups.slice(6,7)
+          agegroup.taskgroups = agegroup.taskgroups.slice(6,8)
           agegroup.taskgroups[0].tasks = agegroup.taskgroups[0].tasks.slice(0,2)
+          agegroup.taskgroups[1].taskgroups = agegroup.taskgroups[1].taskgroups.slice(0,1)
+          agegroup.taskgroups[1].taskgroups[0].taskgroups = agegroup.taskgroups[1].taskgroups[0].taskgroups.slice(0,1)
           console.log(agegroup)
         }
         return agegroup
