@@ -30,9 +30,15 @@ SECRET_KEY is used for cookies.
 
 Next:
 
-1. Install PostgreSQL and create databases for development and testing.
-2. Configure settings in `.env`
-3. Migrate models to the development and testing databases by running:
+1. Install PostgreSQL and create databases for development and testing:
+    1. [Install psql](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04)
+    2. Access sql prompt: `sudo -i -u postgres psql`
+    3. Create development database: `create database tosudb;`
+    4. Create testing database: `create database tosudb_test;`
+    5. Exit: `\q`
+    6. [Set password](https://stackoverflow.com/questions/7695962/postgresql-password-authentication-failed-for-user-postgres) if necessary.
+2. Configure database settings in `.env` if necessary
+3. Migrate models to the development and testing databases by running (in project root):
 ```sh
 ./node_modules/.bin/sequelize db:migrate --env development
 ./node_modules/.bin/sequelize db:migrate --env test
@@ -60,10 +66,7 @@ Run one test class:
 npm test activities
 ```
 
-Code coverage. Prints a report to console and generates an html report to /coverage.
-```sh
-npm test --coverage
-```
+Code coverage is generated when tests are run. A report is printed to the console and an html report generated to /coverage.
 
 # Documentation
 
