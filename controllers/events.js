@@ -1,3 +1,5 @@
+const axios = require('axios')
+
 const eventRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const eventService = require('../services/eventService')
@@ -7,6 +9,11 @@ eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
   const events = await eventService.getAllEvents(scout.id)
   res.status(200).json(events)
+})
+
+eventRouter.get('/tapahtumat', async (req, res) => {
+  const apiEvents = await axios.get('https://demo.kehatieto.fi/partiolaiset/Tapahtumat_Rajapinta/api/Tapahtumahaku?PvmValillaAlku=2018-10-01&PvmValillaLoppu=2018-11-01')
+  res.send(apiEvents)
 })
 
 // Add a new event, return the added event

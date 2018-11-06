@@ -18,8 +18,11 @@ const planRouter = require('./controllers/plans')
 const activityBufferRouter = require('./controllers/activitybuffers')
 
 var corsOptions = {
-  origin: ['http://localhost:3000', 'https://suunnittelu.partio-ohjelma.fi', 'https://suunnittelu.beta.partio-ohjelma.fi'],
-  credentials: true
+  origin: ['http://localhost:3000',
+    'https://suunnittelu.partio-ohjelma.fi',
+    'https://suunnittelu.beta.partio-ohjelma.fi',
+    'https://demo.kehatieto.fi'
+  ], credentials: true
 }
 
 app.use(cookieParser())
