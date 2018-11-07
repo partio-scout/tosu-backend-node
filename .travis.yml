@@ -30,3 +30,4 @@ env:
     - DB_USERNAME=postgres
     - DB_PASSWORD=
     - DB_NAME_TEST=tosudb_test
+    - CODECOV_TOKEN="45e3794d-34cb-4247-a422-960a82b8451f"
