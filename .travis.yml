@@ -15,9 +15,9 @@ before_install:
 - bash .scripts/install.sh
 install:
   - npm install -g codecov
+  - npm install
 script:
-  - jest && codecov
-  - codecov
+  - NODE_ENV=test jest && codecov
 before_script:
   - export CI=false
   - psql -c 'create database tosudb_test;' -U postgres
