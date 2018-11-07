@@ -14,7 +14,10 @@ branches:
 before_install:
 - bash .scripts/install.sh
 install:
-  - npm install
+  - npm install -g codecov
+script:
+  - jest && codecov
+  - codecov
 before_script:
   - export CI=false
   - psql -c 'create database tosudb_test;' -U postgres
