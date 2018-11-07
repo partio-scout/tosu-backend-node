@@ -14,10 +14,7 @@ branches:
 before_install:
 - bash .scripts/install.sh
 install:
-  - npm install -g codecov
   - npm install
-script:
-  - NODE_ENV=test jest && codecov
 before_script:
   - export CI=false
   - psql -c 'create database tosudb_test;' -U postgres
@@ -33,4 +30,3 @@ env:
     - DB_USERNAME=postgres
     - DB_PASSWORD=
     - DB_NAME_TEST=tosudb_test
-    - CODECOV_TOKEN="45e3794d-34cb-4247-a422-960a82b8451f"

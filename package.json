@@ -47,7 +47,6 @@
     "supertest": "^3.3.0"
   },
   "jest": {
-    "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "coverageReporters": [
       "text",
