@@ -24,10 +24,11 @@ eventRouter.get('', async (req, res) => {
       title: kuksaEvent.Nimi,
       startDate: startDate.getFullYear() + "-" + ("0" + (startDate.getMonth() + 1)).slice(-2) + "-" + ("0" + startDate.getDate()).slice(-2),
       endDate: endDate.getFullYear() + "-" + ("0" + (endDate.getMonth() + 1)).slice(-2) + "-" + ("0" + endDate.getDate()).slice(-2),
-      startTime: "00:00", // kuksaEvent.Alkukellonaika might be null
+      startTime: "00:00", // use kuksaEvent.Alkukellonaika (but might be null)
       endTime: "00:00",
       type: "Kokous", // ei APIssa?
       information: kuksaEvent.KuvausHTML,
+      kuksaEvent: true,
       activities: [],
     }
   })
