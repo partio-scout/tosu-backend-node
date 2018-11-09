@@ -1,39 +1,15 @@
-const axios = require('axios')
-
 const eventRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const eventService = require('../services/eventService')
+const kuksaService = require('../services/kuksaService')
 
 // Get a list of scouts events
 eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
   const events = await eventService.getAllEvents(scout.id)
 
-  // TODO: refactor
-  const kuksaResponse = await axios.get('https://demo.kehatieto.fi/partiolaiset/Tapahtumat_Rajapinta/api/Tapahtumahaku?PvmValillaAlku=2018-01-01&PvmValillaLoppu=2018-12-31') // filter by group? multiple calls?
-  console.log("kuksaResponse:", kuksaResponse.data[0])
-
-  var tapahtumat = kuksaResponse.data.filter(kuksaEvent =>
-    kuksaEvent.Ikakaudet && kuksaEvent.Ikakaudet.includes("Samoajat (15-17 v)")
-  )
-  tapahtumat = tapahtumat.map(kuksaEvent => {
-    const startDate = new Date(kuksaEvent.Alkupvm)
-    const endDate = new Date(kuksaEvent.Loppupvm)
-    return {
-      id: "kuksa" + kuksaEvent.Id,
-      title: kuksaEvent.Nimi,
-      startDate: startDate.getFullYear() + "-" + ("0" + (startDate.getMonth() + 1)).slice(-2) + "-" + ("0" + startDate.getDate()).slice(-2),
-      endDate: endDate.getFullYear() + "-" + ("0" + (endDate.getMonth() + 1)).slice(-2) + "-" + ("0" + endDate.getDate()).slice(-2),
-      startTime: "00:00", // use kuksaEvent.Alkukellonaika (but might be null)
-      endTime: "00:00",
-      type: "Kokous", // ei APIssa?
-      information: kuksaEvent.KuvausHTML,
-      kuksaEvent: true,
-      activities: [],
-    }
-  })
-
-  res.status(200).json(events.concat(tapahtumat))
+  let kuksaEvents = await kuksaService.getKuksaEventsByAgeGroup('Tarpojat (12-14 v)')
+  res.status(200).json(events.concat(kuksaEvents))
 })
 
 // Add a new event, return the added event
