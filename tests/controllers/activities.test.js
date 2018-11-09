@@ -23,7 +23,7 @@ test('Delete activity', async () => {
   await api
     .delete('/activities/' + activity.id)
     .set('cookie', [cookie])
-    .expect(200)
+    .expect(204)
 
   const found = await models.Activity.findById(activity.id)
   expect(found).toBe(null)

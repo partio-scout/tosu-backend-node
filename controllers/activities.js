@@ -20,7 +20,7 @@ activityRouter.delete('/:activityId', async (req, res) => {
 
   if (! await activityService.deleteActivity(activityId)) {
     console.log('Deleted activity with ID', activityId)
-    res.status(200).send('Deleted')
+    res.status(204).send('Deleted')
   } else {
     console.log('Did not delete activity with ID', activityId)
     res.status(404).send('Did not delete')
@@ -52,7 +52,7 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
   const eventId = parseInt(req.params.eventId)
 
   if (isNaN(activityId) || isNaN(eventId)) {
-    return res.status(400).send('Invalid activity or event id!')
+    return res.status(404).send('Invalid activity or event id!')
   }
 
   if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
@@ -71,7 +71,7 @@ activityRouter.post('/:activityId/plans', async(req, res) => {
   const plan = req.body
 
   if (isNaN(activityId)) {
-    return res.status(400).send('Invalid activity id!')
+    return res.status(404).send('Invalid activity id!')
   }
 
   if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
