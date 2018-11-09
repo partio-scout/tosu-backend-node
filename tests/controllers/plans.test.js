@@ -33,7 +33,7 @@ test('Modify a plan', async () => {
 })
 
 test('Cannot modify a plan that does not exist', async () => {
-  plan.destroy()
+  await plan.destroy()
   await api.put('/plans/'+plan.id)
     .send({
       title: 'EGasg'
