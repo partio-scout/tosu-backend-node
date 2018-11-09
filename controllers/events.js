@@ -47,7 +47,7 @@ eventRouter.post('/:eventId/activities', async (req, res) => {
   if (activity.error){ //Should never really happen since verifyService should prevent all errors
     return res.status(500).send(activity.error)
   }
-  res.status(200).json(activity)
+  res.json(activity)
 })
 
 
@@ -66,7 +66,7 @@ eventRouter.delete('/:eventId', async (req, res) => {
   if (!succeeded) { // Should not happen
     return res.status(404).send('The event was not deleted.')
   }
-  res.status(200).json(event)
+  res.json(event)
 })
 
 module.exports = eventRouter

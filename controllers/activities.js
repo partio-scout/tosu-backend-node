@@ -20,7 +20,7 @@ activityRouter.delete('/:activityId', async (req, res) => {
 
   if (! await activityService.deleteActivity(activityId)) {
     console.log('Deleted activity with ID', activityId)
-    res.status(200).send('Deleted')
+    res.send('Deleted')
   } else {
     console.log('Did not delete activity with ID', activityId)
     res.status(404).send('Did not delete')
