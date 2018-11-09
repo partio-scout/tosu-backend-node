@@ -66,7 +66,7 @@ eventRouter.delete('/:eventId', async (req, res) => {
   if (!succeeded) { // Should not happen
     return res.status(404).send('The event was not deleted.')
   }
-  res.status(204).send()
+  res.status(200).json(event)
 })
 
 module.exports = eventRouter

@@ -57,7 +57,7 @@ test('User cannot modify a plan that that he does not own', async () => {
 test('Delete a plan', async () => {
   await api.delete('/plans/'+plan.id)
     .set('cookie', [cookie])
-    .expect(200)
+    .expect(204)
   const dbPlan = await models.Plan.findById(plan.id)
   expect(dbPlan).toBe(null)
 })
@@ -74,14 +74,14 @@ test('User cannot delete a plan that that he does not own', async () => {
 test('Invalid (noninteger) planID is handled when trying to modify a plan', async () => {
   await api.put('/plans/asgasASg')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 
 test('Invalid (noninteger) planID is handled when trying to delete a plan', async () => {
   await api.delete('/plans/asgasg')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 

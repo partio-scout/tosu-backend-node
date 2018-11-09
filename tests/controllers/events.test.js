@@ -52,7 +52,7 @@ test('Create an event', async () => {
     })
     .set('cookie', [cookie])
     .expect('Content-Type', /json/)
-    .expect(200)
+    .expect(201)
   expect(result.body.title).toBe('EGasg')
   expect(result.body.startDate).toBe('2018-10-19')
   expect(result.body.startTime).toBe('15:12:42')
@@ -163,7 +163,6 @@ test('Cannot add activity to a event that is not owned', async () => {
     .expect(403)
 })
 
-
 test('Delete event', async () => {
   const event = await models.Event.create({title:'WOW', scoutId: scout.id})
 
@@ -201,7 +200,7 @@ test('Invalid (noninteger) event id is handled properly when trying to update', 
       title: 'EGasg'
     })
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 
@@ -211,13 +210,13 @@ test('Invalid (noninteger) event id is handled properly when trying add an activ
       guid: 'EGasg'
     })
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 test('Invalid (noninteger) event id is handled properly when trying to delete', async () => {
   await api.delete('/events/GSGaghhq')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 // GET /events returns a list of users events
