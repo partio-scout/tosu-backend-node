@@ -1,0 +1,9 @@
+200 : Get (success), Modified, Deleted
+201 : Created a new resource
+204 : Deleted but not sending parameters
+
+400 : Invalid input
+403 : You don’t own the resource, not logged in  
+404 : Something went wrong and it’s not users fault
+
+500: Error
