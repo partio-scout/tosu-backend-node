@@ -1,5 +1,5 @@
 const models = require('../domain/models')
-
+const prepareService = require('./prepareService')
 
 // Returns a list of all scouts events
 async function getAllEvents(scoutId) {
@@ -8,24 +8,19 @@ async function getAllEvents(scoutId) {
       scoutId: { $eq : scoutId }
     }
   })
-  // TODO: better solution to this...
-  for (var i=0; i<events.length; i+=1){
-    events[i].dataValues.activities = await models.Activity.findByEvent(events[i])
-    events[i] = events[i].dataValues
-  }
-  return events
+  return await prepareService.prepareEvents(events)
 }
 
 // Returns an event
 async function getEvent(eventId) {
-  return await models.Event.findById(eventId)
+  return await prepareService.prepareEvent(await models.Event.findById(eventId))
 }
 
 //Creates a new event and returns it
 async function createEvent(scoutId, eventData) {
   eventData.scoutId=scoutId
   const event = await models.Event.create(eventData)
-  return event
+  return await prepareService.prepareEvent(event)
 }
 
 //Updates an event and returns the updated event
@@ -48,7 +43,7 @@ async function updateEvent(eventId, eventData) {
     return { error : 'Something went wrong o_O' }
   }
   const updatedEvent = await models.Event.findById(event.id)
-  return updatedEvent
+  return await prepareService.prepareEvent(updatedEvent)
 }
 
 
@@ -61,7 +56,7 @@ async function addActivityToEvent(eventId, activityData) {
   const activity = await models.Activity.create(activityData)
   await activity.update({ activityBufferId: null })
   await activity.update({ eventId: eventId })
-  return activity
+  return await prepareService.prepareActivity(activity)
 }
 
 

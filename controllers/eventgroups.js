@@ -1,25 +1,21 @@
 const eventgroupRouter = require('express').Router()
-const models = require('../domain/models')
+const eventgroupService = require('../services/eventgroupService')
 
 eventgroupRouter.post('/', async (req, res) => {
-  const group = await models.EventGroup.create()
-  res.json(group.id)
+  const eventGroup = await eventgroupService.createEventGroup()
+  res.status(200).json(eventGroup)
 })
 
 eventgroupRouter.delete('/:id', async (req, res) => {
-  const groupId = req.params.id
-  models.EventGroup.destroy({
-    where: {
-      id: {$eq: groupId}
-    }
-  }).then(rowsDeleted => {
-    if (rowsDeleted === 1) {
-      res.status(204).send()
-    } else {
-      console.log('Did not delete activity with ID')
-      res.status(404).send('Not deleted')
-    }
-  })
+  const eventGroupId = parseInt(req.params.id)
+  if (isNaN(eventGroupId)) {
+    return res.status(404).send('Invalid event group id!')
+  }
+  const succeeded = await eventgroupService.deleteEventGroup(eventGroupId)
+  if (!succeeded) { // Should not happen
+    return res.status(404).send('The event group was not deleted.')
+  }
+  res.status(204).send()
 })
 
 module.exports = eventgroupRouter

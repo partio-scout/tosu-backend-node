@@ -241,3 +241,34 @@ test('Cannot add plan to activity when not logged in', async () => {
     .post('/activities/666/tobuffer')
     .expect(403)
 })
+
+// PUT /:activityId/tobuffer adds activity to buffer (moves activity from event to buffer) and returns the activity
+// check that the returned activity has activity.plans
+test('Plans of activity are returned on PUT /:activityId/tobuffer', async () => {
+  await models.ActivityBuffer.create({ scoutId: scout.id })
+  const event = await models.Event.create({ scoutId: scout.id })
+  const activity = await models.Activity.create({ eventId: event.id }) // Scout does not own activity
+  const plan = await models.Plan.create({ activityId: activity.id })
+
+  const result = await api.put('/activities/' + activity.id + '/tobuffer')
+    .set('cookie', [cookie])
+    .expect(200)
+  expect(result.body.plans.length).toBe(1)
+  expect(result.body.plans[0].id).toBe(plan.id)
+})
+
+
+// PUT /:activityId/toevent/:eventID adds activity to an event (moves activity from buffer to event) and returns the activity
+// check that the returned activity has activity.plans
+test('Plans of activity are returned on PUT /:activityId/toevent/:eventId', async () => {
+  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
+  const event = await models.Event.create({ scoutId: scout.id })
+  const activity = await models.Activity.create({ activityBufferId: buffer.id }) // Scout does not own activity
+  const plan = await models.Plan.create({ activityId: activity.id })
+
+  const result = await api.put('/activities/' + activity.id + '/toevent/' + event.id)
+    .set('cookie', [cookie])
+    .expect(200)
+  expect(result.body.plans.length).toBe(1)
+  expect(result.body.plans[0].id).toBe(plan.id)
+})

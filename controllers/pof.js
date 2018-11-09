@@ -7,11 +7,13 @@ var path = require('path')
 var makingPof = false
 
 pofRouter.get('/', async (req, res) => {
-  res.send('Hello world')
+  res.json({
+    'makingPof': makingPof
+  })
 })
 
 pofRouter.get('/delete', async (req, res) => {
-  cache.del('filledpof')
+  cache.del('filledpof')                              
   res.redirect('/filledpof')
 })
 
@@ -32,11 +34,15 @@ pofRouter.get('/tarppo', async (req, res) => {
   }
 })
 
-async function makeFilledPof(res, guid) {
+pofRouter.get('/test', async (req, res) => {
+  makeFilledPof(res, 'fd0083b9a325c06430ba29cc6c6d1bac', true)
+})
+
+async function makeFilledPof(res, guid, test) {
   console.log('START MAKING POF')
   makingPof = true
-  const agegroup = await getContent(guid)
-  taskDetails(agegroup)
+  const agegroup = await getContent(guid, test)
+  await taskDetails(agegroup)
   async function taskDetails(agegroup) {
     for (const taskgroup of agegroup.taskgroups) {
       if (taskgroup.taskgroups.length > 0) {
@@ -60,9 +66,10 @@ async function makeFilledPof(res, guid) {
         }
       }
     }
-    const date = new Date().toISOString()
-    agegroup['updateDate'] = date
-    jsonfile.writeFile('pof.json', agegroup, { spaces: 2 } )
+    agegroup['updateDate'] = new Date().toISOString()
+    if(!test){
+      jsonfile.writeFile('pof.json', agegroup, { spaces: 2 } )
+    }
     cache.put('filledpof', JSON.stringify(agegroup))
     makingPof = false
     if (res) {
@@ -91,7 +98,7 @@ const getTaskDetails = async task => {
   }
 }
 
-const getContent = async guid => {
+const getContent = async (guid, test) => {
   const url = 'https://pof-backend.partio.fi/spn-ohjelma-json-taysi'
   try {
     const response = await axios.get(url)
@@ -100,8 +107,14 @@ const getContent = async guid => {
       if (age.guid === guid) {
         const agegroup = age
         console.log(agegroup.title)
+        if(test){
+          agegroup.taskgroups = agegroup.taskgroups.slice(6,8)
+          agegroup.taskgroups[0].tasks = agegroup.taskgroups[0].tasks.slice(0,2)
+          agegroup.taskgroups[1].taskgroups = agegroup.taskgroups[1].taskgroups.slice(0,1)
+          agegroup.taskgroups[1].taskgroups[0].taskgroups = agegroup.taskgroups[1].taskgroups[0].taskgroups.slice(0,1)
+          agegroup.taskgroups[1].taskgroups[0].taskgroups[0].tasks = agegroup.taskgroups[1].taskgroups[0].taskgroups[0].tasks.slice(0,1)
+        }
         return agegroup
-        break
       }
     }
   } catch (error) {

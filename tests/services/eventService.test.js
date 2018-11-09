@@ -16,15 +16,6 @@ test('Get all events', async () => {
   expect(events[0].id).toBe(event.id)
 })
 
-test('Get all events returns activities assigned to events', async () => {
-  const activity = await models.Activity.create({eventId: event.id})
-  const events = await eventService.getAllEvents(scout.id)
-  expect(events.length).toBe(1)
-  expect(events[0].id).toBe(event.id)
-  expect(events[0].activities.length).toBe(1)
-  expect(events[0].activities[0].id).toBe(activity.id)
-})
-
 test('Create an event', async () => {
   const newEvent = await eventService.createEvent(scout.id, {title:'Asdf'})
   expect(newEvent.title).toBe('Asdf')
@@ -62,3 +53,5 @@ test('Delete an event', async () => {
   expect(result).toBe(true)
   expect(await models.Event.findById(event.id)).toBeNull()
 })
+
+

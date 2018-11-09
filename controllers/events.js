@@ -43,11 +43,11 @@ eventRouter.post('/:eventId/activities', async (req, res) => {
   if (!await verifyService.scoutOwnsEvent(scout, eventId)){
     return res.status(403).send('You are not the owner of this event!')
   }
-  const event = await eventService.addActivityToEvent(eventId, req.body)
-  if (event.error){ //Should never really happen since verifyService should prevent all errors
-    return res.status(500).send(event.error)
+  const activity = await eventService.addActivityToEvent(eventId, req.body)
+  if (activity.error){ //Should never really happen since verifyService should prevent all errors
+    return res.status(500).send(activity.error)
   }
-  res.json(event)
+  res.status(200).json(activity)
 })
 
 
