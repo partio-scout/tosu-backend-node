@@ -10,7 +10,7 @@ test('Create an event group', async () => {
   const result = await api.post('/eventgroups')
     .send()
     .expect('Content-Type', /json/)
-    .expect(200)
+    .expect(201)
   const eventGroupId = result.body.id
 
   const dbEventGroup = await models.EventGroup.findById(eventGroupId)
