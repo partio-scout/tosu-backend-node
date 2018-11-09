@@ -3,7 +3,7 @@ const eventgroupService = require('../services/eventgroupService')
 
 eventgroupRouter.post('/', async (req, res) => {
   const eventGroup = await eventgroupService.createEventGroup()
-  res.status(200).json(eventGroup)
+  res.status(201).json(eventGroup)
 })
 
 eventgroupRouter.delete('/:id', async (req, res) => {

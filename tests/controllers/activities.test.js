@@ -46,7 +46,7 @@ test('Invalid (noninteger) id is handled when trying to delete', async () => {
   await api
     .delete('/activities/hu4hlgd43kf')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 test('Cannot delete when not logged in', async () => {
@@ -97,7 +97,7 @@ test('Invalid (noninteger) id is handled when trying to move activity to buffer'
   await api
     .put('/activities/fjhsu4t8unv4dr/tobuffer')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 test('Cannot move activity from event to buffer when not logged in', async () => {
@@ -170,17 +170,17 @@ test('Invalid (noninteger) id is handled when trying to move activity to event',
   await api
     .put('/activities/jfsom48m/toevent/fhsu3')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 
   await api
     .put('/activities/' + activity.id + '/toevent/fhsu3')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 
   await api
     .put('/activities/gs4gf/toevent/' + buffer.id)
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 test('Cannot move activity from buffer to event when not logged in', async () => {
@@ -233,7 +233,7 @@ test('Invalid (noninteger) id is handled when trying to add plan to activity', a
   await api
     .post('/activities/gd5ybfhf7ik/plans')
     .set('cookie', [cookie])
-    .expect(404)
+    .expect(400)
 })
 
 test('Cannot add plan to activity when not logged in', async () => {

@@ -88,12 +88,12 @@ test('Verify the scout does not own the plan when the scout or the plan does not
   const planId = plan.id
 
   expect(await verifyService.scoutOwnsPlan(scout, planId)).toBe(true)
-  plan.destroy()
+  await plan.destroy()
   expect(await verifyService.scoutOwnsPlan(scout, planId)).toBe(false)
   expect(await verifyService.scoutOwnsPlan(scout, null)).toBe(false)
   expect(await verifyService.scoutOwnsPlan(null, plan.id)).toBe(false)
   expect(await verifyService.scoutOwnsPlan(null, null)).toBe(false)
-  scout.destroy()
+  await scout.destroy()
   expect(await verifyService.scoutOwnsPlan(scoutId, planId)).toBe(false)
 })
   
