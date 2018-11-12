@@ -43,6 +43,11 @@ async function prepareEvent(sequelizeEvent) {
   })
   event.dataValues.activities = await prepareActivities(event.dataValues.Activities)
   delete event.dataValues.Activities
+  // Used by frontend to determine if the event is coming from the database
+  // and needs to be synced with Kuksa:
+  if (event.dataValues.kuksaEventId) {
+    event.dataValues.synced = true
+  }
   return event.dataValues
 }
 

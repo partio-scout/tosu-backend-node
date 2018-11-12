@@ -30,9 +30,6 @@ module.exports = {
       information: {
         type: Sequelize.STRING(2047)
       },
-      kuksaEvent: {
-        type: Sequelize.BOOLEAN
-      },
       kuksaEventId: {
         type: Sequelize.INTEGER
       },
