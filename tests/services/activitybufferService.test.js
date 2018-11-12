@@ -15,6 +15,7 @@ beforeEach(async () => {
 test('Add activity to buffer', async () => {
   const created = await bufferService.addActivityToBuffer(activity, scout)
   expect(created.activityBufferId).toBe(buffer.id)
+  expect(created.plans.length).toBe(0)
 })
 
 test('Add activity to buffer when buffer is null', async () => {
@@ -39,6 +40,18 @@ test('Add activity to buffer when buffer and scout are null', async () => {
 test('Find buffer by scout', async () => {
   const found = await bufferService.findByScout(scout)
   expect(found.id).toBe(buffer.id)
+  expect(found.activities.length).toBe(0)
+})
+
+test('Find buffer by scout returns activities', async () => {
+  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const found = await bufferService.findByScout(scout)
+  expect(found.id).toBe(buffer.id)
+  expect(found.activities.length).toBe(1)
+  expect(found.activities[0].id).toBe(activity.id)
+  expect(found.activities[0].plans.length).toBe(1)
+  expect(found.activities[0].plans[0].id).toBe(plan.id)
 })
 
 test('Find buffer by scout returns null when scout is null', async () => {
