@@ -43,6 +43,52 @@ test('Event deleted in Kuksa is deleted in tosu as well', async () => {
   expect(hasEvents(events, tosuEvents, kuksaEvents))
 })
 
+test('Fetch Kuksa events by age group (TODO)', async () => {
+  // TODO: How to test?
+  expect(await kuksaService.getKuksaEventsByAgeGroup("")).toBe(null)
+})
+
+test('Parse Kuksa event into tosu event', async () => {
+  const kuksaEvent = {
+    "Id": "17732",
+    "Nimi": "E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ",
+    "Alkupvm": "2018-10-26T00:00:00",
+    "Loppupvm": "2018-10-28T00:00:00",
+    "Alkukellonaika": null,
+    "Loppukellonaika": null,
+    "Paikka": null,
+    "KuvausHTML": "Koulutus toteutetaan Opintokeskus Siviksen tuella<br />",
+    "IlmoittautuminenPaattyy": "2018-10-01T00:00:00",
+    "IlmoittautuminenPaattynyt": true,
+    "JalkiIlmoittautuminenVoimassa": false,
+    "TilaisuudenTyyppi": "Koulutustoiminta",
+    "Jasenmaksupakko": true,
+    "VainJarjestajaorganisaationjasenille": false,
+    "Ikakaudet": [
+        "Aikuiset",
+        "Vaeltajat (18-22 v)"
+    ],
+    "Liitetiedostot": null,
+    "Jarjestajat": [
+        "Etelä-Karjalan Partiolaiset ry"
+    ],
+    "Ilmoittautumislinkki": "https://demo.kehatieto.fi/partiolaiset/kotisivut/login.aspx?Id=17732",
+    "Ilmoittautuneita": 0
+  }
+  const parsed = kuksaService.parseKuksaEvents([kuksaEvent])[0]
+  expect(parsed.id).toBe("kuksa17732")
+  expect(parsed.title).toBe("E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ")
+  expect(parsed.startDate).toBe("2018-10-26")
+  expect(parsed.endDate).toBe("2018-10-28")
+  expect(parsed.startTime).toBe("00:00") // Original time is null
+  expect(parsed.endTime).toBe("00:00") // Original time is null
+  expect(parsed.type).toBe("Koulutustoiminta")
+  expect(parsed.information).toBe("Koulutus toteutetaan Opintokeskus Siviksen tuella<br />")
+  expect(parsed.kuksaEvent).toBe(true)
+  expect(parsed.kuksaEventId).toBe("17732")
+  expect(parsed.activities.length).toBe(0)
+})
+
 // Checks equality by id and title, doesn't accept duplicates
 function hasEvents(group, events1, events2) {
   for (var i = 0; i < events1.length; i++) {

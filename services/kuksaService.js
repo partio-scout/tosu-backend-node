@@ -19,7 +19,13 @@ function getEventApi() {
 }
 
 async function getKuksaEventsByAgeGroup(ageGroup) {
-  let response = await axios.get(getEventApi())
+  let response
+  try {
+    await axios.get(getEventApi())
+  } catch (e) {
+    console.log("Failed to fetch Kuksa events:",e)
+    return null
+  }
   let kuksaEvents = response.data.filter(kuksaEvent =>
     kuksaEvent.Ikakaudet && kuksaEvent.Ikakaudet.includes(ageGroup)
   )
@@ -122,4 +128,5 @@ function findKuksaEvent(kuksaEventId, kuksaEvents) {
 module.exports = {
   getKuksaEventsByAgeGroup,
   syncEvents,
+  parseKuksaEvents, // Exported for testing
 }
