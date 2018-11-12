@@ -1,5 +1,6 @@
 const axios = require('axios')
 const models = require('../domain/models')
+const eventService = require('./eventService')
 
 // const EVENT_API_BASE_PRODUCTION = "https://kuksa.partio.fi" // TODO: Enable, or new ENV=staging?
 const EVENT_API_BASE_PRODUCTION = "https://demo.kehatieto.fi/partiolaiset"
@@ -53,6 +54,72 @@ function parseKuksaEvents(kuksaEvents) {
   })
 }
 
+/*
+  Syncs events from the tosu database with events from Kuksa.
+  The flow of sync happens: Kuksa -> tosu
+  All information from kuksaEvents are updated to corresponding synced tosuEvents.
+  Also checks for:
+  - Event deleted from Kuksa -> delete from tosu (synced tosuEvent does not correspond to any kuksaEvent)
+  Params:
+  - kuksaEvents: Assumed to be parsed already by getKuksaEventsByAgeGroup()
+*/
+async function syncEvents(kuksaEvents, scoutId) {
+  const syncedEvents = await models.Event.findAll({
+    where: {
+      kuksaEventId: { $ne: null }
+    }
+  })
+  for (var i = 0; i < syncedEvents.length; i++) {
+    // For each synced event, update values from kuksaEvent, or delete if kuksaEvent not found.
+    const tosuEvent = syncedEvents[i]
+    const correspondingKuksaEvent = findKuksaEvent(tosuEvent.kuksaEventId, kuksaEvents)
+    if (correspondingKuksaEvent) {
+      // Update
+      await updateEvent(tosuEvent, correspondingKuksaEvent)
+      // Delete kuksa event from kuksaEvents to avoid passing duplicates to frontend
+      deleteFromArray(correspondingKuksaEvent, kuksaEvents)
+    } else {
+      // No Kuksa event found: Deleted from Kuksa, delete from tosu as well.
+      await eventService.deleteEvent(tosuEvent.id)
+    }
+  }
+
+  const tosuEvents = await eventService.getAllEvents(scoutId)
+  return tosuEvents.concat(kuksaEvents)
+}
+
+async function updateEvent(tosuEvent, kuksaEvent) {
+  // Update by using database event's id as kuksaEvent's id.
+  await eventService.updateEvent(tosuEvent.id, {
+    title: kuksaEvent.title,
+    startDate: kuksaEvent.startDate,
+    endDate: kuksaEvent.endDate,
+    startTime: kuksaEvent.startTime,
+    endTime: kuksaEvent.endTime,
+    type: kuksaEvent.type,
+    information: kuksaEvent.information,
+    kuksaEventId: kuksaEvent.kuksaEventId
+  })
+}
+
+function deleteFromArray(obj, array) {
+  var index = array.indexOf(obj)
+  if (index > -1) {
+    array.splice(index, 1)
+  }
+}
+
+function findKuksaEvent(kuksaEventId, kuksaEvents) {
+  // Does not scale well... although is only executed for every synced event
+  for (var i = 0; i < kuksaEvents.length; i++) {
+    if (parseInt(kuksaEvents[i].kuksaEventId) === kuksaEventId) {
+      return kuksaEvents[i]
+    }
+  }
+  return null
+}
+
 module.exports = {
   getKuksaEventsByAgeGroup,
+  syncEvents,
 }
