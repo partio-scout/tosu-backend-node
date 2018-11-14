@@ -1,8 +1,8 @@
 ### Frontend
 
-event.kuksaEvent: Event coming from Kuksa. To be shown on the "Kuksa" page.
+event.kuksaEvent === true: Event coming from Kuksa. To be shown on the "Kuksa" page. Not a synced event.
 
-event.synced: Event is stored in both tosu database and in Kuksa, and is synced.
+event.synced === true: Event is stored in both tosu database and in Kuksa, and is synced.
 
 ### Backend
 
