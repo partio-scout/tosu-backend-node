@@ -91,7 +91,7 @@ async function syncEvents(kuksaEvents, scoutId) {
   }
 
   const tosuEvents = await eventService.getAllEvents(scoutId)
-  return tosuEvents.concat(kuksaEvents)
+  return kuksaEvents ? tosuEvents.concat(kuksaEvents) : tosuEvents // Don't concat a null object
 }
 
 async function updateEvent(tosuEvent, kuksaEvent) {
@@ -116,6 +116,7 @@ function deleteFromArray(obj, array) {
 }
 
 function findKuksaEvent(kuksaEventId, kuksaEvents) {
+  if (!kuksaEvents) return null
   // Does not scale well... although is only executed for every synced event
   for (var i = 0; i < kuksaEvents.length; i++) {
     if (parseInt(kuksaEvents[i].kuksaEventId) === kuksaEventId) {
