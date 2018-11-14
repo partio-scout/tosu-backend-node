@@ -8,13 +8,13 @@ planRouter.put('/:planId', async (req, res) => {
   const scout = req.session.scout
   const planId = parseInt(req.params.planId)
   if (isNaN(planId)){
-    return res.status(404).send('Invalid plan id!')
+    return res.status(400).send('Invalid plan id!')
   }
   if (!await verifyService.scoutOwnsPlan(scout, planId)){
     return res.status(403).send('You do not own this plan!')
   }
   const plan = await planService.modifyPlan(planId, req.body)
-  res.status(200).send(plan)
+  res.send(plan)
 })
 
 //  Delete a plan
@@ -22,13 +22,13 @@ planRouter.delete('/:planId', async (req, res) => {
   const scout = req.session.scout
   const planId = parseInt(req.params.planId)
   if (isNaN(planId)){
-    return res.status(404).send('Invalid plan id!')
+    return res.status(400).send('Invalid plan id!')
   }
   if (!await verifyService.scoutOwnsPlan(scout, planId)){
     return res.status(403).send('You do not own this plan!')
   }
-  const plan = await planService.deletePlan(planId)
-  res.status(200).send(plan)
+  await planService.deletePlan(planId)
+  res.status(204).send()
 })
 
 

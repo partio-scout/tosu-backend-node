@@ -16,9 +16,21 @@ test('Get all events', async () => {
   expect(events[0].id).toBe(event.id)
 })
 
+test('getAllEvents returns the activities of the event and the plans of the activities', async () => {
+  const activity = await models.Activity.create({eventId: event.id})
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const events = await eventService.getAllEvents(scout.id)
+  expect(events.length).toBe(1)
+  expect(events[0].activities.length).toBe(1)
+  expect(events[0].activities[0].id).toBe(activity.id)
+  expect(events[0].activities[0].plans.length).toBe(1)
+  expect(events[0].activities[0].plans[0].id).toBe(plan.id)
+})
+
 test('Create an event', async () => {
   const newEvent = await eventService.createEvent(scout.id, {title:'Asdf'})
   expect(newEvent.title).toBe('Asdf')
+  expect(newEvent.activities.length).toBe(0)
   const dbEvent = await models.Event.findById(newEvent.id)
   expect(dbEvent.id).toBe(newEvent.id)
   expect(dbEvent.title).toBe('Asdf')
@@ -32,11 +44,22 @@ test('Update an event', async () => {
   expect(dbEvent.title).toBe('Asdf')
 })
 
+test('updateEvent returns the activities of the event and the plans of the activities', async () => {
+  const activity = await models.Activity.create({eventId: event.id})
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const updatedEvent = await eventService.updateEvent(event.id, {title: 'Asdf'})
+  expect(updatedEvent.activities.length).toBe(1)
+  expect(updatedEvent.activities[0].id).toBe(activity.id)
+  expect(updatedEvent.activities[0].plans.length).toBe(1)
+  expect(updatedEvent.activities[0].plans[0].id).toBe(plan.id)
+})
+
 test('Add activity to an event', async () => {
   const activity = await eventService.addActivityToEvent(event.id, {guid: 'asgasg'})
   const dbActivity = await models.Activity.findById(activity.id)
   expect(activity.eventId).toBe(event.id)
   expect(activity.guid).toBe('asgasg')
+  expect(activity.plans.length).toBe(0)
   expect(dbActivity.eventId).toBe(event.id)
   expect(dbActivity.guid).toBe('asgasg')
 })

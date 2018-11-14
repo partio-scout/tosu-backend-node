@@ -21,12 +21,23 @@ test('Delete activity', async () => {
 })
 
 test('Move activity from event to buffer', async () => {
-  await activityService.moveActivityFromEventToBuffer(activityWithEventId.id, scout)
-
+  const movedActivity = await activityService.moveActivityFromEventToBuffer(activityWithEventId.id, scout)
+  // Returned activity is correct
+  expect(movedActivity.id).toBe(activityWithEventId.id)
+  expect(movedActivity.activityBufferId).toBe(buffer.id)
+  expect(movedActivity.eventId).toBe(null)
   // Activity is correct in the database
   await activityWithEventId.reload()
   expect(activityWithEventId.activityBufferId).toBe(buffer.id)
   expect(activityWithEventId.eventId).toBe(null)
+})
+
+test('Move activity from event to buffer keeps and returns the plans of the activity', async () => {
+  const plan = await models.Plan.create({ activityId: activityWithEventId.id })
+  const movedActivity = await activityService.moveActivityFromEventToBuffer(activityWithEventId.id, scout)
+
+  expect(movedActivity.plans.length).toBe(1)
+  expect(movedActivity.plans[0].id).toBe(plan.id)
 })
 
 test('Do not move activity from event to buffer when activity does not exist', async () => {
@@ -60,12 +71,24 @@ test('Do not move activity from event to buffer when event does not exist', asyn
 test('Move activity from buffer to event', async () => {
   const activity = await models.Activity.create({ activityBufferId: buffer.id })
 
-  await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
-
+  const movedActivity = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
+  // Returned activity is correct
+  expect(movedActivity.id).toBe(activity.id)
+  expect(movedActivity.activityBufferId).toBe(null)
+  expect(movedActivity.eventId).toBe(event.id)
   // Activity is correct in the database
   await activity.reload()
   expect(activity.activityBufferId).toBe(null)
   expect(activity.eventId).toBe(event.id)
+})
+
+test('Move activity from buffer to event keeps and returns the plans of the activity', async () => {
+  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+  const plan = await models.Plan.create({ activityId: activity.id })
+  const movedActivity = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
+
+  expect(movedActivity.plans.length).toBe(1)
+  expect(movedActivity.plans[0].id).toBe(plan.id)
 })
 
 test('Do not move activity from buffer to event when activity does not exist', async () => {
