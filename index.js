@@ -21,7 +21,8 @@ var corsOptions = {
   origin: ['http://localhost:3000',
     'https://suunnittelu.partio-ohjelma.fi',
     'https://suunnittelu.beta.partio-ohjelma.fi',
-    'https://demo.kehatieto.fi'
+    'https://demo.kehatieto.fi',
+    'https://kuksa.partio.fi'
   ], credentials: true
 }
 
