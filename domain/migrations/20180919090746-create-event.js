@@ -28,7 +28,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       information: {
-        type: Sequelize.STRING(2047)
+        type: Sequelize.STRING(32767)
+      },
+      kuksaEventId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

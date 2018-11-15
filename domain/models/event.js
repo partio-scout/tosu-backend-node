@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
     type: DataTypes.STRING,
-    information: DataTypes.STRING(2047)
+    information: DataTypes.STRING(32767),
+    kuksaEventId: DataTypes.INTEGER // ID of the corresponding Kuksa event. Null if not synced (local event).
   }, {})
 
   Event.associate = (models) => {

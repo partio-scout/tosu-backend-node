@@ -1,12 +1,16 @@
 const eventRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const eventService = require('../services/eventService')
+const kuksaService = require('../services/kuksaService')
+
+const AGE_GROUP = 'Tarpojat (12-14 v)'
 
 // Get a list of scouts events
 eventRouter.get('', async (req, res) => {
   const scout = req.session.scout
-  const events = await eventService.getAllEvents(scout.id)
-  res.json(events)
+  const kuksaEvents = await kuksaService.getKuksaEventsByAgeGroup(AGE_GROUP)
+  const syncedEvents = await kuksaService.syncEvents(kuksaEvents, scout.id)
+  res.json(syncedEvents)
 })
 
 // Add a new event, return the added event
