@@ -132,6 +132,7 @@ test('Parse Kuksa event start and end times correctly', async () => {
 
 // Checks equality by id and title, doesn't accept duplicates
 function hasEvents(group, events1, events2) {
+  // TODO: Check that group doesn't have extra events (that aren't in events1 or events2)
   for (var i = 0; i < events1.length; i++) {
     var found = false
     var foundDuplicate = false

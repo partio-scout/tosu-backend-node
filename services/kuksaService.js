@@ -126,8 +126,10 @@ function findKuksaEvent(kuksaEventId, kuksaEvents) {
   return null
 }
 
+// Returns the time if it's valid, or 00:00 if it's not
 function validTime(time) {
   if (!time) return "00:00"
+  // https://stackoverflow.com/a/22044831
   return time.match("^([01]?[0-9]|2[0-3]):[0-5][0-9]$") ? time : "00:00"
 }
 
