@@ -38,7 +38,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['leiri', 'baari']],
+        // TODO: should there bi isIn validation for type..? 
+        // would it cause problems if some kuksa event had a type that is not listed here?
+        // isIn: [['leiri', 'retku']],
         not: ['^ *$','i'], // Not whitespace-only
         len: [1,255],
       }

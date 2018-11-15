@@ -10,8 +10,26 @@ test('EventGroup can be created', async () => {
 
 test('EventGroup can be assigned Events', async () => {
   const group = await models.EventGroup.create()
-  const event1 = await models.Event.create({ eventGroupId: group.id })
-  const event2 = await models.Event.create({ eventGroupId: group.id })
+  const event1 = await models.Event.create({
+    title: 'Let\'s go fishing!',
+    startDate: '2018-09-23',
+    endDate: '2018-09-23',
+    startTime: '17:46:22.33',
+    endTime: '18:44:05.795',
+    type: 'Retki',
+    information: 'Fishing fish',
+    eventGroupId: group.id,
+  })
+  const event2 = await models.Event.create({
+    title: 'Let\'s go fishing!',
+    startDate: '2018-09-23',
+    endDate: '2018-09-23',
+    startTime: '17:46:22.33',
+    endTime: '18:44:05.795',
+    type: 'Retki',
+    information: 'Fishing fish',
+    eventGroupId: group.id,
+  })
 
   const fetchedGroup = await models.EventGroup.findById(group.id, { include: [models.Event] })
   expect(fetchedGroup.Events.length).toBe(2)

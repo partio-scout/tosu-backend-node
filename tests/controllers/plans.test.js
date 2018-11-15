@@ -8,6 +8,7 @@ require('../handleTestDatabase')
 
 var scout
 var cookie
+var eventData
 var event
 var activity
 var plan
@@ -16,7 +17,17 @@ var plan
 beforeEach(async () => {
   scout = await models.Scout.create()
   cookie = testUtils.createScoutCookieWithId(scout.id)  
-  event = await models.Event.create({ scoutId: scout.id })
+  eventData = {
+    scoutId: scout.id, 
+    startDate: '2500-10-10',
+    endDate: '2501-10-10',
+    startTime: '12:11:54',
+    endTime: '15:18:11',
+    title: 'Eventti',
+    type: 'leiri',
+    information: 'kgeqwg aogqa olgao e',
+  }
+  event = await models.Event.create(eventData)
   activity = await models.Activity.create({ eventId: event.id })
   plan = await models.Plan.create({activityId: activity.id})
 })
