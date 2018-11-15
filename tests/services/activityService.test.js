@@ -4,13 +4,24 @@ require('../handleTestDatabase')
 
 var scout
 var buffer
+var eventData
 var event
 var activityWithEventId
 
 beforeEach(async () => {
   scout = await models.Scout.create()
   buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  event = await models.Event.create({ scoutId: scout.id })
+  eventData = {
+    scoutId: scout.id, 
+    startDate: '2500-10-10',
+    endDate: '2501-10-10',
+    startTime: '00:00',
+    endTime: '00:00',
+    title: 'Eventti',
+    type: 'leiri',
+    information: '',
+  }
+  event = await models.Event.create(eventData)
   activityWithEventId = await models.Activity.create({ eventId: event.id })
 })
 
@@ -101,7 +112,6 @@ test('Do not move activity from buffer to event when activity does not exist', a
 })
 
 test('Do not move activity from buffer to event when event does not exist', async () => {
-  const event = await models.Event.create()
   const activity = await models.Activity.create({ activityBufferId: buffer.id })
   await event.destroy()
 

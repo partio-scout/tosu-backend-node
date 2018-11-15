@@ -5,11 +5,22 @@ require('../handleTestDatabase')
 
 
 var scout
+var eventData
 var event
 
 beforeEach(async () => {
   scout = await models.Scout.create()
-  event = await models.Event.create({ scoutId: scout.id })
+  eventData = { 
+    scoutId: scout.id, 
+    startDate: '2500-10-10',
+    endDate: '2501-10-10',
+    startTime: '00:00',
+    endTime: '00:00',
+    title: 'Eventti',
+    type: 'leiri',
+    information: '',
+  }
+  event = await models.Event.create(eventData)
   buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
 })
 

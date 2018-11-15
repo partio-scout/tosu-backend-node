@@ -3,11 +3,22 @@ const eventService = require('../../services/eventService')
 require('../handleTestDatabase')
 
 var scout
+var eventData
 var event
 
 beforeEach(async () => {
   scout = await models.Scout.create()
-  event = await models.Event.create({ scoutId: scout.id })
+  eventData = { 
+    scoutId: scout.id, 
+    startDate: '2500-10-10',
+    endDate: '2501-10-10',
+    startTime: '00:00',
+    endTime: '00:00',
+    title: 'Eventti',
+    type: 'leiri',
+    information: '',
+  }
+  event = await models.Event.create(eventData)
 })
 
 test('Get all events', async () => {
@@ -28,7 +39,8 @@ test('getAllEvents returns the activities of the event and the plans of the acti
 })
 
 test('Create an event', async () => {
-  const newEvent = await eventService.createEvent(scout.id, {title:'Asdf'})
+  eventData.title='Asdf'
+  const newEvent = await eventService.createEvent(scout.id, eventData)
   expect(newEvent.title).toBe('Asdf')
   expect(newEvent.activities.length).toBe(0)
   const dbEvent = await models.Event.findById(newEvent.id)
@@ -37,7 +49,8 @@ test('Create an event', async () => {
 })
 
 test('Update an event', async () => {
-  const updatedEvent = await eventService.updateEvent(event.id, {title: 'Asdf'})
+  eventData.title='Asdf'
+  const updatedEvent = await eventService.updateEvent(event.id, eventData)
   expect(updatedEvent.id).toBe(event.id)
   expect(updatedEvent.title).toBe('Asdf')
   const dbEvent = await models.Event.findById(event.id)
