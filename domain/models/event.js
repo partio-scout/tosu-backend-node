@@ -7,19 +7,21 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: [1,255],
-        not: ['^ *$','i'], // Not whitespace-only
+        not: ['^( |\t|\n)*$','i'], // Not whitespace-only
       },
     },
     startDate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
+        isDate: true,
       },
     },
     endDate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
+        isDate: true,
       },
     },
     startTime: {
@@ -38,10 +40,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        // TODO: should there bi isIn validation for type..? 
-        // would it cause problems if some kuksa event had a type that is not listed here?
-        // isIn: [['leiri', 'retku']],
-        not: ['^ *$','i'], // Not whitespace-only
+        // TODO: should there be isIn validation for type? 
+        // if there was isIn validation, it could cause problems 
+        // if some kuksa event had a type that is not listed here...
+        // isIn: [['leiri', 'retki']],
+        not: ['^( |\t|\n)*$','i'], // Not whitespace-only
         len: [1,255],
       }
     },
