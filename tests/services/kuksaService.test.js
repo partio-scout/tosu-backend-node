@@ -33,18 +33,19 @@ beforeEach(async () => {
 test('Sync title from kuksa event to tosu event, removes kuksa source event', async () => {
   const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
   tosuEventsWithWrongTitle[0].dataValues.title = "kuksa eventti 1" // Expect to update "test 1" to this title from kuksa
+  kuksaEvents.splice(0, 1) // Remove 0th element (synced event's corresponding kuksa event, no duplicates allowed)
   expect(hasEvents(events, tosuEventsWithWrongTitle, kuksaEvents)).toBe(true)
 })
 
 test('Event deleted in Kuksa is deleted in tosu as well', async () => {
   kuksaEvents.splice(0, 1) // Remove 0th element (synced event's corresponding kuksa event)
   const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
-  tosuEvents.splice(0, 1) // Expect the corresponding tosu event to be removed as well
-  expect(hasEvents(events, tosuEvents, kuksaEvents))
+  // Expect the corresponding tosu event to be removed as well (cheked by hasEvents())
+  expect(hasEvents(events, tosuEvents, kuksaEvents)).toBe(true)
 })
 
-test('Fetch Kuksa events by age group (TODO)', async () => {
-  // TODO: How to test?
+test('TODO: Fetch Kuksa events by age group', async () => {
+  // TODO: How to test? Maybe add getKuksaEventsByAgeGroup(ageGroup, mockApiResponse), use mock instead of axios
   expect(await kuksaService.getKuksaEventsByAgeGroup("")).toBe(null)
 })
 
@@ -131,19 +132,37 @@ test('Parse Kuksa event start and end times correctly', async () => {
 })
 
 // Checks equality by id and title, doesn't accept duplicates
+// group: synced events returned (contains tosuEvents(+synced) and kuksaEvents)
+// events1: events from the database
+// events2: events from Kuksa API (parsed)
 function hasEvents(group, events1, events2) {
-  // TODO: Check that group doesn't have extra events (that aren't in events1 or events2)
+  // Check that events1 events are in group
   for (var i = 0; i < events1.length; i++) {
-    var found = false
+    var foundInGroup = false
     var foundDuplicate = false
     for (var j = 0; j < group.length; j++) {
       if (group[j].id === events1[i].dataValues.id && group[j].title === events1[i].dataValues.title) {
-        if (found) foundDuplicate = true
-        found = true
+        if (foundInGroup) foundDuplicate = true
+        foundInGroup = true
       }
     }
-    if (!found || foundDuplicate) return false
+
+    if (events1[i].dataValues.kuksaEventId) {
+      // Check that if a synced event in tosuEvents (events1) does not have a corresponding event
+      // in kuksaEvents (events2), then it should not be in group either.
+      // Simulates deleting an event from Kuksa -> should be deleted from tosu as well.
+      var foundInEvents2 = false
+      for (var j = 0; j < events2.length; j++) {
+        if (events1[i].dataValues.id === events2[j].id && events1[i].dataValues.title === events2[j].title) foundInEvents2 = true
+        if (!foundInEvents2) {
+          // Is a synced event, but no correspond kuksaEvent -> should not be in group
+          if (foundInGroup || foundDuplicate) return false
+        }
+      }
+    } else if (!foundInGroup || foundDuplicate) return false
   }
+
+  // Check that events2 are in group
   for (var i = 0; i < events2.length; i++) {
     var found = false
     var foundDuplicate = false
