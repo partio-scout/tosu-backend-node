@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const Plan = sequelize.define('Plan', {
     title: DataTypes.STRING,
     guid: DataTypes.STRING,
-    content: DataTypes.STRING(2047)
+    content: DataTypes.STRING(32767)
   }, {})
 
   Plan.associate = (models) => {

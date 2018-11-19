@@ -46,14 +46,20 @@ module.exports = (sequelize, DataTypes) => {
         // isIn: [['leiri', 'retki']],
         not: ['^( |\t|\n)*$','i'], // Not whitespace-only
         len: [1,255],
-      }
+      },
     },
     information: {
-      type: DataTypes.STRING(2047),
+      type: DataTypes.STRING(32767),
       allowNull: false,
       validate: {
-        len: [0,2047],
-      }
+        len: [0,32767],
+      },
+    },
+    kuksaEventId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+      },
     },
   }, {})
 
