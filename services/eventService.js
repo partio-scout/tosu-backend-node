@@ -50,6 +50,7 @@ async function updateEvent(eventId, eventData) {
     const updatedEvent = await models.Event.findById(event.id)
     return await prepareService.prepareEvent(updatedEvent)
   } catch (error) {
+    console.log(error)
     return { error : error }
   }
 }

@@ -12,7 +12,7 @@ beforeEach(async () => {
   const kuksaId1 = Math.floor(Math.random() * 1001)
   const kuksaId2 = Math.floor(Math.random() * 1001)
 
-  // Already parsed by parseKuksaEvents():
+  // needed pass event creation validations
   const eventData = {
     startDate: '2500-10-10',
     endDate: '2501-10-10',
@@ -20,21 +20,24 @@ beforeEach(async () => {
     endTime: '00:00',
     type: 'eventti',
     information: '',
+    scoutId: scout.id, 
   }
+
+  // Already parsed by parseKuksaEvents():
   kuksaEvents = [
-    { id: 'kuksa' + kuksaId1, title: 'kuksa eventti 1', kuksaEvent: true, kuksaEventId: kuksaId1 },
-    { id: 'kuksa' + kuksaId2, title: 'kuksa eventti 2', kuksaEvent: true, kuksaEventId: kuksaId2 },
+    {...eventData, id: "kuksa" + kuksaId1, title: "kuksa eventti 1", kuksaEvent: true, kuksaEventId: kuksaId1 },
+    {...eventData, id: "kuksa" + kuksaId2, title: "kuksa eventti 2", kuksaEvent: true, kuksaEventId: kuksaId2 },
   ]
 
   tosuEventsWithWrongTitle = []
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 1', scoutId: scout.id, kuksaEventId: kuksaId1}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 1', kuksaEventId: kuksaId1}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 2'}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 3'}))
 
   tosuEvents = []
-  tosuEvents.push(await models.Event.create({...eventData, title:'kuksa eventti 1', scoutId: scout.id, kuksaEventId: kuksaId1}))
-  tosuEvents.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
-  tosuEvents.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'kuksa eventti 1', kuksaEventId: kuksaId1}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 2'}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 3'}))
 })
 
 test('Sync title from kuksa event to tosu event, removes kuksa source event', async () => {
