@@ -13,21 +13,28 @@ beforeEach(async () => {
   const kuksaId2 = Math.floor(Math.random() * 1001)
 
   // Already parsed by parseKuksaEvents():
+  const eventData = {
+    startDate: '2500-10-10',
+    endDate: '2501-10-10',
+    startTime: '00:00',
+    endTime: '00:00',
+    type: 'eventti',
+    information: '',
+  }
   kuksaEvents = [
-    { id: "kuksa" + kuksaId1, title: "kuksa eventti 1", kuksaEvent: true, kuksaEventId: kuksaId1 },
-    { id: "kuksa" + kuksaId2, title: "kuksa eventti 2", kuksaEvent: true, kuksaEventId: kuksaId2 },
+    { id: 'kuksa' + kuksaId1, title: 'kuksa eventti 1', kuksaEvent: true, kuksaEventId: kuksaId1 },
+    { id: 'kuksa' + kuksaId2, title: 'kuksa eventti 2', kuksaEvent: true, kuksaEventId: kuksaId2 },
   ]
 
   tosuEventsWithWrongTitle = []
-  tosuEventsWithWrongTitle.push(await models.Event.create({title:"test 1", scoutId: scout.id, kuksaEventId: kuksaId1}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({title:"test 2", scoutId: scout.id}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({title:"test 3", scoutId: scout.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 1', scoutId: scout.id, kuksaEventId: kuksaId1}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
 
   tosuEvents = []
-  tosuEvents.push(await models.Event.create({title:"kuksa eventti 1", scoutId: scout.id, kuksaEventId: kuksaId1}))
-  tosuEvents.push(await models.Event.create({title:"test 2", scoutId: scout.id}))
-  tosuEvents.push(await models.Event.create({title:"test 3", scoutId: scout.id}))
-
+  tosuEvents.push(await models.Event.create({...eventData, title:'kuksa eventti 1', scoutId: scout.id, kuksaEventId: kuksaId1}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
 })
 
 test('Sync title from kuksa event to tosu event, removes kuksa source event', async () => {
