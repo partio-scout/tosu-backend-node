@@ -37,12 +37,12 @@ function parseKuksaEvents(kuksaEvents) {
     const startDate = new Date(kuksaEvent.Alkupvm)
     const twoDigitStartMonth = ("0" + (startDate.getMonth() + 1)).slice(-2)
     const twoDigitStartDay = ("0" + startDate.getDate()).slice(-2)
-    const startTime = kuksaEvent.Alkukellonaika ? kuksaEvent.Alkukellonaika : "00:00" // TODO: Validate/parse
+    const startTime = validTime(kuksaEvent.Alkukellonaika)
 
     const endDate = new Date(kuksaEvent.Loppupvm)
     const twoDigitEndDay = ("0" + endDate.getDate()).slice(-2)
     const twoDigitEndMonth = ("0" + (endDate.getMonth() + 1)).slice(-2)
-    const endTime = kuksaEvent.Loppukellonaika ? kuksaEvent.Loppukellonaika : "00:00" // TODO: Validate/parse
+    const endTime = validTime(kuksaEvent.Loppukellonaika)
 
     return {
       id: "kuksa" + kuksaEvent.Id,
@@ -124,6 +124,13 @@ function findKuksaEvent(kuksaEventId, kuksaEvents) {
     }
   }
   return null
+}
+
+// Returns the time if it's valid, or 00:00 if it's not
+function validTime(time) {
+  if (!time) return "00:00"
+  // https://stackoverflow.com/a/22044831
+  return time.match("^([01]?[0-9]|2[0-3]):[0-5][0-9]$") ? time : "00:00"
 }
 
 module.exports = {
