@@ -1,5 +1,5 @@
 const supertest = require('supertest')
-const { app, server } = require('../../index')
+const { app } = require('../../index')
 const api = supertest(app)
 
 const models = require('../../domain/models')
@@ -7,17 +7,35 @@ const testUtils = require('../testUtils')
 require('../handleTestDatabase')
 
 var scout
+var otherScout
 var cookie
+var eventData
+var event
+var otherEvent
 
 beforeEach(async () => {
   scout = await models.Scout.create()
-  cookie = testUtils.createScoutCookieWithId(scout.id)
+  otherScout = await models.Scout.create()
+  cookie = testUtils.createScoutCookieWithId(scout.id)  
+  eventData = {
+    scoutId: scout.id, 
+    startDate: '2500-10-10',
+    endDate: '2501-10-10',
+    startTime: '12:11:54',
+    endTime: '15:18:11',
+    title: 'Eventti',
+    type: 'leiri',
+    information: 'kgeqwg aogqa olgao e',
+  }
+  event = await models.Event.create(eventData)
+  eventData.scoutId = otherScout.id
+  otherEvent = await models.Event.create(eventData)
+  eventData.scoutId = scout.id
 })
 
 // DELETE /activities/id
 
 test('Delete activity', async () => {
-  const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id }) // Scout owns activity
 
   await api
@@ -30,9 +48,7 @@ test('Delete activity', async () => {
 })
 
 test('Cannot delete an activity that scout does not own', async () => {
-  const otherScout = await models.Scout.create()
-  const event = await models.Event.create({ scoutId: otherScout.id })
-  const activity = await models.Activity.create({ eventId: event.id })
+  const activity = await models.Activity.create({ eventId: otherEvent.id })
 
   await api
     .delete('/activities/' + activity.id)
@@ -59,7 +75,6 @@ test('Cannot delete when not logged in', async () => {
 
 test('Move activity from event to buffer', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id })
 
   await api.put('/activities/' + activity.id + '/tobuffer')
@@ -78,10 +93,8 @@ test('Move activity from event to buffer', async () => {
 })
 
 test('Cannot move activity that scout does not own to buffer', async () => {
-  const otherScout = await models.Scout.create()
-  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const event = await models.Event.create({ scoutId: otherScout.id })
-  const activity = await models.Activity.create({ eventId: event.id })
+  await models.ActivityBuffer.create({ scoutId: scout.id })
+  const activity = await models.Activity.create({ eventId: otherEvent.id })
 
   await api.put('/activities/' + activity.id + '/tobuffer')
     .set('cookie', [cookie])
@@ -90,7 +103,7 @@ test('Cannot move activity that scout does not own to buffer', async () => {
   // Activity is correct in the database (nothing changed)
   await activity.reload()
   expect(activity.activityBufferId).toBe(null)
-  expect(activity.eventId).toBe(event.id) // Still in otherScout's event, not stolen D:
+  expect(activity.eventId).toBe(otherEvent.id) // Still in otherScout's event, not stolen D:
 })
 
 test('Invalid (noninteger) id is handled when trying to move activity to buffer', async () => {
@@ -110,7 +123,6 @@ test('Cannot move activity from event to buffer when not logged in', async () =>
 
 test('Move activity from buffer to event', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const event = await models.Event.create()
   const activity = await models.Activity.create({ activityBufferId: buffer.id })
 
   await api.put('/activities/' + activity.id + '/toevent/' + event.id)
@@ -129,11 +141,9 @@ test('Move activity from buffer to event', async () => {
 })
 
 test('Cannot move activity from buffer to event when scout does not own the buffer', async () => {
-  const randomScout = await models.Scout.create()
-  const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const randomScoutsBuffer = await models.ActivityBuffer.create({ scoutId: randomScout.id })
-  const event = await models.Event.create()
-  const activity = await models.Activity.create({ activityBufferId: randomScoutsBuffer.id })
+  await models.ActivityBuffer.create({ scoutId: scout.id })
+  const otherScoutsBuffer = await models.ActivityBuffer.create({ scoutId: otherScout.id })
+  const activity = await models.Activity.create({ activityBufferId: otherScoutsBuffer.id })
 
   await api.put('/activities/' + activity.id + '/toevent/' + event.id)
     .set('cookie', [cookie])
@@ -141,13 +151,12 @@ test('Cannot move activity from buffer to event when scout does not own the buff
 
   // Activity is correct in the database (nothing changed)
   await activity.reload()
-  expect(activity.activityBufferId).toBe(randomScoutsBuffer.id)
+  expect(activity.activityBufferId).toBe(otherScoutsBuffer.id)
   expect(activity.eventId).toBe(null)
 })
 
 test('Cannot move activity from buffer to event when event does not exist', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const event = await models.Event.create()
   const deletedEventId = event.id
   await event.destroy()
   const activity = await models.Activity.create({ activityBufferId: buffer.id })
@@ -164,7 +173,6 @@ test('Cannot move activity from buffer to event when event does not exist', asyn
 
 test('Invalid (noninteger) id is handled when trying to move activity to event', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const event = await models.Event.create()
   const activity = await models.Activity.create({ activityBufferId: buffer.id })
 
   await api
@@ -192,7 +200,6 @@ test('Cannot move activity from buffer to event when not logged in', async () =>
 // POST /activities/id/plan
 
 test('Add plan to activity', async () => {
-  const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id }) // Scout owns activity
   const plan = {
     title: 'Plänni',
@@ -214,9 +221,7 @@ test('Add plan to activity', async () => {
 })
 
 test('Does not add plan to activity scout does not own', async () => {
-  const otherScout = await models.Scout.create()
-  const event = await models.Event.create({ scoutId: otherScout.id })
-  const activity = await models.Activity.create({ eventId: event.id }) // Scout does not own activity
+  const activity = await models.Activity.create({ eventId: otherEvent.id }) // Scout does not own activity
   const plan = {
     title: 'Plänni',
     guid: 'gfjggrdgd',
@@ -246,7 +251,6 @@ test('Cannot add plan to activity when not logged in', async () => {
 // check that the returned activity has activity.plans
 test('Plans of activity are returned on PUT /:activityId/tobuffer', async () => {
   await models.ActivityBuffer.create({ scoutId: scout.id })
-  const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ eventId: event.id }) // Scout does not own activity
   const plan = await models.Plan.create({ activityId: activity.id })
 
@@ -262,7 +266,6 @@ test('Plans of activity are returned on PUT /:activityId/tobuffer', async () => 
 // check that the returned activity has activity.plans
 test('Plans of activity are returned on PUT /:activityId/toevent/:eventId', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const event = await models.Event.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ activityBufferId: buffer.id }) // Scout does not own activity
   const plan = await models.Plan.create({ activityId: activity.id })
 

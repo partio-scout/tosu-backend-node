@@ -19,57 +19,75 @@ async function getEvent(eventId) {
 //Creates a new event and returns it
 async function createEvent(scoutId, eventData) {
   eventData.scoutId=scoutId
-  const event = await models.Event.create(eventData)
-  return await prepareService.prepareEvent(event)
+  try {
+    const event = await models.Event.create(eventData)
+    return await prepareService.prepareEvent(event)
+  } catch (error) {
+    return { error : error}
+  }
 }
 
 //Updates an event and returns the updated event
 async function updateEvent(eventId, eventData) {
-  const event = await models.Event.findById(eventId)
-  if (event === null){
-    return { error : 'Event was not found' }
-  }
-  eventData.scoutId = event.scoutId
-  const updated = await models.Event.update(
-    eventData,
-    {
-      where: {
-        id: { $eq: event.id }
-      }
+  try {
+    const event = await models.Event.findById(eventId)
+    if (event === null){
+      return { error : 'Event was not found' }
     }
-  )
-  if (updated[0] !== 1) { //Should actually never happen
-    console.log('Some nasty and weird error occurred when updating an event', updated)
-    return { error : 'Something went wrong o_O' }
+    eventData.scoutId = event.scoutId
+    const updated = await models.Event.update(
+      eventData,
+      {
+        where: {
+          id: { $eq: event.id }
+        }
+      }
+    )
+    if (updated[0] !== 1) { //Should actually never happen
+      console.log('Some nasty and weird error occurred when updating an event', updated)
+      return { error : 'Something went wrong o_O' }
+    }
+    const updatedEvent = await models.Event.findById(event.id)
+    return await prepareService.prepareEvent(updatedEvent)
+  } catch (error) {
+    console.log(error)
+    return { error : error }
   }
-  const updatedEvent = await models.Event.findById(event.id)
-  return await prepareService.prepareEvent(updatedEvent)
 }
 
 
 // Add activity to event
 async function addActivityToEvent(eventId, activityData) {
-  const event = await models.Event.findById(eventId)
-  if (!event){
-    return {error: 'Event could not be found'}
+  try {
+    const event = await models.Event.findById(eventId)
+    if (!event){
+      return {error: 'Event could not be found'}
+    }
+    const activity = await models.Activity.create(activityData)
+    await activity.update({ activityBufferId: null })
+    await activity.update({ eventId: eventId })
+    return await prepareService.prepareActivity(activity)
+  } catch (error) {
+    return { error : error }
   }
-  const activity = await models.Activity.create(activityData)
-  await activity.update({ activityBufferId: null })
-  await activity.update({ eventId: eventId })
-  return await prepareService.prepareActivity(activity)
 }
 
 
 // Deletes an event
 async function deleteEvent(eventId) {
-  const rowsDeleted = await models.Event.destroy({
-    where: {
-      id: { $eq: eventId }
+  try {
+    const rowsDeleted = await models.Event.destroy({
+      where: {
+        id: { $eq: eventId }
+      }
+    })
+    if (rowsDeleted === 1) {
+      return true
+    } else {
+      return false
     }
-  })
-  if (rowsDeleted === 1) {
-    return true
-  } else {
+  } catch (error) {
+    console.log('Error in deleting event: ', error)
     return false
   }
 }

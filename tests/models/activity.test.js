@@ -11,7 +11,15 @@ test('Activity can be created', async () => {
 })
 
 test('Activity can be assigned to Event', async () => {
-  const event = await models.Event.create({ title: "title" })
+  const event = await models.Event.create({
+    title: 'Let\'s go fishing!',
+    startDate: '2018-09-23',
+    endDate: '2018-09-23',
+    startTime: '17:46:22.33',
+    endTime: '18:44:05.795',
+    type: 'Retki',
+    information: 'Fishing fish',
+  })
   const activity = await models.Activity.create({ guid: "gfdjgfdgd", eventId: event.id })
   expect(activity.eventId).toBe(event.id)
 })
@@ -52,7 +60,15 @@ test('Activity can be assigned plans', async () => {
 })
 
 test('Activities can be searched by event id', async () => {
-  const event = await models.Event.create({ title: "title" })
+  const event = await models.Event.create({
+    title: 'Let\'s go fishing!',
+    startDate: '2018-09-23',
+    endDate: '2018-09-23',
+    startTime: '17:46:22.33',
+    endTime: '18:44:05.795',
+    type: 'Retki',
+    information: 'Fishing fish',
+  })
   const activity1 = await models.Activity.create({ guid: "gfdjgfdgd", eventId: event.id })
   const activity2 = await models.Activity.create({ guid: "gfasg12", eventId: event.id })
   const events = await models.Activity.findByEvent(event)

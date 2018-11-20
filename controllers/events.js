@@ -32,7 +32,7 @@ eventRouter.put('/:eventId', async (req, res) => {
   }
   const event = await eventService.updateEvent(eventId, req.body)
   if (event.error) { //Should never really happen since verifyService should prevent all errors
-    return res.status(404).send(event.error)
+    return res.status(400).send(event.error)
   }
   res.json(event)
 })
@@ -49,7 +49,7 @@ eventRouter.post('/:eventId/activities', async (req, res) => {
   }
   const activity = await eventService.addActivityToEvent(eventId, req.body)
   if (activity.error){ //Should never really happen since verifyService should prevent all errors
-    return res.status(500).send(activity.error)
+    return res.status(400).send(activity.error)
   }
   res.json(activity)
 })
@@ -68,7 +68,7 @@ eventRouter.delete('/:eventId', async (req, res) => {
   const event = await eventService.getEvent(eventId)
   const succeeded = await eventService.deleteEvent(eventId)
   if (!succeeded) { // Should not happen
-    return res.status(404).send('The event was not deleted.')
+    return res.status(400).send('The event was not deleted.')
   }
   res.json(event)
 })
