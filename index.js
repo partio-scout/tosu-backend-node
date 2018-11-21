@@ -7,6 +7,8 @@ const config = require('./utils/config')
 const app = express()
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
+const passport = require('passport')
+require('./config/passport')(passport, config)
 
 const verifyService = require('./services/verifyService')
 const pofRouter = require('./controllers/pof')
@@ -38,6 +40,8 @@ app.use(cookieSession({
 app.use(cors(corsOptions))
 app.use(middleware.logger)
 app.use(bodyParser.json())
+app.use(passport.initialize())
+app.use(passport.session())
 
 const loggedIn = async (req, res, next) => {
   if (await verifyService.isLoggedIn(req.session.scout)) {
@@ -64,7 +68,7 @@ app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
 app.use('/eventgroups', eventgroupRouter)
 app.use('/events', eventRouter)
-app.use('/scouts', scoutRouter)
+app.use('/scouts', scoutRouter(config, passport)) // if doesn't work, use scoutRouter(app, config, passport)
 app.use('/plans', planRouter)
 app.use('/activitybuffers', activityBufferRouter)
 
