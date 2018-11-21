@@ -8,7 +8,7 @@ const app = express()
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
 const passport = require('passport')
-require('./config/passport')(passport, config)
+require('./utils/passport')(passport, config)
 
 const verifyService = require('./services/verifyService')
 const pofRouter = require('./controllers/pof')
@@ -24,7 +24,9 @@ var corsOptions = {
     'https://suunnittelu.partio-ohjelma.fi',
     'https://suunnittelu.beta.partio-ohjelma.fi',
     'https://demo.kehatieto.fi',
-    'https://kuksa.partio.fi'
+    'https://kuksa.partio.fi',
+    'https://partioid-test.partio.fi',
+    'https://id.partio.fi'
   ], credentials: true
 }
 

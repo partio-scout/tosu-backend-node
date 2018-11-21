@@ -35,7 +35,7 @@ module.exports = function (config, passport) {
 
   // Called by the client to login
   // Calls the Identity Provider (partioID) to authenticate
-  scoutRouter.get('/login', // Why not POST...?
+  scoutRouter.get('/login',
     passport.authenticate(config.passport.strategy, {
       successRedirect: '/',
       failureRedirect: '/'
@@ -43,19 +43,23 @@ module.exports = function (config, passport) {
   )
 
   // Identity Provider calls back to inform of successful authentication
+  // Then req.isAuthenticated() can be used (hopefully)
   scoutRouter.post(config.passport.saml.path,
     passport.authenticate(config.passport.strategy, {
       failureRedirect: '/',
       failureFlash: true
     }),
     function (req, res) {
+      // TODO: make frontend save scout here?
       res.redirect('/')
     }
   )
 
-  scoutRouter.get('/logout', function (req, res) { // Why not POST..?
+  scoutRouter.get('/logout', function (req, res) {
     req.logout();
     // TODO: invalidate session on IP (?)
     res.redirect('/');
   })
+
+  return scoutRouter
 }
