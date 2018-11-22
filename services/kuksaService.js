@@ -52,7 +52,7 @@ function parseKuksaEvents(kuksaEvents) {
       startTime: startTime,
       endTime: endTime,
       type: kuksaEvent.TilaisuudenTyyppi,
-      information: kuksaEvent.KuvausHTML,
+      information: kuksaEvent.KuvausHTML?kuksaEvent.KuvausHTML:'',
       kuksaEvent: true,
       kuksaEventId: kuksaEvent.Id,
       activities: [],
@@ -103,8 +103,8 @@ async function updateEvent(tosuEvent, kuksaEvent) {
     startTime: kuksaEvent.startTime,
     endTime: kuksaEvent.endTime,
     type: kuksaEvent.type,
-    information: kuksaEvent.information?kuksaEvent.information:'',
-    kuksaEventId: kuksaEvent.kuksaEventId,
+    information: kuksaEvent.information,
+    kuksaEventId: kuksaEvent.kuksaEventId
   })
 }
 
