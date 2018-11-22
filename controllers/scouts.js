@@ -9,7 +9,7 @@ module.exports = function (config, passport) {
     Login/logout with GoogleIdToken sent from the client
   */
 
-  scoutRouter.post('/', async (req, res) => {
+  scoutRouter.post('/google/login', async (req, res) => {
     const idTokenString = req.body.Authorization
     const idToken = await verifyService.verifyId(idTokenString)
 
@@ -22,7 +22,7 @@ module.exports = function (config, passport) {
     res.json(scout)
   })
 
-  scoutRouter.post('/logout', async (req, res) => {
+  scoutRouter.post('/google/logout', async (req, res) => {
     req.session = null
     res.send('Logout successful')
   })
@@ -44,7 +44,7 @@ module.exports = function (config, passport) {
 
   // Identity Provider calls back to inform of successful authentication
   // Then req.isAuthenticated() can be used (hopefully)
-  scoutRouter.post(config.passport.saml.path,
+  scoutRouter.post(config.passport.saml.path, // scouts/login/callback
     passport.authenticate(config.passport.strategy, {
       failureRedirect: '/',
       failureFlash: true

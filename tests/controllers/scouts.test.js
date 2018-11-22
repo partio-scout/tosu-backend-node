@@ -9,7 +9,7 @@ require('../handleTestDatabase')
 
 test('Logging in with invalid token returns 403', async () => {
   await api
-    .post('/scouts')
+    .post('/scouts/google/login')
     .send({ Authorization: 'foo' })
     .expect(403)
 })
@@ -31,7 +31,7 @@ test('Logging in with a valid token works', async () => {
 
 test('Logout works', async () => {
   await api
-    .post('/scouts/logout')
+    .post('/scouts/google/logout')
     .expect(200)
 })
 
