@@ -103,8 +103,8 @@ async function updateEvent(tosuEvent, kuksaEvent) {
     startTime: kuksaEvent.startTime,
     endTime: kuksaEvent.endTime,
     type: kuksaEvent.type,
-    information: kuksaEvent.information,
-    kuksaEventId: kuksaEvent.kuksaEventId
+    information: kuksaEvent.information?kuksaEvent.information:'',
+    kuksaEventId: kuksaEvent.kuksaEventId,
   })
 }
 
