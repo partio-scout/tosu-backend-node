@@ -28,8 +28,13 @@ test('Get all events', async () => {
 })
 
 test('getAllEvents returns the activities of the event and the plans of the activities', async () => {
-  const activity = await models.Activity.create({ guid: 'justiinsa', eventId: event.id})
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const activity = await models.Activity.create({  guid: 'justiinsa', eventId: event.id})
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
   const events = await eventService.getAllEvents(scout.id)
   expect(events.length).toBe(1)
   expect(events[0].activities.length).toBe(1)
@@ -59,7 +64,12 @@ test('Update an event', async () => {
 
 test('updateEvent returns the activities of the event and the plans of the activities', async () => {
   const activity = await models.Activity.create({ guid: 'kauha', eventId: event.id})
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
   const updatedEvent = await eventService.updateEvent(event.id, {title: 'Asdf'})
   expect(updatedEvent.activities.length).toBe(1)
   expect(updatedEvent.activities[0].id).toBe(activity.id)

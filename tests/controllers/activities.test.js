@@ -252,7 +252,12 @@ test('Cannot add plan to activity when not logged in', async () => {
 test('Plans of activity are returned on PUT /:activityId/tobuffer', async () => {
   await models.ActivityBuffer.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ guid: 'toimii',  eventId: event.id }) // Scout does not own activity
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
 
   const result = await api.put('/activities/' + activity.id + '/tobuffer')
     .set('cookie', [cookie])
@@ -267,7 +272,12 @@ test('Plans of activity are returned on PUT /:activityId/tobuffer', async () => 
 test('Plans of activity are returned on PUT /:activityId/toevent/:eventId', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ guid: 'wei', activityBufferId: buffer.id }) // Scout does not own activity
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
 
   const result = await api.put('/activities/' + activity.id + '/toevent/' + event.id)
     .set('cookie', [cookie])

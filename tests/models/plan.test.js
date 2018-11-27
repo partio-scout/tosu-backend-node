@@ -17,7 +17,12 @@ test('Plan can be created', async () => {
 
 test('Plan can be assigned to Activity', async () => {
   const activity = await models.Activity.create({guid: 'luo'})
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
 
   const fetchedPlan = await models.Plan.findById(plan.id, { include: [models.Activity] })
   expect(fetchedPlan.Activity.id).toBe(activity.id)

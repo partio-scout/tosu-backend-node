@@ -33,11 +33,39 @@ test('Prepare a buffer to be front-end friendly returns activities', async () =>
 })
 
 test('Prepare a buffer to be front-end friendly returns plans', async () => {
+<<<<<<< HEAD
   const activity = await models.Activity.create({ guid:'joulukuusi', activityBufferId: buffer.id})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
+=======
+  const activity = await models.Activity.create({activityBufferId: buffer.id})
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
+>>>>>>> plan-validation
   const result = await prepareService.prepareBuffer(buffer)
   expect(result.activities.length).toBe(1)
   expect(result.activities[0].plans.length).toBe(4)
@@ -51,8 +79,18 @@ test('Prepare a buffer to be front-end returns null when buffer is null', async 
 
 test('Prepare activity to be front-end friendly', async () => {
   const activity = await models.Activity.create({guid: 'lahja'})
-  await models.Plan.create({activityId: activity.id})
-  await models.Plan.create({activityId: activity.id})
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
   const result = await prepareService.prepareActivity(activity)
   expect(result.plans.length).toBe(2)
 })
@@ -73,9 +111,25 @@ test('Prepare an event front-end friendly returns activities', async () => {
 })
 
 test('Prepare an event to be front-end friendly returns plans', async () => {
+<<<<<<< HEAD
   const activity = await models.Activity.create({ guid:'test', eventId: event.id})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
+=======
+  const activity = await models.Activity.create({eventId: event.id})
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
+>>>>>>> plan-validation
   const result = await prepareService.prepareEvent(event)
   expect(result.activities.length).toBe(1)
   expect(result.activities[0].plans.length).toBe(2)
