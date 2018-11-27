@@ -1,4 +1,4 @@
- 'use strict'
+'use strict'
 
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {

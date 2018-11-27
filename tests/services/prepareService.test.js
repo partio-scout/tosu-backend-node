@@ -25,15 +25,15 @@ beforeEach(async () => {
 })
 
 test('Prepare a buffer to be front-end friendly returns activities', async () => {
-  await models.Activity.create({activityBufferId: buffer.id})
-  await models.Activity.create({activityBufferId: buffer.id})
-  await models.Activity.create({activityBufferId: buffer.id})
+  await models.Activity.create({ guid:'kattila', activityBufferId: buffer.id})
+  await models.Activity.create({ guid:'paistinpannu', activityBufferId: buffer.id})
+  await models.Activity.create({ guid:'tosu', activityBufferId: buffer.id})
   const result = await prepareService.prepareBuffer(buffer)
   expect(result.activities.length).toBe(3)
 })
 
 test('Prepare a buffer to be front-end friendly returns plans', async () => {
-  const activity = await models.Activity.create({activityBufferId: buffer.id})
+  const activity = await models.Activity.create({ guid:'joulukuusi', activityBufferId: buffer.id})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
@@ -50,7 +50,7 @@ test('Prepare a buffer to be front-end returns null when buffer is null', async 
 
 
 test('Prepare activity to be front-end friendly', async () => {
-  const activity = await models.Activity.create()
+  const activity = await models.Activity.create({guid: 'lahja'})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
   const result = await prepareService.prepareActivity(activity)
@@ -65,15 +65,15 @@ test('Prepare an activity to be front-end returns null when activity is null', a
 
 
 test('Prepare an event front-end friendly returns activities', async () => {
-  await models.Activity.create({eventId: event.id})
-  await models.Activity.create({eventId: event.id})
-  await models.Activity.create({eventId: event.id})
+  await models.Activity.create({ guid:'paketti', eventId: event.id})
+  await models.Activity.create({ guid:'joulupukki', eventId: event.id})
+  await models.Activity.create({ guid:'joulumaa', eventId: event.id})
   const result = await prepareService.prepareEvent(event)
   expect(result.activities.length).toBe(3)
 })
 
 test('Prepare an event to be front-end friendly returns plans', async () => {
-  const activity = await models.Activity.create({eventId: event.id})
+  const activity = await models.Activity.create({ guid:'test', eventId: event.id})
   await models.Plan.create({activityId: activity.id})
   await models.Plan.create({activityId: activity.id})
   const result = await prepareService.prepareEvent(event)
@@ -83,10 +83,10 @@ test('Prepare an event to be front-end friendly returns plans', async () => {
 
 
 test('Prepare an array of events to be front-end friendly works', async () => {
-  await models.Activity.create({eventId: event.id})
-  await models.Activity.create({eventId: event.id})
-  await models.Activity.create({eventId: event.id})
-  await models.Activity.create({eventId: event.id})
+  await models.Activity.create({ guid:'yhteismaa', eventId: event.id})
+  await models.Activity.create({ guid:'sattuma', eventId: event.id})
+  await models.Activity.create({ guid:'vankila', eventId: event.id})
+  await models.Activity.create({ guid:'maali', eventId: event.id})
   const result = await prepareService.prepareEvents([event])
   expect(result[0].activities.length).toBe(4)
 })

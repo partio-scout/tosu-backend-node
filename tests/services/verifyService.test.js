@@ -25,8 +25,8 @@ beforeEach(async () => {
   }
   event = await models.Event.create(eventData)
   buffer = await models.ActivityBuffer.create({ scoutId: scoutOwner.id })
-  activityInEvent = await models.Activity.create({ eventId: event.id })
-  activityInBuffer = await models.Activity.create({ activityBufferId: buffer.id })
+  activityInEvent = await models.Activity.create({ guid:'monopoli', eventId: event.id })
+  activityInBuffer = await models.Activity.create({ guid:'sp',  activityBufferId: buffer.id })
 })
 
 

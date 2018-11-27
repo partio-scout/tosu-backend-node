@@ -2,7 +2,14 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Activity = sequelize.define('Activity', {
-    guid: DataTypes.STRING
+    guid: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1,255],
+        not: ['^( |\t|\n)*$','i'], // Not whitespace-only
+      },
+    },
   }, {})
 
   Activity.associate = (models) => {

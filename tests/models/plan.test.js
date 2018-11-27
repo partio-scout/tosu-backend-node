@@ -16,7 +16,7 @@ test('Plan can be created', async () => {
 })
 
 test('Plan can be assigned to Activity', async () => {
-  const activity = await models.Activity.create()
+  const activity = await models.Activity.create({guid: 'luo'})
   const plan = await models.Plan.create({ activityId: activity.id })
 
   const fetchedPlan = await models.Plan.findById(plan.id, { include: [models.Activity] })
