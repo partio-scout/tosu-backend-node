@@ -52,7 +52,7 @@ function parseKuksaEvents(kuksaEvents) {
       startTime: startTime,
       endTime: endTime,
       type: kuksaEvent.TilaisuudenTyyppi,
-      information: kuksaEvent.KuvausHTML,
+      information: kuksaEvent.KuvausHTML?kuksaEvent.KuvausHTML:'',
       kuksaEvent: true,
       kuksaEventId: kuksaEvent.Id,
       activities: [],
