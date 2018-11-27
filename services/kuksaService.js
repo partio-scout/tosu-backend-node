@@ -72,7 +72,8 @@ function parseKuksaEvents(kuksaEvents) {
 async function syncEvents(kuksaEvents, scoutId) {
   const syncedEvents = await models.Event.findAll({
     where: {
-      kuksaEventId: { $ne: null }
+      kuksaEventId: { $ne: null },
+      scoutId: { $eq: scoutId }
     }
   })
   for (var i = 0; i < syncedEvents.length; i++) {
