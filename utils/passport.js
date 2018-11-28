@@ -12,7 +12,7 @@ module.exports = function (passport, config) {
 
   passport.use(new SamlStrategy(
     {
-      path: '/scouts/' + config.passport.saml.path,
+      path: '/scouts' + config.passport.saml.path,
       entryPoint: config.passport.saml.entryPoint,
       issuer: config.passport.saml.issuer,
       cert: config.passport.saml.cert

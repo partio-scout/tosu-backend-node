@@ -44,16 +44,22 @@ module.exports = function (config, passport) {
 
   // Identity Provider calls back to inform of successful authentication
   // Then req.isAuthenticated() can be used (hopefully)
-  scoutRouter.post(config.passport.saml.path, // scouts/login/callback
+  scoutRouter.post(config.passport.saml.path,
     passport.authenticate(config.passport.strategy, {
       failureRedirect: '/',
       failureFlash: true
     }),
     function (req, res) {
       // TODO: make frontend save scout here?
+      console.log("tried to authenticate")
       res.redirect('/')
     }
   )
+
+  // scoutRouter.post(config.passport.saml.path, async (req, res) => {
+  //   console.log("auth:", req.isAuthenticated())
+  //   res.send('hi')
+  // })
 
   scoutRouter.get('/logout', function (req, res) {
     req.logout();
