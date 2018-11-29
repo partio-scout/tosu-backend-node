@@ -48,7 +48,7 @@ app.use(passport.session())
 metadata(config.passport.saml)
 
 const loggedIn = async (req, res, next) => {
-  if (await verifyService.isLoggedIn(req.session.scout)) {
+  if (await verifyService.isLoggedIn(req.session.scout) || req.isAuthenticated()) {
     next()
   } else {
     res.status(403).send('You are not logged in')

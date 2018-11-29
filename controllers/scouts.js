@@ -49,9 +49,14 @@ module.exports = function (config, passport) {
       failureRedirect: '/',
       failureFlash: true
     }),
-    function (req, res) {
-      // TODO: make frontend save scout here?
-      console.log("tried to authenticate")
+    async (req, res) => {
+      // https://stackoverflow.com/questions/27637609/understanding-passport-serialize-deserialize
+      // req.user.membernumber (?)
+      console.log("user who logged in:", req.user)
+
+      const scout = await scoutService.findOrCreateScout(req.user.membernumber)
+      req.session.scout = scout
+      res.cookie('scout', scout)
       res.redirect('/')
     }
   )
@@ -62,9 +67,9 @@ module.exports = function (config, passport) {
   // })
 
   scoutRouter.get('/logout', function (req, res) {
-    req.logout();
+    req.logout()
     // TODO: invalidate session on IP (?)
-    res.redirect('/');
+    res.redirect('/')
   })
 
   return scoutRouter
