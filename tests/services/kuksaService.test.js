@@ -46,11 +46,13 @@ test('Sync title from kuksa event to tosu event, removes kuksa source event', as
   expect(hasEvents(events, tosuEventsWithWrongTitle, kuksaEvents)).toBe(true)
 })
 
-test('Synced events of another scout do not affect another other users', async () => {
+test('Synced events of one scout do not affect synced events of other scouts', async () => {
+  const kuksaEventsCopy = kuksaEvents.slice()
   const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
   const scout2 = await models.Scout.create()
-  const events2 = await kuksaService.syncEvents(kuksaEvents, scout2.id)
-  expect(events2.length).toBe(2) // Should be same as kuksa events
+  const events2 = await kuksaService.syncEvents(kuksaEventsCopy, scout2.id)
+  expect(events2.length).toBe(2) // Should be same as kuksaEvents
+  expect(hasEvents(events2, [], kuksaEventsCopy)) // events2 should have all kuksa events (no tosu events)
 })
 
 test('Event deleted in Kuksa is deleted in tosu as well', async () => {

@@ -92,7 +92,10 @@ async function syncEvents(kuksaEvents, scoutId) {
   }
 
   const tosuEvents = await eventService.getAllEvents(scoutId)
-  return kuksaEvents ? tosuEvents.concat(kuksaEvents) : tosuEvents // Don't concat a null object
+  var concattedEvents = []
+  concattedEvents = kuksaEvents ? concattedEvents.concat(kuksaEvents) : concattedEvents // Don't concat a null object
+  concattedEvents = tosuEvents ? concattedEvents.concat(tosuEvents) : concattedEvents // Don't concat a null object
+  return concattedEvents
 }
 
 async function updateEvent(tosuEvent, kuksaEvent) {
@@ -105,7 +108,7 @@ async function updateEvent(tosuEvent, kuksaEvent) {
     endTime: kuksaEvent.endTime,
     type: kuksaEvent.type,
     information: kuksaEvent.information,
-    kuksaEventId: kuksaEvent.kuksaEventId
+    kuksaEventId: kuksaEvent.kuksaEventId,
   })
 }
 
