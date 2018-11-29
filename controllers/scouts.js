@@ -54,7 +54,9 @@ module.exports = function (config, passport) {
       // req.user.membernumber (?)
       console.log("user who logged in:", req.user)
 
-      const scout = await scoutService.findOrCreateScout(req.user.membernumber)
+      const membernumber = parseInt(req.user.membernumber)
+      if (isNaN(membernumber)) return res.status(500).send("membernumber is Nan")
+      const scout = await scoutService.findOrCreateScoutByMemberNumber(membernumber)
       req.session.scout = scout
       res.cookie('scout', scout)
       res.redirect('/')

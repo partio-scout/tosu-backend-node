@@ -42,7 +42,22 @@ app.use(cookieSession({
 
 app.use(cors(corsOptions))
 app.use(middleware.logger)
-app.use(bodyParser.json())
+
+// app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+
+// TODO: implement shouldParseRequest
+// var parseJSON = bodyParser.json()
+// var parseUrlencoded = bodyParser.urlencoded({extended: true})
+// app.use((req, res, next) => {
+//   if (shouldParseRequest(req)) {
+//     parseJSON(req, res, next)
+//   } else {
+//     parseUrlencoded(req, res, next)
+//   }
+// })
+
+
 app.use(passport.initialize())
 app.use(passport.session())
 metadata(config.passport.saml)

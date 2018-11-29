@@ -5,7 +5,15 @@ const bufferService = require('./activitybufferService')
 async function findOrCreateScout(googleIdToken) {
   const userId = googleIdToken.getPayload()['sub']
   const name = googleIdToken.getPayload()['name']
+  return await findOrCreate(userId, name)
+}
 
+async function findOrCreateScoutByMemberNumber(memberNumber) {
+  // TODO: Add a mew column for partioid
+  return await findOrCreate(memberNumber, "Add name here") // TODO: add name
+}
+
+async function findOrCreate(userId, name) {
   const scout = await models.Scout.findOrCreate({
     where: {
       googleId: { $eq: userId }
@@ -27,4 +35,5 @@ async function findOrCreateScout(googleIdToken) {
 
 module.exports = {
   findOrCreateScout,
+  findOrCreateScoutByMemberNumber,
 }
