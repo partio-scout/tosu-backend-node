@@ -36,6 +36,7 @@
     "node-cron": "^2.0.1",
     "passport": "^0.4.0",
     "passport-saml": "^0.35.0",
+    "passport-saml-metadata": "^1.5.2",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "request": "^2.88.0",

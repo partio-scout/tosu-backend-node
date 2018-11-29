@@ -8,6 +8,7 @@ const app = express()
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
 const passport = require('passport')
+const metadata = require('passport-saml-metadata').metadata
 require('./utils/passport')(passport, config)
 
 const verifyService = require('./services/verifyService')
@@ -44,6 +45,7 @@ app.use(middleware.logger)
 app.use(bodyParser.json())
 app.use(passport.initialize())
 app.use(passport.session())
+metadata(config.passport.saml)
 
 const loggedIn = async (req, res, next) => {
   if (await verifyService.isLoggedIn(req.session.scout)) {
