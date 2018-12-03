@@ -38,35 +38,29 @@ module.exports = function (config, passport) {
   scoutRouter.get('/login',
     passport.authenticate(config.passport.strategy, {
       successRedirect: '/',
-      failureRedirect: '/'
+      failureRedirect: '/',
     })
   )
 
   // Identity Provider calls back to inform of successful authentication
-  // Then req.isAuthenticated() can be used (hopefully)
+  // Then req.isAuthenticated() can be used
   scoutRouter.post(config.passport.saml.path,
     passport.authenticate(config.passport.strategy, {
       failureRedirect: '/',
-      failureFlash: true
+      failureFlash: true,
+      // session: true
     }),
     async (req, res) => {
-      // https://stackoverflow.com/questions/27637609/understanding-passport-serialize-deserialize
-      // req.user.membernumber (?)
       console.log("user who logged in:", req.user)
 
       const membernumber = parseInt(req.user.membernumber)
       if (isNaN(membernumber)) return res.status(500).send("membernumber is Nan")
-      const scout = await scoutService.findOrCreateScoutByMemberNumber(membernumber)
+      const scout = await scoutService.findOrCreateScoutByMemberNumber(membernumber+"") // TODO don't use googleID col
       req.session.scout = scout
-      res.cookie('scout', scout)
-      res.redirect('/')
+      res.cookie('scout', scout) // TODO: Make expire?
+      res.redirect('http://localhost:3000') // TODO
     }
   )
-
-  // scoutRouter.post(config.passport.saml.path, async (req, res) => {
-  //   console.log("auth:", req.isAuthenticated())
-  //   res.send('hi')
-  // })
 
   scoutRouter.get('/logout', function (req, res) {
     req.logout()

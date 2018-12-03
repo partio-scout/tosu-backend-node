@@ -43,10 +43,11 @@ app.use(cookieSession({
 app.use(cors(corsOptions))
 app.use(middleware.logger)
 
-// app.use(bodyParser.json())
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-// TODO: implement shouldParseRequest
+// If both bodyParsers don't work, remove app.use(bodyParser.json()) and
+// implement shouldParseRequest:
 // var parseJSON = bodyParser.json()
 // var parseUrlencoded = bodyParser.urlencoded({extended: true})
 // app.use((req, res, next) => {
@@ -56,7 +57,6 @@ app.use(bodyParser.urlencoded({extended: true}))
 //     parseUrlencoded(req, res, next)
 //   }
 // })
-
 
 app.use(passport.initialize())
 app.use(passport.session())
@@ -72,10 +72,6 @@ const loggedIn = async (req, res, next) => {
 var options_sendfile = {
   root: __dirname + '/build/',
 }
-
-app.get('/', function (req, res) {
-  res.sendFile('index.html', options_sendfile)
-})
 
 
 app.use('/activities', loggedIn)

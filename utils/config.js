@@ -14,8 +14,8 @@ module.exports = {
         issuer: 'https://suunnittelu.beta.partio-ohjelma.fi',
         metadata: {
           url: 'https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php',
-          // url: 'https://stubidp.sustainsys.com/Metadata',
-          timeout: process.env.SAML_METADATA_TIMEOUT || 1500,
+          // url: 'https://stubidp.sustainsys.com/Metadata/BrowserFriendly',
+          timeout: process.env.SAML_METADATA_TIMEOUT || 30000,
           // backupStore: fileCache({
           //   basePath: process.env.SAML_METADATA_CACHE_DIR || os.tmpdir(),
           //   ns: process.env.SAML_ISSUER
