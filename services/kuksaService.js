@@ -2,8 +2,7 @@ const axios = require('axios')
 const models = require('../domain/models')
 const eventService = require('./eventService')
 
-// const EVENT_API_BASE_PRODUCTION = "https://kuksa.partio.fi" // TODO: Enable, or new ENV=staging?
-const EVENT_API_BASE_PRODUCTION = "https://demo.kehatieto.fi/partiolaiset"
+const EVENT_API_BASE_PRODUCTION = "https://kuksa.partio.fi" // NOTE: beta machine has env=production
 const EVENT_API_BASE_STAGING = "https://demo.kehatieto.fi/partiolaiset"
 
 const EVENT_API = "/Tapahtumat_Rajapinta/api/Tapahtumahaku"
