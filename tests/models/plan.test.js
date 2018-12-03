@@ -3,6 +3,16 @@ const sequelize = require('sequelize')
 const models = require('../../domain/models')
 require('../handleTestDatabase')
 
+test('Cannot post blank plan', async () => {
+  models.Plan.create({
+    title: "",
+    guid: "",
+    content: ""
+  }).then(function () {
+    expect.fail()
+  })
+})
+
 test('Plan can be created', async () => {
   const plan = await models.Plan.create({
     title: "Quaint plan",
@@ -17,7 +27,12 @@ test('Plan can be created', async () => {
 
 test('Plan can be assigned to Activity', async () => {
   const activity = await models.Activity.create()
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
 
   const fetchedPlan = await models.Plan.findById(plan.id, { include: [models.Activity] })
   expect(fetchedPlan.Activity.id).toBe(activity.id)

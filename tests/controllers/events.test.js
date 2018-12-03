@@ -227,7 +227,12 @@ test('Invalid (noninteger) event id is handled properly when trying to delete', 
 test('Activities and the plans of activities are returned on GET /events', async () => {
   const event = await models.Event.create(eventData)
   const activity = await models.Activity.create({eventId: event.id})
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
   const result = await api.get('/events')
     .set('cookie', [cookie])
     .expect('Content-Type', /json/)
@@ -244,7 +249,12 @@ test('Activities and the plans of activities are returned on GET /events', async
 test('Activities and the plans of activities are returned on PUT /events/:eventId', async () => {
   const event = await models.Event.create(eventData)
   const activity = await models.Activity.create({eventId: event.id})
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
   const result = await api.put('/events/'+event.id)
     .send({
       title: 'EGasg',
@@ -263,7 +273,12 @@ test('Activities and the plans of activities are returned on PUT /events/:eventI
 test('Plans are returned on POST /events/:eventId/activities', async () => {
   const event = await models.Event.create(eventData)
   const activity = await models.Activity.create({eventId: event.id})
-  await models.Plan.create({ activityId: activity.id })
+  await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
   const result = await api.post('/events/'+event.id+'/activities')
     .send({guid: 'asgas'})
     .set('cookie', [cookie])
@@ -278,7 +293,12 @@ test('Plans are returned on POST /events/:eventId/activities', async () => {
 test('Plans are returned on DELETE /events/:eventId/activities', async () => {
   const event = await models.Event.create(eventData)
   const activity = await models.Activity.create({eventId: event.id})
-  const plan = await models.Plan.create({ activityId: activity.id })
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activity.id
+  })
   const result = await api.delete('/events/'+event.id)
     .set('cookie', [cookie])
     .expect('Content-Type', /json/)

@@ -67,14 +67,24 @@ test('Verify scout does not own event when scout or event does not exist', async
 
 
 test('Verify scout owns the plan through activity through event', async () => {
-  const plan = await models.Plan.create({activityId: activityInEvent.id})
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activityInEvent.id
+  })
 
   expect(await verifyService.scoutOwnsPlan(scoutOwner, plan.id)).toBe(true)
   expect(await verifyService.scoutOwnsPlan(scoutImposter, plan.id)).toBe(false)
 })
 
 test('Verify scout owns the plan through activity through buffer', async () => {
-  const plan = await models.Plan.create({activityId: activityInBuffer.id})
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activityInBuffer.id
+  })
 
   expect(await verifyService.scoutOwnsPlan(scoutOwner, plan.id)).toBe(true)
   expect(await verifyService.scoutOwnsPlan(scoutImposter, plan.id)).toBe(false)
@@ -82,7 +92,12 @@ test('Verify scout owns the plan through activity through buffer', async () => {
 
 
 test('Verify the scout does not own the plan when the scout or the plan does not exist', async () => {
-  const plan = await models.Plan.create({activityId: activityInEvent.id})
+  const plan = await models.Plan.create({
+    title: "Quaint plan",
+    guid: "jgkdflhgjfkld",
+    content: "Do this and that",
+    activityId: activityInEvent.id
+  })
   const planId = plan.id
 
   expect(await verifyService.scoutOwnsPlan(scoutOwner, planId)).toBe(true)
