@@ -111,7 +111,7 @@ scoutRouter.get('/logout', function(req, res) {
 console.log('In int----------------------------');
 //Here add the nameID and nameIDFormat to the user if you stored it someplace.
 if (req.user == null) {
-return res.redirect('/');
+return res.redirect('http://localhost:3000');
 }
 
   req.user.saml = {};
@@ -125,8 +125,8 @@ req.user.nameIDFormat = req.user.saml.nameIDFormat;
 
 samlStrategy.logout(req, function(err, request){
     if(!err){
-        //redirect to the IdP Logout URL
-        res.redirect(request);
+        req.logout() // Logout locally
+        res.redirect(request) // Redirect to the IdP Logout URL (partio.fi)
     }
  });
 })
