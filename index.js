@@ -51,6 +51,7 @@ app.use(passport.session())
 metadata(config.passport.saml)
 
 const loggedIn = async (req, res, next) => {
+  // TODO: Remove verifyService.isLoggedIn once GoogleLogin is no longer implemented
   if (await verifyService.isLoggedIn(req.session.scout) || req.isAuthenticated()) {
     next()
   } else {

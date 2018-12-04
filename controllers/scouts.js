@@ -34,7 +34,6 @@ module.exports = function (config, passport) {
     passport.authenticate(config.passport.strategy, {
       failureRedirect: '/',
       failureFlash: true,
-      // session: true
     }),
     async (req, res) => {
       console.log("user who logged in:", req.user)
@@ -46,7 +45,7 @@ module.exports = function (config, passport) {
       var scoutInfo = { name: scout.name }
       req.session.scout = scout
       res.cookie('scout', JSON.stringify(scoutInfo)) // Send only necessary, harmless info to a client cookie
-      res.redirect('http://localhost:3000')
+      res.redirect(config.localFrontend)
     }
   )
 
@@ -55,11 +54,11 @@ module.exports = function (config, passport) {
   // https://github.com/bergie/passport-saml/issues/200
   require('../utils/passport')(passport, config).then(function (samlStrategy) {
     scoutRouter.get('/logout', function(req, res) {
-      // Here add the nameID and nameIDFormat to the user if you stored it someplace.
       if (req.user == null) {
-        return res.redirect('http://localhost:3000')
+        return res.redirect(config.localFrontend)
       }
 
+      // Here add the nameID and nameIDFormat to the user
       req.user.saml = {}
       req.user.saml.nameID = req.user.nameID
       req.user.saml.nameIDFormat = req.user.nameIDFormat
@@ -70,7 +69,7 @@ module.exports = function (config, passport) {
           req.logout() // Logout locally
           res.redirect(request) // Redirect to the IdP Logout URL (partio.fi)
         }
-      });
+      })
     })
   })
 
@@ -79,7 +78,7 @@ module.exports = function (config, passport) {
     req.log.info("completing logout", req.user)
     req.logout()
     req.session = null
-    res.redirect('/')
+    res.redirect(config.localFrontend)
   })
 
   return scoutRouter
