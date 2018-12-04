@@ -46,18 +46,6 @@ app.use(middleware.logger)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-// If both bodyParsers don't work, remove app.use(bodyParser.json()) and
-// implement shouldParseRequest:
-// var parseJSON = bodyParser.json()
-// var parseUrlencoded = bodyParser.urlencoded({extended: true})
-// app.use((req, res, next) => {
-//   if (shouldParseRequest(req)) {
-//     parseJSON(req, res, next)
-//   } else {
-//     parseUrlencoded(req, res, next)
-//   }
-// })
-
 app.use(passport.initialize())
 app.use(passport.session())
 metadata(config.passport.saml)
@@ -83,7 +71,7 @@ app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
 app.use('/eventgroups', eventgroupRouter)
 app.use('/events', eventRouter)
-app.use('/scouts', scoutRouter(config, passport)) // if doesn't work, use scoutRouter(app, config, passport)
+app.use('/scouts', scoutRouter(config, passport))
 app.use('/plans', planRouter)
 app.use('/activitybuffers', activityBufferRouter)
 

@@ -5,10 +5,7 @@ const scoutService = require('../services/scoutService')
 
 module.exports = function (config, passport) {
 
-  /*
-    Login/logout with GoogleIdToken sent from the client
-  */
-
+  //  Login with GoogleIdToken sent from the client
   scoutRouter.post('/google/login', async (req, res) => {
     const idTokenString = req.body.Authorization
     const idToken = await verifyService.verifyId(idTokenString)
@@ -46,8 +43,9 @@ module.exports = function (config, passport) {
       if (isNaN(membernumber)) return res.status(500).send("membernumber is Nan")
 
       const scout = await scoutService.findOrCreateScoutByMemberNumber(req.user) // TODO don't use googleID col
+      var scoutInfo = { name: scout.name }
       req.session.scout = scout
-      res.cookie('scout', JSON.stringify(scout)) // TODO: Make expire?
+      res.cookie('scout', JSON.stringify(scoutInfo)) // Send only necessary, harmless info to a client cookie
       res.redirect('http://localhost:3000')
     }
   )
@@ -82,10 +80,6 @@ module.exports = function (config, passport) {
     req.logout()
     req.session = null
     res.redirect('/')
-  })
-
-  scoutRouter.get('/test', async (req, res) => {
-    res.status(200).send(req.user)
   })
 
   return scoutRouter
