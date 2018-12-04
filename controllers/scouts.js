@@ -52,47 +52,29 @@ module.exports = function (config, passport) {
     }
   )
 
-  // Called by frontend to logout (messy...)
-  const metadata = require('passport-saml-metadata')
-  const SamlStrategy = require('passport-saml').Strategy
+  // Called by frontend to log out. Also logs out from other partioid single sign out service providers
+  // Could not get to work without reinitializing samlStrategy:
+  // https://github.com/bergie/passport-saml/issues/200
+  require('../utils/passport')(passport, config).then(function (samlStrategy) {
+    scoutRouter.get('/logout', function(req, res) {
+      // Here add the nameID and nameIDFormat to the user if you stored it someplace.
+      if (req.user == null) {
+        return res.redirect('http://localhost:3000')
+      }
 
-  metadata.fetch(config.passport.saml.metadata, {credentials: 'include'}) // credentials not necessary(?)
-    .then(function (reader) {
-      const strategyConfig = metadata.toPassportConfig(reader)
-      strategyConfig.realm = config.passport.saml.issuer
-      strategyConfig.issuer = config.passport.saml.issuer
-      strategyConfig.protocol = 'samlp'
+      req.user.saml = {}
+      req.user.saml.nameID = req.user.nameID
+      req.user.saml.nameIDFormat = req.user.nameIDFormat
+      req.user.id = req.user.saml.nameID
 
-      var samlStrategy = new SamlStrategy(strategyConfig, function (profile, done) {
-        console.log("profile:",profile)
-        // profile = metadata.claimsToCamelCase(profile, reader.claimSchema)
-        return done(null, profile)
-      })
-
-      scoutRouter.get('/logout', function(req, res) {
-        // Here add the nameID and nameIDFormat to the user if you stored it someplace.
-        if (req.user == null) {
-          return res.redirect('http://localhost:3000')
+      samlStrategy.logout(req, function(err, request){
+        if (!err) {
+          req.logout() // Logout locally
+          res.redirect(request) // Redirect to the IdP Logout URL (partio.fi)
         }
-
-        req.user.saml = {}
-        req.user.saml.nameID = req.user.nameID
-        req.user.saml.nameIDFormat = req.user.nameIDFormat
-        req.user.id = req.user.saml.nameID
-        req.user.nameIDFormat = req.user.saml.nameIDFormat
-
-        samlStrategy.logout(req, function(err, request){
-          if (!err) {
-            req.logout() // Logout locally
-            res.redirect(request) // Redirect to the IdP Logout URL (partio.fi)
-          }
-        });
-      })
+      });
     })
-    .catch((err) => {
-      console.error('Error loading SAML metadata', err)
-      process.exit(1)
-    })
+  })
 
   // Called by IdP to logout
   scoutRouter.get(config.passport.saml.logoutCallback, function(req, res) {
