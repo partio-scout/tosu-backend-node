@@ -29,7 +29,12 @@ beforeEach(async () => {
   }
   event = await models.Event.create(eventData)
   activity = await models.Activity.create({ eventId: event.id })
-  plan = await models.Plan.create({activityId: activity.id})
+  plan = await models.Plan.create({
+    content: "Jos tarppo suoritetaan syksyllä, vartio voi seurata kuinka lehdet muuttavat.",
+    guid: "bb55234fb00bc313cf7e3379bfeead1a",
+    title: "Luonnon vuosi",
+    activityId: activity.id
+  })
 })
 
 test('Modify a plan', async () => {

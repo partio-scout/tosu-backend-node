@@ -19,8 +19,7 @@ beforeEach(async () => {
     startTime: '00:00',
     endTime: '00:00',
     type: 'eventti',
-    information: '',
-    scoutId: scout.id, 
+    information: ''
   }
 
   // Already parsed by parseKuksaEvents():
@@ -30,14 +29,14 @@ beforeEach(async () => {
   ]
 
   tosuEventsWithWrongTitle = []
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 1', kuksaEventId: kuksaId1}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 2'}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 3'}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 1', kuksaEventId: kuksaId1, scoutId: scout.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
 
   tosuEvents = []
-  tosuEvents.push(await models.Event.create({...eventData, title:'kuksa eventti 1', kuksaEventId: kuksaId1}))
-  tosuEvents.push(await models.Event.create({...eventData, title:'test 2'}))
-  tosuEvents.push(await models.Event.create({...eventData, title:'test 3'}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'kuksa eventti 1', kuksaEventId: kuksaId1, scoutId: scout.id}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
 })
 
 test('Sync title from kuksa event to tosu event, removes kuksa source event', async () => {
@@ -45,6 +44,15 @@ test('Sync title from kuksa event to tosu event, removes kuksa source event', as
   tosuEventsWithWrongTitle[0].dataValues.title = "kuksa eventti 1" // Expect to update "test 1" to this title from kuksa
   kuksaEvents.splice(0, 1) // Remove 0th element (synced event's corresponding kuksa event, no duplicates allowed)
   expect(hasEvents(events, tosuEventsWithWrongTitle, kuksaEvents)).toBe(true)
+})
+
+test('Synced events of one scout do not affect synced events of other scouts', async () => {
+  const kuksaEventsCopy = kuksaEvents.slice()
+  const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
+  const scout2 = await models.Scout.create()
+  const events2 = await kuksaService.syncEvents(kuksaEventsCopy, scout2.id)
+  expect(events2.length).toBe(2) // Should be same as kuksaEvents
+  expect(hasEvents(events2, [], kuksaEventsCopy)) // events2 should have all kuksa events (no tosu events)
 })
 
 test('Event deleted in Kuksa is deleted in tosu as well', async () => {
