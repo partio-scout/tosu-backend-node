@@ -11,6 +11,7 @@ module.exports = {
         path: '/login/callback',
         callbackUrl: `http://localhost:3001/scouts/login/callback`,
         logoutCallbackUrl: `http://localhost:3001/scouts/logout/callback`,
+        logoutCallback: '/logout/callback',
         issuer: 'https://suunnittelu.beta.partio-ohjelma.fi',
         metadata: {
           url: 'https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php',

@@ -8,9 +8,9 @@ async function findOrCreateScout(googleIdToken) {
   return await findOrCreate(userId, name)
 }
 
-async function findOrCreateScoutByMemberNumber(memberNumber) {
-  // TODO: Add a mew column for partioid
-  return await findOrCreate(memberNumber, "Add name here") // TODO: add name
+async function findOrCreateScoutByMemberNumber(user) {
+  // TODO: Add a mew column for partioid in model Scout
+  return await findOrCreate(user.memberNumber+"", user.firstname + " " + user.lastname)
 }
 
 async function findOrCreate(userId, name) {
