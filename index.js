@@ -62,7 +62,6 @@ var options_sendfile = {
   root: __dirname + '/build/',
 }
 
-
 app.use('/activities', loggedIn)
 app.use('/events', loggedIn)
 app.use('/activitybuffers', loggedIn)

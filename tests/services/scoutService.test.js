@@ -3,9 +3,15 @@ const scoutService = require('../../services/scoutService')
 require('../handleTestDatabase')
 
 var mockToken
+var user
 
 beforeEach(() => {
   mockToken = generateMockToken()
+  user = {
+    firstname: "John",
+    lastname: "Smith",
+    membernumber: 7584309
+  }
 })
 
 test('Finding an existing scout', async () => {
@@ -15,16 +21,35 @@ test('Finding an existing scout', async () => {
   expect(found.name).toBe(scout.name)
 })
 
-test('Creating a new scout', async () => {
+test('Creating a new scout with googleToken', async () => {
   const newScoutGoogleIdToken = googleIdTokenMock(mockToken, "Tester Girl")
   const found = await scoutService.findOrCreateScoutByGoogleToken(googleIdTokenMock(mockToken, "Tester Girl"))
   expect(found.id).not.toBeNull()
   expect(found.name).toBe("Tester Girl")
+  expect(found.googleId).not.toBeNull()
+  expect(found.partioId).toBeNull()
 })
 
-test('Creating a new scout creates an activityBuffer', async () => {
+test('Creating a new scout with partioID', async () => {
+  const found = await scoutService.findOrCreateScoutByMemberNumber(user)
+  expect(found.id).not.toBeNull()
+  expect(found.name).toBe("John Smith")
+  expect(found.googleId).toBeNull()
+  expect(found.partioId).not.toBeNull()
+})
+
+test('Creating a new scout with googleToken creates an activityBuffer', async () => {
   const newScoutGoogleIdToken = googleIdTokenMock(mockToken, "Tester Girl")
   const created = await scoutService.findOrCreateScoutByGoogleToken(googleIdTokenMock(mockToken, "Tester Girl"))
+  const foundBuffer = await models.ActivityBuffer.findOne({
+    where: { scoutId: created.id }
+  })
+  expect(foundBuffer).not.toBeNull()
+  expect(foundBuffer.scoutId).toBe(created.id)
+})
+
+test('Creating a new scout with partioID creates an activityBuffer', async () => {
+  const created = await scoutService.findOrCreateScoutByMemberNumber(user)
   const foundBuffer = await models.ActivityBuffer.findOne({
     where: { scoutId: created.id }
   })

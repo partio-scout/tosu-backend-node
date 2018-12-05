@@ -17,7 +17,6 @@ async function findOrCreateScoutByGoogleToken(googleIdToken) {
 }
 
 async function findOrCreateScoutByMemberNumber(user) {
-  // TODO: Add a mew column for partioid in model Scout
   return await findOrCreate({
     where: {
       partioId: { $eq: user.membernumber }

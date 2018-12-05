@@ -9,8 +9,6 @@ module.exports = {
     saml: {
       path: '/login/callback',
       // callbackUrl and logoutCallbackUrl are configured at IdP side
-      // callbackUrl: `http://localhost:3001/scouts/login/callback`,
-      // logoutCallbackUrl: `http://localhost:3001/scouts/logout/callback`,
       logoutCallback: '/logout/callback',
       issuer: 'https://suunnittelu.beta.partio-ohjelma.fi',
       metadata: {

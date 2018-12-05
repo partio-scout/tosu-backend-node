@@ -2,7 +2,7 @@ const metadata = require('passport-saml-metadata')
 const SamlStrategy = require('passport-saml').Strategy
 
 module.exports = function (passport, config) {
-  return metadata.fetch(config.passport.saml.metadata, {credentials: 'include'}) // credentials not necessary(?)
+  return metadata.fetch(config.passport.saml.metadata, { credentials: 'include' })
     .then(function (reader) {
       if (process.env.NODE_ENV !== 'test') {
         const strategyConfig = metadata.toPassportConfig(reader)
@@ -12,7 +12,6 @@ module.exports = function (passport, config) {
 
         const samlStrategy = new SamlStrategy(strategyConfig, function (profile, done) {
           console.log("profile:",profile)
-          // profile = metadata.claimsToCamelCase(profile, reader.claimSchema)
           return done(null, profile)
         })
 
@@ -34,7 +33,7 @@ module.exports = function (passport, config) {
 
         return samlStrategy
       } else {
-        return { logout: function (a, b) {} } // Stub for testing
+        return { logout: function (a, b) { return } } // Stub for testing
       }
     })
 }
