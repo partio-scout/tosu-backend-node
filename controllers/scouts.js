@@ -41,7 +41,7 @@ module.exports = function (config, passport) {
       const membernumber = parseInt(req.user.membernumber)
       if (isNaN(membernumber)) return res.status(500).send("membernumber is Nan")
 
-      const scout = await scoutService.findOrCreateScoutByMemberNumber(req.user) // TODO don't use googleID col
+      const scout = await scoutService.findOrCreateScoutByMemberNumber(req.user)
       var scoutInfo = { name: scout.name }
       req.session.scout = scout
       res.cookie('scout', JSON.stringify(scoutInfo)) // Send only necessary, harmless info to a client cookie
@@ -49,7 +49,7 @@ module.exports = function (config, passport) {
     }
   )
 
-  // Called by frontend to log out. Also logs out from other partioid single sign out service providers
+  // Called by frontend to log out. Also logs out from other partioid single sign out service providers.
   // Could not get to work without reinitializing samlStrategy:
   // https://github.com/bergie/passport-saml/issues/200
   require('../utils/passport')(passport, config).then(function (samlStrategy) {
@@ -67,7 +67,7 @@ module.exports = function (config, passport) {
       samlStrategy.logout(req, function(err, request){
         if (!err) {
           req.logout() // Logout locally
-          res.redirect(request) // Redirect to the IdP Logout URL (partio.fi)
+          res.redirect(request) // Redirect to the IdP Logout URL
         }
       })
     })
@@ -75,7 +75,7 @@ module.exports = function (config, passport) {
 
   // Called by IdP to logout
   scoutRouter.get(config.passport.saml.logoutCallback, function(req, res) {
-    req.log.info("completing logout", req.user)
+    console.log("completing logout", req.user)
     req.logout()
     req.session = null
     res.redirect(config.localFrontend)

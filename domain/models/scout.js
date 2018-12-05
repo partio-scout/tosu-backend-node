@@ -3,6 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Scout = sequelize.define('Scout', {
     googleId: DataTypes.STRING,
+    partioId: DataTypes.INTEGER, // Scout will have either googleId or partioId
     name: DataTypes.STRING
   }, {})
 
