@@ -14,7 +14,7 @@ module.exports = function (config, passport) {
       return res.status(403).send('Unable to verify idToken')
     }
 
-    const scout = await scoutService.findOrCreateScout(idToken)
+    const scout = await scoutService.findOrCreateScoutByGoogleToken(idToken)
     req.session.scout = scout
     res.json(scout)
   })

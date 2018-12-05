@@ -15,7 +15,7 @@ test('Scout can be created', async () => {
 
 test('Scout can be created with partioid', async () => {
   const scout = await models.Scout.create({
-    partioid: 5677834,
+    partioId: 5677834,
     name: "Teppo"
   })
   expect(Number.isInteger(scout.id)).toBe(true)

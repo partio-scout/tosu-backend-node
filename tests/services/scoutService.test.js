@@ -10,21 +10,21 @@ beforeEach(() => {
 
 test('Finding an existing scout', async () => {
   const scout = await models.Scout.create({ name: "Tester Dude", googleId: mockToken })
-  const found = await scoutService.findOrCreateScout(googleIdTokenMock(mockToken, scout.name))
+  const found = await scoutService.findOrCreateScoutByGoogleToken(googleIdTokenMock(mockToken, scout.name))
   expect(found.id).toBe(scout.id)
   expect(found.name).toBe(scout.name)
 })
 
 test('Creating a new scout', async () => {
   const newScoutGoogleIdToken = googleIdTokenMock(mockToken, "Tester Girl")
-  const found = await scoutService.findOrCreateScout(googleIdTokenMock(mockToken, "Tester Girl"))
+  const found = await scoutService.findOrCreateScoutByGoogleToken(googleIdTokenMock(mockToken, "Tester Girl"))
   expect(found.id).not.toBeNull()
   expect(found.name).toBe("Tester Girl")
 })
 
 test('Creating a new scout creates an activityBuffer', async () => {
   const newScoutGoogleIdToken = googleIdTokenMock(mockToken, "Tester Girl")
-  const created = await scoutService.findOrCreateScout(googleIdTokenMock(mockToken, "Tester Girl"))
+  const created = await scoutService.findOrCreateScoutByGoogleToken(googleIdTokenMock(mockToken, "Tester Girl"))
   const foundBuffer = await models.ActivityBuffer.findOne({
     where: { scoutId: created.id }
   })

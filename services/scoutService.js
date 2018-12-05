@@ -2,7 +2,7 @@ const models = require('../domain/models')
 const bufferService = require('./activitybufferService')
 
 // Finds or creates a scout with given googleIdToken and returns it.
-async function findOrCreateScout(googleIdToken) {
+async function findOrCreateScoutByGoogleToken(googleIdToken) {
   const userId = googleIdToken.getPayload()['sub']
   const name = googleIdToken.getPayload()['name'] // TODO: Would be better to save first and last names separately
   return await findOrCreate({
@@ -43,6 +43,6 @@ async function findOrCreate(queryConditions) {
 }
 
 module.exports = {
-  findOrCreateScout,
+  findOrCreateScoutByGoogleToken,
   findOrCreateScoutByMemberNumber,
 }
