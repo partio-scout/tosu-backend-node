@@ -44,7 +44,7 @@ test('Find buffer by scout', async () => {
 })
 
 test('Find buffer by scout returns activities', async () => {
-  const activity = await models.Activity.create({ guid: 'askj', id: 'suo', activityBufferId: buffer.id })
+  const activity = await models.Activity.create({ guid: 'askj', activityBufferId: buffer.id })
   const plan = await models.Plan.create({
     title: 'Quaint plan',
     guid: 'jgkdflhgjfkld',
