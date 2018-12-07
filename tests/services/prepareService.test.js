@@ -35,27 +35,27 @@ test('Prepare a buffer to be front-end friendly returns activities', async () =>
 test('Prepare a buffer to be front-end friendly returns plans', async () => {
   const activity = await models.Activity.create({ guid:'joulukuusi', activityBufferId: buffer.id})
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const result = await prepareService.prepareBuffer(buffer)
@@ -72,15 +72,15 @@ test('Prepare a buffer to be front-end returns null when buffer is null', async 
 test('Prepare activity to be front-end friendly', async () => {
   const activity = await models.Activity.create({guid: 'lahja'})
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const result = await prepareService.prepareActivity(activity)
@@ -105,15 +105,15 @@ test('Prepare an event front-end friendly returns activities', async () => {
 test('Prepare an event to be front-end friendly returns plans', async () => {
   const activity = await models.Activity.create({ guid:'test', eventId: event.id})
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const result = await prepareService.prepareEvent(event)

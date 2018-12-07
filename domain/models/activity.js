@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {})
 
   Activity.associate = (models) => {
-    Activity.belongsTo(models.Event, { foreignKey: "eventId" })
-    Activity.hasMany(models.Plan, { foreignKey: "activityId" })
-    Activity.belongsTo(models.ActivityBuffer, { foreignKey: "activityBufferId" })
+    Activity.belongsTo(models.Event, { foreignKey: 'eventId' })
+    Activity.hasMany(models.Plan, { foreignKey: 'activityId' })
+    Activity.belongsTo(models.ActivityBuffer, { foreignKey: 'activityBufferId' })
   }
 
 

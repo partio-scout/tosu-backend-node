@@ -45,9 +45,9 @@ test('Move activity from event to buffer', async () => {
 
 test('Move activity from event to buffer keeps and returns the plans of the activity', async () => {
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activityWithEventId.id
   })
   const movedActivity = await activityService.moveActivityFromEventToBuffer(activityWithEventId.id, scout)
@@ -101,9 +101,9 @@ test('Move activity from buffer to event', async () => {
 test('Move activity from buffer to event keeps and returns the plans of the activity', async () => {
   const activity = await models.Activity.create({ guid: 'diud', activityBufferId: buffer.id })
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const movedActivity = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)

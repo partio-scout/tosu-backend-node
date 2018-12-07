@@ -68,9 +68,9 @@ test('Verify scout does not own event when scout or event does not exist', async
 
 test('Verify scout owns the plan through activity through event', async () => {
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activityInEvent.id
   })
 
@@ -80,9 +80,9 @@ test('Verify scout owns the plan through activity through event', async () => {
 
 test('Verify scout owns the plan through activity through buffer', async () => {
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activityInBuffer.id
   })
 
@@ -93,9 +93,9 @@ test('Verify scout owns the plan through activity through buffer', async () => {
 
 test('Verify the scout does not own the plan when the scout or the plan does not exist', async () => {
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activityInEvent.id
   })
   const planId = plan.id

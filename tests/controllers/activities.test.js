@@ -253,9 +253,9 @@ test('Plans of activity are returned on PUT /:activityId/tobuffer', async () => 
   await models.ActivityBuffer.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ guid: 'toimii',  eventId: event.id }) // Scout does not own activity
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
 
@@ -273,9 +273,9 @@ test('Plans of activity are returned on PUT /:activityId/toevent/:eventId', asyn
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   const activity = await models.Activity.create({ guid: 'wei', activityBufferId: buffer.id }) // Scout does not own activity
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
 

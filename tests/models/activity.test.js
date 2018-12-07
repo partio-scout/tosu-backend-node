@@ -50,13 +50,13 @@ test('Activity can be assigned plans', async () => {
 
   // Assign Plan to Activity during creation
   const plan1 = await models.Plan.create({
-    title: "plan1",
-    guid: "gdfgdf",
-    content: "masterplan",
+    title: 'plan1',
+    guid: 'gdfgdf',
+    content: 'masterplan',
     activityId: activity.id
   })
 
-  const plan2 = await models.Plan.create({ title: "plan2", guid: "fsdfdsfds", content: "masterplan" })
+  const plan2 = await models.Plan.create({ title: 'plan2', guid: 'fsdfdsfds', content: 'masterplan' })
 
   // Assign Plan to Activity after creation
   await plan2.update({ activityId: activity.id })

@@ -30,9 +30,9 @@ test('Get all events', async () => {
 test('getAllEvents returns the activities of the event and the plans of the activities', async () => {
   const activity = await models.Activity.create({  guid: 'justiinsa', eventId: event.id})
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const events = await eventService.getAllEvents(scout.id)
@@ -65,9 +65,9 @@ test('Update an event', async () => {
 test('updateEvent returns the activities of the event and the plans of the activities', async () => {
   const activity = await models.Activity.create({ guid: 'kauha', eventId: event.id})
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const updatedEvent = await eventService.updateEvent(event.id, {title: 'Asdf'})

@@ -25,8 +25,8 @@ beforeEach(async () => {
 
   // Already parsed by parseKuksaEvents():
   kuksaEvents = [
-    {...eventData, id: "kuksa" + kuksaId1, title: "kuksa eventti 1", kuksaEvent: true, kuksaEventId: kuksaId1 },
-    {...eventData, id: "kuksa" + kuksaId2, title: "kuksa eventti 2", kuksaEvent: true, kuksaEventId: kuksaId2 },
+    {...eventData, id: 'kuksa' + kuksaId1, title: 'kuksa eventti 1', kuksaEvent: true, kuksaEventId: kuksaId1 },
+    {...eventData, id: 'kuksa' + kuksaId2, title: 'kuksa eventti 2', kuksaEvent: true, kuksaEventId: kuksaId2 },
   ]
 
   tosuEventsWithWrongTitle = []
@@ -42,7 +42,7 @@ beforeEach(async () => {
 
 test('Sync title from kuksa event to tosu event, removes kuksa source event', async () => {
   const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
-  tosuEventsWithWrongTitle[0].dataValues.title = "kuksa eventti 1" // Expect to update "test 1" to this title from kuksa
+  tosuEventsWithWrongTitle[0].dataValues.title = 'kuksa eventti 1' // Expect to update 'test 1' to this title from kuksa
   kuksaEvents.splice(0, 1) // Remove 0th element (synced event's corresponding kuksa event, no duplicates allowed)
   expect(hasEvents(events, tosuEventsWithWrongTitle, kuksaEvents)).toBe(true)
 })
@@ -56,88 +56,88 @@ test('Event deleted in Kuksa is deleted in tosu as well', async () => {
 
 test('TODO: Fetch Kuksa events by age group', async () => {
   // TODO: How to test? Maybe add getKuksaEventsByAgeGroup(ageGroup, mockApiResponse), use mock instead of axios
-  expect(await kuksaService.getKuksaEventsByAgeGroup("")).toBe(null)
+  expect(await kuksaService.getKuksaEventsByAgeGroup('')).toBe(null)
 })
 
 test('Parse Kuksa event into tosu event', async () => {
   const kuksaEvent = {
-    "Id": "17732",
-    "Nimi": "E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ",
-    "Alkupvm": "2018-10-26T00:00:00",
-    "Loppupvm": "2018-10-28T00:00:00",
-    "Alkukellonaika": null,
-    "Loppukellonaika": "21:00",
-    "Paikka": null,
-    "KuvausHTML": "Koulutus toteutetaan Opintokeskus Siviksen tuella<br />",
-    "IlmoittautuminenPaattyy": "2018-10-01T00:00:00",
-    "IlmoittautuminenPaattynyt": true,
-    "JalkiIlmoittautuminenVoimassa": false,
-    "TilaisuudenTyyppi": "Koulutustoiminta",
-    "Jasenmaksupakko": true,
-    "VainJarjestajaorganisaationjasenille": false,
-    "Ikakaudet": [
-        "Aikuiset",
-        "Vaeltajat (18-22 v)"
+    'Id': '17732',
+    'Nimi': 'E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ',
+    'Alkupvm': '2018-10-26T00:00:00',
+    'Loppupvm': '2018-10-28T00:00:00',
+    'Alkukellonaika': null,
+    'Loppukellonaika': '21:00',
+    'Paikka': null,
+    'KuvausHTML': 'Koulutus toteutetaan Opintokeskus Siviksen tuella<br />',
+    'IlmoittautuminenPaattyy': '2018-10-01T00:00:00',
+    'IlmoittautuminenPaattynyt': true,
+    'JalkiIlmoittautuminenVoimassa': false,
+    'TilaisuudenTyyppi': 'Koulutustoiminta',
+    'Jasenmaksupakko': true,
+    'VainJarjestajaorganisaationjasenille': false,
+    'Ikakaudet': [
+        'Aikuiset',
+        'Vaeltajat (18-22 v)'
     ],
-    "Liitetiedostot": null,
-    "Jarjestajat": [
-        "Etelä-Karjalan Partiolaiset ry"
+    'Liitetiedostot': null,
+    'Jarjestajat': [
+        'Etelä-Karjalan Partiolaiset ry'
     ],
-    "Ilmoittautumislinkki": "https://demo.kehatieto.fi/partiolaiset/kotisivut/login.aspx?Id=17732",
-    "Ilmoittautuneita": 0
+    'Ilmoittautumislinkki': 'https://demo.kehatieto.fi/partiolaiset/kotisivut/login.aspx?Id=17732',
+    'Ilmoittautuneita': 0
   }
   const parsed = kuksaService.parseKuksaEvents([kuksaEvent])[0]
-  expect(parsed.id).toBe("kuksa17732")
-  expect(parsed.title).toBe("E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ")
-  expect(parsed.startDate).toBe("2018-10-26")
-  expect(parsed.endDate).toBe("2018-10-28")
-  expect(parsed.startTime).toBe("00:00") // Original time is null
-  expect(parsed.endTime).toBe("21:00")
-  expect(parsed.type).toBe("Koulutustoiminta")
-  expect(parsed.information).toBe("Koulutus toteutetaan Opintokeskus Siviksen tuella<br />")
+  expect(parsed.id).toBe('kuksa17732')
+  expect(parsed.title).toBe('E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ')
+  expect(parsed.startDate).toBe('2018-10-26')
+  expect(parsed.endDate).toBe('2018-10-28')
+  expect(parsed.startTime).toBe('00:00') // Original time is null
+  expect(parsed.endTime).toBe('21:00')
+  expect(parsed.type).toBe('Koulutustoiminta')
+  expect(parsed.information).toBe('Koulutus toteutetaan Opintokeskus Siviksen tuella<br />')
   expect(parsed.kuksaEvent).toBe(true)
-  expect(parsed.kuksaEventId).toBe("17732")
+  expect(parsed.kuksaEventId).toBe('17732')
   expect(parsed.activities.length).toBe(0)
 })
 
 test('Parse Kuksa event start and end times correctly', async () => {
   const kuksaEvent = {
-    "Id": "17732",
-    "Nimi": "E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ",
-    "Alkupvm": "2018-10-26T00:00:00",
-    "Loppupvm": "2018-10-28T00:00:00",
-    "Alkukellonaika": "21.00",
-    "Loppukellonaika": "25:00",
-    "Paikka": null,
-    "KuvausHTML": "Koulutus toteutetaan Opintokeskus Siviksen tuella<br />",
-    "IlmoittautuminenPaattyy": "2018-10-01T00:00:00",
-    "IlmoittautuminenPaattynyt": true,
-    "JalkiIlmoittautuminenVoimassa": false,
-    "TilaisuudenTyyppi": "Koulutustoiminta",
-    "Jasenmaksupakko": true,
-    "VainJarjestajaorganisaationjasenille": false,
-    "Ikakaudet": [
-        "Aikuiset",
-        "Vaeltajat (18-22 v)"
+    'Id': '17732',
+    'Nimi': 'E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ',
+    'Alkupvm': '2018-10-26T00:00:00',
+    'Loppupvm': '2018-10-28T00:00:00',
+    'Alkukellonaika': '21.00',
+    'Loppukellonaika': '25:00',
+    'Paikka': null,
+    'KuvausHTML': 'Koulutus toteutetaan Opintokeskus Siviksen tuella<br />',
+    'IlmoittautuminenPaattyy': '2018-10-01T00:00:00',
+    'IlmoittautuminenPaattynyt': true,
+    'JalkiIlmoittautuminenVoimassa': false,
+    'TilaisuudenTyyppi': 'Koulutustoiminta',
+    'Jasenmaksupakko': true,
+    'VainJarjestajaorganisaationjasenille': false,
+    'Ikakaudet': [
+        'Aikuiset',
+        'Vaeltajat (18-22 v)'
     ],
-    "Liitetiedostot": null,
-    "Jarjestajat": [
-        "Etelä-Karjalan Partiolaiset ry"
+    'Liitetiedostot': null,
+    'Jarjestajat': [
+        'Etelä-Karjalan Partiolaiset ry'
     ],
-    "Ilmoittautumislinkki": "https://demo.kehatieto.fi/partiolaiset/kotisivut/login.aspx?Id=17732",
-    "Ilmoittautuneita": 0
+    'Ilmoittautumislinkki': 'https://demo.kehatieto.fi/partiolaiset/kotisivut/login.aspx?Id=17732',
+    'Ilmoittautuneita': 0
   }
   const parsed = kuksaService.parseKuksaEvents([kuksaEvent])[0]
-  expect(parsed.id).toBe("kuksa17732")
-  expect(parsed.title).toBe("E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ")
-  expect(parsed.startDate).toBe("2018-10-26")
-  expect(parsed.endDate).toBe("2018-10-28")
-  expect(parsed.startTime).toBe("00:00") // Original time is invalid
-  expect(parsed.endTime).toBe("00:00") // Original time is invalid
-  expect(parsed.type).toBe("Koulutustoiminta")
-  expect(parsed.information).toBe("Koulutus toteutetaan Opintokeskus Siviksen tuella<br />")
+  expect(parsed.id).toBe('kuksa17732')
+  expect(parsed.title).toBe('E-KP Akela-/sampo-koulutus - ÄLÄ ILMOITTAUDU VIELÄ')
+  expect(parsed.startDate).toBe('2018-10-26')
+  expect(parsed.endDate).toBe('2018-10-28')
+  expect(parsed.startTime).toBe('00:00') // Original time is invalid
+  expect(parsed.endTime).toBe('00:00') // Original time is invalid
+  expect(parsed.type).toBe('Koulutustoiminta')
+  expect(parsed.information).toBe('Koulutus toteutetaan Opintokeskus Siviksen tuella<br />')
   expect(parsed.kuksaEvent).toBe(true)
-  expect(parsed.kuksaEventId).toBe("17732")
+  expect(parsed.kuksaEventId).toBe('17732')
   expect(parsed.activities.length).toBe(0)
 })
 
