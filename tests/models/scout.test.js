@@ -5,12 +5,12 @@ require('../handleTestDatabase')
 
 test('Scout can be created', async () => {
   const scout = await models.Scout.create({
-    googleId: "ghfjdklgh",
-    name: "Teppo"
+    googleId: 'ghfjdklgh',
+    name: 'Teppo'
   })
   expect(Number.isInteger(scout.id)).toBe(true)
-  expect(scout.googleId).toBe("ghfjdklgh")
-  expect(scout.name).toBe("Teppo")
+  expect(scout.googleId).toBe('ghfjdklgh')
+  expect(scout.name).toBe('Teppo')
 })
 
 test('Scout can be assigned Events', async () => {

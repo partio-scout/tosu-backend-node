@@ -152,8 +152,8 @@ test('Event can be assigned to EventGroup', async () => {
 
 test('Event can be assigned Activities', async () => {
   const event = await models.Event.create(eventData)
-  const activity1 = await models.Activity.create({ eventId: event.id })
-  const activity2 = await models.Activity.create({ eventId: event.id })
+  const activity1 = await models.Activity.create({ guid: 'guid', eventId: event.id })
+  const activity2 = await models.Activity.create({ guid: 'pakollinen', eventId: event.id })
 
   const fetchedEvent = await models.Event.findById(event.id, { include: [models.Activity] })
   expect(fetchedEvent.Activities.length).toBe(2)

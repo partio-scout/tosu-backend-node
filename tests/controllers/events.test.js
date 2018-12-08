@@ -226,11 +226,11 @@ test('Invalid (noninteger) event id is handled properly when trying to delete', 
 // Check that the activities of the events and the the plans for the activities are also returned
 test('Activities and the plans of activities are returned on GET /events', async () => {
   const event = await models.Event.create(eventData)
-  const activity = await models.Activity.create({eventId: event.id})
+  const activity = await models.Activity.create({ guid:'spagetti', eventId: event.id})
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const result = await api.get('/events')
@@ -248,11 +248,11 @@ test('Activities and the plans of activities are returned on GET /events', async
 // Check that the returned event has .activities
 test('Activities and the plans of activities are returned on PUT /events/:eventId', async () => {
   const event = await models.Event.create(eventData)
-  const activity = await models.Activity.create({eventId: event.id})
+  const activity = await models.Activity.create({ guid: 'temppu', eventId: event.id})
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const result = await api.put('/events/'+event.id)
@@ -272,11 +272,11 @@ test('Activities and the plans of activities are returned on PUT /events/:eventI
 // test that there is a field for plans in the returned activity
 test('Plans are returned on POST /events/:eventId/activities', async () => {
   const event = await models.Event.create(eventData)
-  const activity = await models.Activity.create({eventId: event.id})
+  const activity = await models.Activity.create({ guid: 'puuro', eventId: event.id})
   await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const result = await api.post('/events/'+event.id+'/activities')
@@ -292,11 +292,11 @@ test('Plans are returned on POST /events/:eventId/activities', async () => {
 // test that the activities of the event are returned also
 test('Plans are returned on DELETE /events/:eventId/activities', async () => {
   const event = await models.Event.create(eventData)
-  const activity = await models.Activity.create({eventId: event.id})
+  const activity = await models.Activity.create({ guid: 'nugetti', eventId: event.id})
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const result = await api.delete('/events/'+event.id)

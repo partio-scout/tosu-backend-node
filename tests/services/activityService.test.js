@@ -22,7 +22,7 @@ beforeEach(async () => {
     information: '',
   }
   event = await models.Event.create(eventData)
-  activityWithEventId = await models.Activity.create({ eventId: event.id })
+  activityWithEventId = await models.Activity.create({ guid: 'asjd', eventId: event.id })
 })
 
 test('Delete activity', async () => {
@@ -45,9 +45,9 @@ test('Move activity from event to buffer', async () => {
 
 test('Move activity from event to buffer keeps and returns the plans of the activity', async () => {
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activityWithEventId.id
   })
   const movedActivity = await activityService.moveActivityFromEventToBuffer(activityWithEventId.id, scout)
@@ -85,7 +85,7 @@ test('Do not move activity from event to buffer when event does not exist', asyn
 */
 
 test('Move activity from buffer to event', async () => {
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+  const activity = await models.Activity.create({ guid: 'giug', activityBufferId: buffer.id })
 
   const movedActivity = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
   // Returned activity is correct
@@ -99,11 +99,11 @@ test('Move activity from buffer to event', async () => {
 })
 
 test('Move activity from buffer to event keeps and returns the plans of the activity', async () => {
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+  const activity = await models.Activity.create({ guid: 'diud', activityBufferId: buffer.id })
   const plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that",
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that',
     activityId: activity.id
   })
   const movedActivity = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
@@ -113,7 +113,7 @@ test('Move activity from buffer to event keeps and returns the plans of the acti
 })
 
 test('Do not move activity from buffer to event when activity does not exist', async () => {
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+  const activity = await models.Activity.create({ guid:'epweir', activityBufferId: buffer.id })
   await activity.destroy()
   
   const result = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
@@ -122,7 +122,7 @@ test('Do not move activity from buffer to event when activity does not exist', a
 })
 
 test('Do not move activity from buffer to event when event does not exist', async () => {
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+  const activity = await models.Activity.create({ guid: 'wehr', activityBufferId: buffer.id })
   await event.destroy()
 
   const result = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)
@@ -131,7 +131,7 @@ test('Do not move activity from buffer to event when event does not exist', asyn
 })
 
 test('Do not move activity from buffer to event when buffer does not exist', async () => {
-  const activity = await models.Activity.create({ activityBufferId: buffer.id })
+  const activity = await models.Activity.create({  guid: 'osieaj', activityBufferId: buffer.id })
   await buffer.destroy()
 
   const result = await activityService.moveActivityFromBufferToEvent(activity.id, event.id)

@@ -2,10 +2,10 @@ const axios = require('axios')
 const models = require('../domain/models')
 const eventService = require('./eventService')
 
-const EVENT_API_BASE_PRODUCTION = "https://kuksa.partio.fi" // NOTE: beta machine has env=production
-const EVENT_API_BASE_STAGING = "https://demo.kehatieto.fi/partiolaiset"
+const EVENT_API_BASE_PRODUCTION = 'https://kuksa.partio.fi' // NOTE: beta machine has env=production
+const EVENT_API_BASE_STAGING = 'https://demo.kehatieto.fi/partiolaiset'
 
-const EVENT_API = "/Tapahtumat_Rajapinta/api/Tapahtumahaku"
+const EVENT_API = '/Tapahtumat_Rajapinta/api/Tapahtumahaku'
 
 function getEventApi() {
   if (process.env.NODE_ENV === 'production') {
@@ -13,7 +13,7 @@ function getEventApi() {
   } else if (process.env.NODE_ENV === 'development') {
     return EVENT_API_BASE_STAGING + EVENT_API
   } else {
-    return ""
+    return ''
   }
 }
 
@@ -22,7 +22,7 @@ async function getKuksaEventsByAgeGroup(ageGroup) {
   try {
     response = await axios.get(getEventApi())
   } catch (e) {
-    console.log("Failed to fetch Kuksa events:",e)
+    console.log('Failed to fetch Kuksa events:',e)
     return null
   }
   let kuksaEvents = response.data.filter(kuksaEvent =>
@@ -34,20 +34,20 @@ async function getKuksaEventsByAgeGroup(ageGroup) {
 function parseKuksaEvents(kuksaEvents) {
   return kuksaEvents.map(kuksaEvent => {
     const startDate = new Date(kuksaEvent.Alkupvm)
-    const twoDigitStartMonth = ("0" + (startDate.getMonth() + 1)).slice(-2)
-    const twoDigitStartDay = ("0" + startDate.getDate()).slice(-2)
+    const twoDigitStartMonth = ('0' + (startDate.getMonth() + 1)).slice(-2)
+    const twoDigitStartDay = ('0' + startDate.getDate()).slice(-2)
     const startTime = validTime(kuksaEvent.Alkukellonaika)
 
     const endDate = new Date(kuksaEvent.Loppupvm)
-    const twoDigitEndDay = ("0" + endDate.getDate()).slice(-2)
-    const twoDigitEndMonth = ("0" + (endDate.getMonth() + 1)).slice(-2)
+    const twoDigitEndDay = ('0' + endDate.getDate()).slice(-2)
+    const twoDigitEndMonth = ('0' + (endDate.getMonth() + 1)).slice(-2)
     const endTime = validTime(kuksaEvent.Loppukellonaika)
 
     return {
-      id: "kuksa" + kuksaEvent.Id,
+      id: 'kuksa' + kuksaEvent.Id,
       title: kuksaEvent.Nimi,
-      startDate: startDate.getFullYear() + "-" + twoDigitStartMonth + "-" + twoDigitStartDay,
-      endDate: endDate.getFullYear() + "-" + twoDigitEndMonth + "-" + twoDigitEndDay,
+      startDate: startDate.getFullYear() + '-' + twoDigitStartMonth + '-' + twoDigitStartDay,
+      endDate: endDate.getFullYear() + '-' + twoDigitEndMonth + '-' + twoDigitEndDay,
       startTime: startTime,
       endTime: endTime,
       type: kuksaEvent.TilaisuudenTyyppi,
@@ -131,9 +131,9 @@ function findKuksaEvent(kuksaEventId, kuksaEvents) {
 
 // Returns the time if it's valid, or 00:00 if it's not
 function validTime(time) {
-  if (!time) return "00:00"
+  if (!time) return '00:00'
   // https://stackoverflow.com/a/22044831
-  return time.match("^([01]?[0-9]|2[0-3]):[0-5][0-9]$") ? time : "00:00"
+  return time.match('^([01]?[0-9]|2[0-3]):[0-5][0-9]$') ? time : '00:00'
 }
 
 module.exports = {
