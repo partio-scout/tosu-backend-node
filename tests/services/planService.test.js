@@ -9,9 +9,9 @@ var plan
 beforeEach(async () => {
   scout = await models.Scout.create()
   plan = await models.Plan.create({
-    title: "Quaint plan",
-    guid: "jgkdflhgjfkld",
-    content: "Do this and that"
+    title: 'Quaint plan',
+    guid: 'jgkdflhgjfkld',
+    content: 'Do this and that'
   })
 })
 

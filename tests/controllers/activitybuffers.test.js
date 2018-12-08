@@ -69,8 +69,8 @@ test('Buffer is not returned when not logged in (no session)', async () => {
 
 test('Returned buffer has activities and id', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const activity1 = await models.Activity.create({ activityBufferId: buffer.id })
-  const activity2 = await models.Activity.create({ activityBufferId: buffer.id })
+  const activity1 = await models.Activity.create({ guid: 'auh', activityBufferId: buffer.id })
+  const activity2 = await models.Activity.create({ guid: 'sudh', activityBufferId: buffer.id })
 
   const response = await api
     .get('/activitybuffers')

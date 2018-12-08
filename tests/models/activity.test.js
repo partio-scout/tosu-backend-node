@@ -5,9 +5,17 @@ require('../handleTestDatabase')
 
 test('Activity can be created', async () => {
   // Create Activity with attributes
-  const activity = await models.Activity.create({ guid: "ghdfjkghdfjk" })
-  expect(activity.guid).toBe("ghdfjkghdfjk")
+  const activity = await models.Activity.create({ guid: 'ghdfjkghdfjk' })
+  expect(activity.guid).toBe('ghdfjkghdfjk')
   expect(Number.isInteger(activity.id)).toBe(true) // Is assigned an ID
+})
+
+test('Activity cannot be created without guid', async () => {
+  await expect(models.Activity.create()).rejects.toThrow(sequelize.SequelizeValidationError)
+})
+
+test('Activity cannot be created with invalid guid', async () => {
+  await expect(models.Activity.create({guid: '   '})).rejects.toThrow(sequelize.SequelizeValidationError)
 })
 
 test('Activity can be assigned to Event', async () => {
@@ -20,13 +28,13 @@ test('Activity can be assigned to Event', async () => {
     type: 'Retki',
     information: 'Fishing fish',
   })
-  const activity = await models.Activity.create({ guid: "gfdjgfdgd", eventId: event.id })
+  const activity = await models.Activity.create({ guid: 'gfdjgfdgd', eventId: event.id })
   expect(activity.eventId).toBe(event.id)
 })
 
 test('Activity can be assigned to ActivityBuffer', async () => {
   const buffer = await models.ActivityBuffer.create()
-  const activity = await models.Activity.create({ guid: "gfdjgfdgd", activityBufferId: buffer.id })
+  const activity = await models.Activity.create({ guid: 'gfdjgfdgd', activityBufferId: buffer.id })
 
   // Fetch Activity from database, and include its buffer
   const retrievedActivity = await models.Activity.findById(activity.id, {
@@ -38,17 +46,17 @@ test('Activity can be assigned to ActivityBuffer', async () => {
 })
 
 test('Activity can be assigned plans', async () => {
-  const activity = await models.Activity.create({ guid: "ghdfjkghdfjk" })
+  const activity = await models.Activity.create({ guid: 'ghdfjkghdfjk' })
 
   // Assign Plan to Activity during creation
   const plan1 = await models.Plan.create({
-    title: "plan1",
-    guid: "gdfgdf",
-    content: "masterplan",
+    title: 'plan1',
+    guid: 'gdfgdf',
+    content: 'masterplan',
     activityId: activity.id
   })
 
-  const plan2 = await models.Plan.create({ title: "plan2", guid: "fsdfdsfds", content: "masterplan" })
+  const plan2 = await models.Plan.create({ title: 'plan2', guid: 'fsdfdsfds', content: 'masterplan' })
 
   // Assign Plan to Activity after creation
   await plan2.update({ activityId: activity.id })
@@ -56,7 +64,7 @@ test('Activity can be assigned plans', async () => {
   // Find Activity's plans
   const retrievedActivity = await models.Activity.findById(activity.id, { include: [models.Plan] })
   expect(retrievedActivity.Plans.length).toBe(2)
-  expect(retrievedActivity.Plans[0].content).toBe("masterplan")
+  expect(retrievedActivity.Plans[0].content).toBe('masterplan')
 })
 
 test('Activities can be searched by event id', async () => {
@@ -69,8 +77,8 @@ test('Activities can be searched by event id', async () => {
     type: 'Retki',
     information: 'Fishing fish',
   })
-  const activity1 = await models.Activity.create({ guid: "gfdjgfdgd", eventId: event.id })
-  const activity2 = await models.Activity.create({ guid: "gfasg12", eventId: event.id })
+  const activity1 = await models.Activity.create({ guid: 'gfdjgfdgd', eventId: event.id })
+  const activity2 = await models.Activity.create({ guid: 'gfasg12', eventId: event.id })
   const events = await models.Activity.findByEvent(event)
   expect(events.length).toBe(2)
   if (events[0].id === activity1.id) {

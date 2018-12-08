@@ -28,11 +28,11 @@ beforeEach(async () => {
     information: 'kgeqwg aogqa olgao e',
   }
   event = await models.Event.create(eventData)
-  activity = await models.Activity.create({ eventId: event.id })
+  activity = await models.Activity.create({ guid: 'pop', eventId: event.id })
   plan = await models.Plan.create({
-    content: "Jos tarppo suoritetaan syksyllä, vartio voi seurata kuinka lehdet muuttavat.",
-    guid: "bb55234fb00bc313cf7e3379bfeead1a",
-    title: "Luonnon vuosi",
+    content: 'Jos tarppo suoritetaan syksyllä, vartio voi seurata kuinka lehdet muuttavat.',
+    guid: 'bb55234fb00bc313cf7e3379bfeead1a',
+    title: 'Luonnon vuosi',
     activityId: activity.id
   })
 })
