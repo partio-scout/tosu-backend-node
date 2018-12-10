@@ -10,7 +10,7 @@ var cookie
 var eventData
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   cookie = testUtils.createScoutCookieWithId(scout.id)
   eventData = {
     scoutId: scout.id, 
@@ -121,7 +121,7 @@ test('Update event', async () => {
 })
 
 test('Cannot update an event that is not owned', async () => {
-  const anotherScout = await models.Scout.create()
+  const anotherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   eventData.scoutId=anotherScout.id
   const event = await models.Event.create(eventData)
 
@@ -154,7 +154,7 @@ test('Test add activity to event', async () => {
 })
 
 test('Cannot add activity to a event that is not owned', async () => {
-  const anotherScout = await models.Scout.create()
+  const anotherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   eventData.scoutId=anotherScout.id
   const event = await models.Event.create(eventData)
   await api.post('/events/'+event.id+'/activities')
@@ -180,7 +180,7 @@ test('Delete event', async () => {
 
 
 test('Cannot delete an event that is not owned', async () => {
-  const anotherScout = await models.Scout.create()
+  const anotherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   eventData.scoutId=anotherScout.id
   const event = await models.Event.create(eventData)
 

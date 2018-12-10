@@ -15,7 +15,7 @@ var plan
 
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   cookie = testUtils.createScoutCookieWithId(scout.id)  
   eventData = {
     scoutId: scout.id, 
@@ -59,7 +59,7 @@ test('Cannot modify a plan that does not exist', async () => {
 })
 
 test('User cannot modify a plan that that he does not own', async () => {
-  const scoutImposter = await models.Scout.create()
+  const scoutImposter = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   const imposterCookie = testUtils.createScoutCookieWithId(scoutImposter.id)  
   await api.put('/plans/'+plan.id)
     .send({
@@ -79,7 +79,7 @@ test('Delete a plan', async () => {
 })
 
 test('User cannot delete a plan that that he does not own', async () => {
-  const scoutImposter = await models.Scout.create()
+  const scoutImposter = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   const imposterCookie = testUtils.createScoutCookieWithId(scoutImposter.id)  
   await api.delete('/plans/'+plan.id)
     .set('cookie', [imposterCookie])

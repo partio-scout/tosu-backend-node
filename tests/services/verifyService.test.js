@@ -11,8 +11,8 @@ var activityInEvent
 var activityInBuffer
 
 beforeEach(async () => {
-  scoutOwner = await models.Scout.create()
-  scoutImposter = await models.Scout.create()
+  scoutOwner = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
+  scoutImposter = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   eventData = { 
     scoutId: scoutOwner.id, 
     startDate: '2500-10-10',
@@ -113,12 +113,12 @@ test('Verify the scout does not own the plan when the scout or the plan does not
   
 
 test('Scout is logged in (found in database)', async () => {
-  const scout = await models.Scout.create()
+  const scout = await models.Scout.create({ partioId: '12345', name: 'PartioId' })
   expect(await verifyService.isLoggedIn(scout)).toBe(true)
 })
 
 test('Scout is logged in (not found in database)', async () => {
-  const scout = await models.Scout.create()
+  const scout = await models.Scout.create({ partioId: '123', name: 'PartioId' })
   await scout.destroy()
   expect(await verifyService.isLoggedIn(scout)).toBe(false)
 })

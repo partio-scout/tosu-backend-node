@@ -19,7 +19,7 @@ test('ActivityBuffer can be assigned Activities', async () => {
 })
 
 test('ActivityBuffer can be assigned to Scout', async () => {
-  const scout = await models.Scout.create({ googleId: 'jkgldfög' })
+  const scout = await models.Scout.create({ googleId: 'jkgldfög', name: 'GoogleId' })
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
 
   const fetchedBuffer = await models.ActivityBuffer.findById(buffer.id, { include: [models.Scout] })
@@ -29,7 +29,7 @@ test('ActivityBuffer can be assigned to Scout', async () => {
 })
 
 test('Can find buffer by scout id', async () => {
-  const scout = await models.Scout.create()
+  const scout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
 
   const fetchedBuffer = await models.ActivityBuffer.findByScout(scout)

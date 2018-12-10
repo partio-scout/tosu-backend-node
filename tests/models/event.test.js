@@ -160,7 +160,7 @@ test('Event can be assigned Activities', async () => {
 })
 
 test('Event can be assigned to Scout', async () => {
-  const scout = await models.Scout.create()
+  const scout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   eventData.scoutId = scout.id
   const event = await models.Event.create(eventData)
 
