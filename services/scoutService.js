@@ -23,7 +23,7 @@ async function findOrCreateScoutByMemberNumber(user) {
     },
     defaults: {
       partioId: user.membernumber,
-      name: user.firstname + " " + user.lastname // TODO: Would be better to save first and last names separately
+      name: user.firstname + ' ' + user.lastname // TODO: Would be better to save first and last names separately
     }
   })
 }

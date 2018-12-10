@@ -36,10 +36,10 @@ module.exports = function (config, passport) {
       failureFlash: true,
     }),
     async (req, res) => {
-      console.log("user who logged in:", req.user)
+      console.log('user who logged in:', req.user)
 
       const membernumber = parseInt(req.user.membernumber)
-      if (isNaN(membernumber)) return res.status(500).send("membernumber is Nan")
+      if (isNaN(membernumber)) return res.status(500).send('membernumber is Nan')
 
       const scout = await scoutService.findOrCreateScoutByMemberNumber(req.user)
       var scoutInfo = { name: scout.name }
@@ -75,7 +75,7 @@ module.exports = function (config, passport) {
 
   // Called by IdP to logout
   scoutRouter.get(config.passport.saml.logoutCallback, function(req, res) {
-    console.log("completing logout", req.user)
+    console.log('completing logout', req.user)
     req.logout()
     req.session = null
     res.redirect(config.localFrontend)

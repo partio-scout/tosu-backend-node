@@ -5,9 +5,9 @@ require('../handleTestDatabase')
 
 test('Cannot post blank plan', async () => {
   models.Plan.create({
-    title: "",
-    guid: "",
-    content: ""
+    title: '',
+    guid: '',
+    content: ''
   }).then(function () {
     expect.fail()
   })
