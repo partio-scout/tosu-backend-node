@@ -7,7 +7,7 @@ var buffer
 var activity
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   activity = { 'guid': 'fsg4grgdg' }
 })

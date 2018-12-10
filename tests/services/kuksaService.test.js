@@ -8,7 +8,7 @@ var kuksaEvents
 var scout
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   const kuksaId1 = Math.floor(Math.random() * 1001)
   const kuksaId2 = Math.floor(Math.random() * 1001)
 
@@ -49,7 +49,7 @@ test('Sync title from kuksa event to tosu event, removes kuksa source event', as
 test('Synced events of one scout do not affect synced events of other scouts', async () => {
   const kuksaEventsCopy = kuksaEvents.slice()
   const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
-  const scout2 = await models.Scout.create()
+  const scout2 = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   const events2 = await kuksaService.syncEvents(kuksaEventsCopy, scout2.id)
   expect(events2.length).toBe(2) // Should be same as kuksaEvents
   expect(hasEvents(events2, [], kuksaEventsCopy)) // events2 should have all kuksa events (no tosu events)

@@ -9,7 +9,7 @@ var eventData
 var event
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   eventData = { 
     scoutId: scout.id, 
     startDate: '2500-10-10',

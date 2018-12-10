@@ -10,7 +10,7 @@ var scout
 var cookie
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   cookie = testUtils.createScoutCookieWithId(scout.id)
 })
 

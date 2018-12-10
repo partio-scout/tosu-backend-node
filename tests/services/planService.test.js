@@ -7,7 +7,7 @@ var plan
 
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   plan = await models.Plan.create({
     title: 'Quaint plan',
     guid: 'jgkdflhgjfkld',

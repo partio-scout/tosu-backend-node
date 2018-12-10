@@ -9,7 +9,7 @@ var event
 var activityWithEventId
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
   eventData = {
     scoutId: scout.id, 

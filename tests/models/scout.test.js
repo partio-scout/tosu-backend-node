@@ -16,15 +16,15 @@ test('Scout can be created', async () => {
 test('Scout can be created with partioid', async () => {
   const scout = await models.Scout.create({
     partioId: 5677834,
-    name: "Teppo"
+    name: 'Teppo'
   })
   expect(Number.isInteger(scout.id)).toBe(true)
   expect(scout.partioId).toBe(5677834)
-  expect(scout.name).toBe("Teppo")
+  expect(scout.name).toBe('Teppo')
 })
 
 test('Scout can be assigned Events', async () => {
-  const scout = await models.Scout.create({})
+  const scout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   const event1 = await models.Event.create({
     scoutId: scout.id,
     title: 'Let\'s go fishing!',
@@ -64,7 +64,7 @@ test('Scout can be assigned Events', async () => {
 })
 
 test('Scout can be assigned an ActivityBuffer', async () => {
-  const scout = await models.Scout.create({})
+  const scout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
 
   const fetchedScout = await models.Scout.findById(scout.id, { include: [models.ActivityBuffer] })

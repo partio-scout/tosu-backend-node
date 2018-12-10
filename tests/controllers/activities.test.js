@@ -14,8 +14,8 @@ var event
 var otherEvent
 
 beforeEach(async () => {
-  scout = await models.Scout.create()
-  otherScout = await models.Scout.create()
+  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
+  otherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   cookie = testUtils.createScoutCookieWithId(scout.id)  
   eventData = {
     scoutId: scout.id, 
