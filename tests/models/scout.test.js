@@ -23,6 +23,11 @@ test('Scout can be created with partioid', async () => {
   expect(scout.name).toBe('Teppo')
 })
 
+test('Scout cannot be created without googleid and partioid', async () => {
+  const scout = await models.Scout.create({ name: 'Eitoimi' })
+  expect(scout.isNull)
+})
+
 test('Scout can be assigned Events', async () => {
   const scout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
   const event1 = await models.Event.create({
