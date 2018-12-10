@@ -1,5 +1,6 @@
 let port = 3001
-let localFrontend = 'http://localhost:3000'
+// let localFrontend = 'http://localhost:3000'
+let localFrontend = 'https://suunnittelu.beta.partio-ohjelma.fi/' // TODO
 
 module.exports = {
   port,
