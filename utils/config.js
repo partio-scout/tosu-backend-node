@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 let port = 3001
 let localFrontend = process.env.HOST_URL || 'http://localhost:3000'
 
