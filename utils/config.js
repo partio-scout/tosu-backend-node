@@ -1,6 +1,5 @@
 let port = 3001
-// let localFrontend = 'http://localhost:3000'
-let localFrontend = 'https://suunnittelu.beta.partio-ohjelma.fi/' // TODO
+let localFrontend = process.env.HOST_URL || 'http://localhost:3000'
 
 module.exports = {
   port,
@@ -11,7 +10,7 @@ module.exports = {
       path: '/login/callback',
       // callbackUrl and logoutCallbackUrl are configured at IdP side
       logoutCallback: '/logout/callback',
-      issuer: 'https://suunnittelu.beta.partio-ohjelma.fi',
+      issuer: process.env.HOST_URL || 'https://suunnittelu.beta.partio-ohjelma.fi',
       metadata: {
         url: 'https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php',
         timeout: process.env.SAML_METADATA_TIMEOUT || 30000,
