@@ -7,6 +7,9 @@ const config = require('./utils/config')
 const app = express()
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
+const passport = require('passport')
+const metadata = require('passport-saml-metadata').metadata
+require('./utils/passport')(passport, config)
 
 const verifyService = require('./services/verifyService')
 const pofRouter = require('./controllers/pof')
@@ -22,7 +25,9 @@ var corsOptions = {
     'https://suunnittelu.partio-ohjelma.fi',
     'https://suunnittelu.beta.partio-ohjelma.fi',
     'https://demo.kehatieto.fi',
-    'https://kuksa.partio.fi'
+    'https://kuksa.partio.fi',
+    'https://partioid-test.partio.fi',
+    'https://id.partio.fi'
   ], credentials: true
 }
 
@@ -37,10 +42,17 @@ app.use(cookieSession({
 
 app.use(cors(corsOptions))
 app.use(middleware.logger)
+
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+metadata(config.passport.saml)
 
 const loggedIn = async (req, res, next) => {
-  if (await verifyService.isLoggedIn(req.session.scout)) {
+  // TODO: Remove verifyService.isLoggedIn once GoogleLogin is no longer implemented
+  if (await verifyService.isLoggedIn(req.session.scout) || req.isAuthenticated()) {
     next()
   } else {
     res.status(403).send('You are not logged in')
@@ -49,11 +61,6 @@ const loggedIn = async (req, res, next) => {
 var options_sendfile = {
   root: __dirname + '/build/',
 }
-
-app.get('/', function (req, res) {
-  res.sendFile('index.html', options_sendfile)
-})
-
 
 app.use('/activities', loggedIn)
 app.use('/events', loggedIn)
@@ -64,7 +71,7 @@ app.use('/filledpof', pofRouter)
 app.use('/activities', activityRouter)
 app.use('/eventgroups', eventgroupRouter)
 app.use('/events', eventRouter)
-app.use('/scouts', scoutRouter)
+app.use('/scouts', scoutRouter(config, passport))
 app.use('/plans', planRouter)
 app.use('/activitybuffers', activityBufferRouter)
 

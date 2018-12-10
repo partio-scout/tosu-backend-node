@@ -13,7 +13,7 @@ pofRouter.get('/', async (req, res) => {
 })
 
 pofRouter.get('/delete', async (req, res) => {
-  cache.del('filledpof')                              
+  cache.del('filledpof')
   res.redirect('/filledpof')
 })
 

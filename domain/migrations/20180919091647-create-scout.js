@@ -12,6 +12,9 @@ module.exports = {
       googleId: {
         type: Sequelize.STRING
       },
+      partioId: {
+        type: Sequelize.INTEGER
+      },
       name: {
         type: Sequelize.STRING
       },

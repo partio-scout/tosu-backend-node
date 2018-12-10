@@ -13,9 +13,19 @@ test('Scout can be created', async () => {
   expect(scout.name).toBe('Teppo')
 })
 
+test('Scout can be created with partioid', async () => {
+  const scout = await models.Scout.create({
+    partioId: 5677834,
+    name: "Teppo"
+  })
+  expect(Number.isInteger(scout.id)).toBe(true)
+  expect(scout.partioId).toBe(5677834)
+  expect(scout.name).toBe("Teppo")
+})
+
 test('Scout can be assigned Events', async () => {
   const scout = await models.Scout.create({})
-  const event1 = await models.Event.create({ 
+  const event1 = await models.Event.create({
     scoutId: scout.id,
     title: 'Let\'s go fishing!',
     startDate: '2018-09-23',
@@ -26,7 +36,7 @@ test('Scout can be assigned Events', async () => {
     information: 'Fishing fish',
     eventGroupId: null,
   })
-  const event2 = await models.Event.create({ 
+  const event2 = await models.Event.create({
     scoutId: scout.id,
     title: 'Let\'s go fishing!',
     startDate: '2018-09-23',
@@ -37,7 +47,7 @@ test('Scout can be assigned Events', async () => {
     information: 'Fishing fish',
     eventGroupId: null,
   })
-  const event3 = await models.Event.create({ 
+  const event3 = await models.Event.create({
     scoutId: scout.id,
     title: 'Let\'s go fishing!',
     startDate: '2018-09-23',
