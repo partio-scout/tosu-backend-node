@@ -45,6 +45,12 @@ Next:
 ./node_modules/.bin/sequelize db:migrate --env development
 ./node_modules/.bin/sequelize db:migrate --env test
 ```
+Undoing migrations:
+```sh
+./node_modules/.bin/sequelize db:migrate:undo:all --env development
+./node_modules/.bin/sequelize db:migrate:undo:all --env test
+```
+
 
 ### Run in development mode (nodemon)
 ```sh
