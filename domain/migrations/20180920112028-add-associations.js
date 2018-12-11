@@ -85,7 +85,7 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     // remove added columns in reversed order
-    // LOL, it wouldn't actually even matter :Dd
+    // LOL, the order wouldn't actually even matter :Dd
     return queryInterface.removeColumn('Plans', 'activityId').then(() => {
       return queryInterface.removeColumn('Events', 'scoutId')
     }).then(() => {
