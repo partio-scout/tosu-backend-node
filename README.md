@@ -14,6 +14,7 @@ npm install
 Create a `.env` file in project root with the following variables:
 ```sh
 NODE_ENV=development
+HOST_URL=
 
 DB_HOST=localhost
 DB_USERNAME=postgres
@@ -26,7 +27,7 @@ DB_NAME_PROD=tosudb_prod
 SECRET_KEY=superSecretKeyABC
 ```
 
-SECRET_KEY is used for cookies.
+SECRET_KEY is used for cookies. HOST_URL is used for SAML routes (can be left undefined for local development).
 
 Next:
 
