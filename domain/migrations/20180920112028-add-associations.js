@@ -84,6 +84,17 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    // TODO: Remove associations/relations. (not needed?)
+    // remove added columns in reversed order
+    return queryInterface.removeColumn('Plans', 'activityId').then(() => {
+      return queryInterface.removeColumn('Events', 'scoutId')
+    }).then(() => {
+      return queryInterface.removeColumn('Events', 'eventGroupId')
+    }).then(() => {
+      return queryInterface.removeColumn('ActivityBuffers', 'scoutId')
+    }).then(() => {
+      return queryInterface.removeColumn('Activities', 'activityBufferId')
+    }).then(() => {
+      return queryInterface.removeColumn('Activities', 'eventId')
+    })
   }
 }
