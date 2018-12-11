@@ -14,7 +14,7 @@ module.exports = {
       logoutCallback: '/logout/callback',
       issuer: process.env.HOST_URL || 'https://suunnittelu.beta.partio-ohjelma.fi',
       metadata: {
-        url: 'https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php',
+        url: process.env.SAML_METADATA_URL || 'https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php',
         timeout: process.env.SAML_METADATA_TIMEOUT || 30000,
         // TODO: Implement fileCache
         // backupStore: fileCache({

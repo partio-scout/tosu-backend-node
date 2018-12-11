@@ -15,6 +15,7 @@ Create a `.env` file in project root with the following variables:
 ```sh
 NODE_ENV=development
 HOST_URL=
+SAML_METADATA_URL=
 
 DB_HOST=localhost
 DB_USERNAME=postgres
@@ -27,7 +28,7 @@ DB_NAME_PROD=tosudb_prod
 SECRET_KEY=superSecretKeyABC
 ```
 
-SECRET_KEY is used for cookies. HOST_URL is used for SAML routes (can be left undefined for local development).
+SECRET_KEY is used for cookies. HOST_URL is used for SAML routes (can be left undefined for local development). SAML_METADATA_URL is used for fetching the SAML metadata for the IdP.
 
 Next:
 

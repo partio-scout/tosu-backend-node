@@ -35,5 +35,7 @@ module.exports = function (passport, config) {
       } else {
         return { logout: function (a, b) { return } } // Stub for testing
       }
+    }).catch(function (e) {
+      console.log('Failed to fetch SAML metadata:', e)
     })
 }
