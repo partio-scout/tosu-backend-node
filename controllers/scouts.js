@@ -42,9 +42,9 @@ module.exports = function (config, passport) {
       if (isNaN(membernumber)) return res.status(500).send('membernumber is Nan')
 
       const scout = await scoutService.findOrCreateScoutByMemberNumber(req.user)
-      var scoutInfo = { name: scout.name }
+      var scoutInfo = { name: scout.name } // Send only necessary, harmless info to a client cookie
       req.session.scout = scout
-      res.cookie('scout', JSON.stringify(scoutInfo)) // Send only necessary, harmless info to a client cookie
+      res.cookie('scout', JSON.stringify(scoutInfo), { maxAge: 7200000 }) // 2 hours
       res.redirect(config.localFrontend)
     }
   )
@@ -78,6 +78,7 @@ module.exports = function (config, passport) {
     console.log('completing logout', req.user)
     req.logout()
     req.session = null
+    res.clearCookie('scout')
     res.redirect(config.localFrontend)
   })
 
