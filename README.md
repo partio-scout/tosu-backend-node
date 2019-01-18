@@ -81,5 +81,6 @@ Code coverage is generated when tests are run. A report is printed to the consol
 
 # Documentation
 
+* [How to run locally](https://github.com/partio-scout/tosu-backend-node/blob/master/doc/howtorunlocally.md)
 * [Product backlog](https://docs.google.com/spreadsheets/d/1s8WgWyk6s9hXbjHSsdBv8X7MHLPGrLpprMkqOl15yBo/edit?usp=sharing)
 * [Trello table](https://trello.com/b/87G4Y96t/tosu-app)
