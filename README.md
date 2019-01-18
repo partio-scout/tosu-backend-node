@@ -37,13 +37,15 @@ Next:
     2. Access sql prompt: `sudo -i -u postgres psql`
     3. Create development database: `create database tosudb;`
     4. Create testing database: `create database tosudb_test;`
-    5. Exit: `\q`
-    6. [Set password](https://stackoverflow.com/questions/7695962/postgresql-password-authentication-failed-for-user-postgres) if necessary.
+    5. Create production database: `create database tosudb_prod;`
+    6. Exit: `\q`
+    7. [Set password](https://stackoverflow.com/questions/7695962/postgresql-password-authentication-failed-for-user-postgres) if necessary.
 2. Configure database settings in `.env` if necessary
 3. Migrate models to the development and testing databases by running (in project root):
 ```sh
 ./node_modules/.bin/sequelize db:migrate --env development
 ./node_modules/.bin/sequelize db:migrate --env test
+./node_modules/.bin/sequelize db:migrate --env production
 ```
 Undoing migrations:
 ```sh
