@@ -51,6 +51,7 @@ Undoing migrations:
 ```sh
 ./node_modules/.bin/sequelize db:migrate:undo:all --env development
 ./node_modules/.bin/sequelize db:migrate:undo:all --env test
+./node_modules/.bin/sequelize db:migrate:undo:all --env production
 ```
 
 
