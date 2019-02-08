@@ -51,6 +51,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     operatorsAliases,
+    logging: false
   },
   test: {
     database: process.env.DB_NAME_TEST,
@@ -59,7 +60,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     logging: logSqlQueriesTests,
-    operatorsAliases,
+    operatorsAliases
   },
   production: {
     database: process.env.DB_NAME_PROD,
@@ -68,5 +69,6 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     operatorsAliases,
+    logging: false
   }
 }

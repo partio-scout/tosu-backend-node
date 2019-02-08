@@ -21,30 +21,33 @@ const planRouter = require('./controllers/plans')
 const activityBufferRouter = require('./controllers/activitybuffers')
 
 var corsOptions = {
-  origin: ['http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
     'https://suunnittelu.partio-ohjelma.fi',
     'https://suunnittelu.beta.partio-ohjelma.fi',
     'https://demo.kehatieto.fi',
     'https://kuksa.partio.fi',
     'https://partioid-test.partio.fi',
     'https://id.partio.fi'
-  ], credentials: true
+  ],
+  credentials: true
 }
 
 app.use(cookieParser())
-app.use(cookieSession({
-  name: 'session',
-  keys: [process.env.SECRET_KEY],
+app.use(
+  cookieSession({
+    name: 'session',
+    keys: [process.env.SECRET_KEY],
 
-  // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}))
-
+    // Cookie Options
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  })
+)
+app.use(bodyParser.json())
 app.use(cors(corsOptions))
 app.use(middleware.logger)
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(passport.initialize())
 app.use(passport.session())
@@ -52,14 +55,17 @@ metadata(config.passport.saml)
 
 const loggedIn = async (req, res, next) => {
   // TODO: Remove verifyService.isLoggedIn once GoogleLogin is no longer implemented
-  if (await verifyService.isLoggedIn(req.session.scout) || req.isAuthenticated()) {
+  if (
+    (await verifyService.isLoggedIn(req.session.scout)) ||
+    req.isAuthenticated()
+  ) {
     next()
   } else {
     res.status(403).send('You are not logged in')
   }
 }
 var options_sendfile = {
-  root: __dirname + '/build/',
+  root: __dirname + '/build/'
 }
 
 app.use('/activities', loggedIn)
@@ -86,5 +92,6 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 module.exports = {
-  app, server
+  app,
+  server
 }
