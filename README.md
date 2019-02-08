@@ -1,18 +1,22 @@
-# tosu-backend-node
+# Toiminnansuunnittelu [backend]
 
 Tosu app backend made with Node.js
 
 [![Build Status](https://travis-ci.org/partio-scout/tosu-backend-node.svg?branch=master)](https://travis-ci.org/partio-scout/tosu-backend-node)
 
-# How to use
-### Install dependencies
-```sh
-npm install
-```
-### Initialize database
+## Getting Started
 
-Create a `.env` file in project root with the following variables:
-```sh
+### Prerequisites
+
+[node.js ](https://nodejs.org/en/)
+
+### Installing
+
+1. Clone the repository `$ git clone git@github.com:partio-scout/tosu-backend-node.git`
+2. Install npm packages `$ npm install`
+3. Add `.env` file to project root
+
+```
 NODE_ENV=development
 HOST_URL=
 SAML_METADATA_URL=
@@ -28,55 +32,69 @@ DB_NAME_PROD=tosudb_prod
 SECRET_KEY=superSecretKeyABC
 ```
 
-SECRET_KEY is used for cookies. HOST_URL is used for SAML routes (can be left undefined for local development). SAML_METADATA_URL is used for fetching the SAML metadata for the IdP.
+`SECRET_KEY` is used for cookies.  
+`HOST_URL` is used for SAML routes (can be left undefined for local development).  
+`SAML_METADATA_URL` is used for fetching the SAML metadata for the IdP.
 
-Next:
+4. Install postgreSQL ([guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04))
+5. Access SQL prompt: `sudo -i -u postgres psql`
+6. Create databases:
 
-1. Install PostgreSQL and create databases for development and testing:
-    1. [Install psql](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04)
-    2. Access sql prompt: `sudo -i -u postgres psql`
-    3. Create development database: `create database tosudb;`
-    4. Create testing database: `create database tosudb_test;`
-    5. Exit: `\q`
-    6. [Set password](https://stackoverflow.com/questions/7695962/postgresql-password-authentication-failed-for-user-postgres) if necessary.
-2. Configure database settings in `.env` if necessary
-3. Migrate models to the development and testing databases by running (in project root):
+```sql
+CREATE DATABASE tosudb;
+CREATE DATABASE tosudb_test;
+CREATE DATABASE tosudb_prod;
+```
+
+7. Exit SQL prompt: `\q`
+8. Configure database settings in `.env` if necessary
+9. Migrate models to the development and testing databases:
+
 ```sh
+# Execute in project root
 ./node_modules/.bin/sequelize db:migrate --env development
 ./node_modules/.bin/sequelize db:migrate --env test
+./node_modules/.bin/sequelize db:migrate --env production
 ```
+
 Undoing migrations:
+
 ```sh
+# Execute in project root
 ./node_modules/.bin/sequelize db:migrate:undo:all --env development
 ./node_modules/.bin/sequelize db:migrate:undo:all --env test
+./node_modules/.bin/sequelize db:migrate:undo:all --env production
 ```
 
+10. Start the server (2 options)
+    - Normal mode (frontend development):`npm start`
+    - Watch mode (backend development): `npm run watch`
 
-### Run in development mode (nodemon)
-```sh
-npm run watch
-```
+### Running tests
 
-### Start server
-```sh
-npm start
-```
+- Run all tests `npm test`
+- Run single test class `npm test activities`
 
-### Run tests
+Code coverage is generated when tests are run.  
+A report is printed to the console and an html report generated to /coverage.
 
-Run all tests:
-```sh
-npm test
-```
+## Deployment
 
-Run one test class:
-```sh
-npm test activities
-```
+> TODO: Add deployment instructions
 
-Code coverage is generated when tests are run. A report is printed to the console and an html report generated to /coverage.
+## Resources
 
-# Documentation
+### Documentation
 
-* [Product backlog](https://docs.google.com/spreadsheets/d/1s8WgWyk6s9hXbjHSsdBv8X7MHLPGrLpprMkqOl15yBo/edit?usp=sharing)
-* [Trello table](https://trello.com/b/87G4Y96t/tosu-app)
+> TODO: Add documentation
+
+Some documentation can be found in the `doc` folder.
+
+### Backlogs
+
+[Product backlog (Trello)](https://trello.com/b/87G4Y96t/tosu-app)  
+[Fall 2018 product & sprint backlog](https://docs.google.com/spreadsheets/d/1s8WgWyk6s9hXbjHSsdBv8X7MHLPGrLpprMkqOl15yBo/edit?usp=sharing)
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
