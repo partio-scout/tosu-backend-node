@@ -2,25 +2,10 @@ const axios = require('axios')
 const models = require('../domain/models')
 const eventService = require('./eventService')
 
-const EVENT_API_BASE_PRODUCTION = 'https://kuksa.partio.fi' // NOTE: beta machine has env=production
-const EVENT_API_BASE_STAGING = 'https://demo.kehatieto.fi/partiolaiset'
-
-const EVENT_API = '/Tapahtumat_Rajapinta/api/Tapahtumahaku'
-
-function getEventApi() {
-  if (process.env.NODE_ENV === 'production') {
-    return EVENT_API_BASE_PRODUCTION + EVENT_API
-  } else if (process.env.NODE_ENV === 'development') {
-    return EVENT_API_BASE_STAGING + EVENT_API
-  } else {
-    return ''
-  }
-}
-
 async function getKuksaEventsByAgeGroup(ageGroup) {
   let response
   try {
-    response = await axios.get(getEventApi())
+    response = await axios.get(process.env.EVENT_API_URL)
   } catch (e) {
     console.log('Failed to fetch Kuksa events:',e)
     return null
