@@ -20,6 +20,8 @@ const scoutRouter = require('./controllers/scouts')
 const planRouter = require('./controllers/plans')
 const activityBufferRouter = require('./controllers/activitybuffers')
 
+const router = express.Router();
+
 var corsOptions = {
   origin: [
     'http://localhost:3000',
@@ -68,18 +70,20 @@ var options_sendfile = {
   root: __dirname + '/build/'
 }
 
-app.use('/activities', loggedIn)
-app.use('/events', loggedIn)
-app.use('/activitybuffers', loggedIn)
-app.use('/plans', loggedIn)
+router.use('/activities', loggedIn)
+router.use('/events', loggedIn)
+router.use('/activitybuffers', loggedIn)
+router.use('/plans', loggedIn)
 
-app.use('/filledpof', pofRouter)
-app.use('/activities', activityRouter)
-app.use('/eventgroups', eventgroupRouter)
-app.use('/events', eventRouter)
-app.use('/scouts', scoutRouter(config, passport))
-app.use('/plans', planRouter)
-app.use('/activitybuffers', activityBufferRouter)
+router.use('/filledpof', pofRouter)
+router.use('/activities', activityRouter)
+router.use('/eventgroups', eventgroupRouter)
+router.use('/events', eventRouter)
+router.use('/scouts', scoutRouter(config, passport))
+router.use('/plans', planRouter)
+router.use('/activitybuffers', activityBufferRouter)
+
+app.use(process.env.API_ROOT, router);
 
 app.use(middleware.error)
 
