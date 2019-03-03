@@ -12,8 +12,10 @@ Tosu app backend made with Node.js
 
 ### Installing
 
-1. Clone the repository `$ git clone git@github.com:partio-scout/tosu-backend-node.git`
-2. Install npm packages `$ npm install`
+1. Clone the repository  
+   `git clone git@github.com:partio-scout/tosu-backend-node.git`
+2. Install npm packages  
+   `npm install`
 3. Add `.env` file to project root
 
 ```
@@ -80,7 +82,27 @@ A report is printed to the console and an html report generated to /coverage.
 
 ## Deployment
 
-> TODO: Add deployment instructions
+- Install node:  
+  `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
+  `sudo apt -y install nodejs`
+
+- Clone the repo:  
+  `git clone git@github.com:partio-scout/tosu-backend-node.git`
+
+- Install PM2, a process manager for Node.js applications:  
+  `sudo npm install pm2@latest -g`
+
+- Start node process:  
+  `cd ~/tosu-backend-node`  
+  `npm install`  
+  `pm2 start index.js`
+
+- Install NGINX, Reverse proxy and copy nginx.conf file:  
+  `sudo apt -y install nginx`  
+  `sudo cp /home/ubuntu/tosu-backend-node/nginx.conf /etc/nginx/sites-available/default`
+
+- Restart nginx:  
+  `sudo systemctl restart nginx`
 
 ## Resources
 

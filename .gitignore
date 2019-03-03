@@ -1,5 +1,16 @@
-node_modules
-coverage
-.env
-.idea
 pof.json
+
+build/
+coverage
+node_modules/
+.env
+
+# Environment
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+logs
+*.log
+npm-debug.log*
