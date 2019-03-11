@@ -46,7 +46,7 @@ async function makeFilledPof(res, guid, test) {
   async function taskDetails(agegroup) {
     for (const taskgroup of agegroup.taskgroups) {
       if (taskgroup.taskgroups.length > 0) {
-        console.log('--------------PAUSSIT--------------')
+        console.log('--------------PAUSES--------------')
         for (const paussigroup of taskgroup.taskgroups) {
           for (const suhde of paussigroup.taskgroups) {
             for (const paussi of suhde.tasks) {
