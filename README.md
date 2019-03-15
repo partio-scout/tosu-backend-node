@@ -40,31 +40,40 @@ SECRET_KEY=superSecretKeyABC
 - `SAML_METADATA_URL` is used for fetching the SAML metadata for the IdP.
 
 4. Install postgreSQL ([guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04))
-5. Access SQL prompt: `sudo -i -u postgres psql` or just `psql`
-6. Create databases:
+5. Configure database credentials in `.env` if necessary
+6. Create local development database `npx sequelize db:create`
 
-```sql
--- For development
-CREATE DATABASE tosudb;
+> **NOTE:** If the above command doesn't work create the database manually
+>
+> 1. Access SQL prompt using one of the following
+>
+> ```
+> $ psql
+> $ psql -u postgres
+> $ sudo -i -u postgres psql
+> ```
+>
+> 2. Create databases
+>
+> ```sql
+> -- For development
+> CREATE DATABASE tosudb;
+>
+> -- For running tests
+> CREATE DATABASE tosudb_test;
+> ```
+>
+> 3. Exit SQL prompt: `\q` or `exit`
 
--- For running tests
-CREATE DATABASE tosudb_test;
-
--- For production (not necessary for local dev)
-CREATE DATABASE tosudb_prod;
-```
-
-7. Exit SQL prompt: `\q` or `exit`
-8. Configure database credentials in `.env` if necessary
-9. Migrate models to the development and testing databases  
+7. Migrate models to the database  
    `npx sequelize db:migrate`
 
    To undo migrations  
    `npx sequelize db:migrate:undo:all`
 
-10. Start the server (2 options)
-    - Static mode: `npm start`
-    - Watch mode (development): `npm run watch`
+8. Start the server (2 options)
+   - Normal mode: `npm start`
+   - Hot reloading: `npm run watch`
 
 ### Running tests
 
@@ -98,13 +107,31 @@ $ sudo apt -y install nodejs
 $ git clone git@github.com:partio-scout/tosu-backend-node.git
 ```
 
-5. Install PM2, a process manager for Node.js applications:
+5. Add `.env` file to project root
+
+```env
+NODE_ENV=production
+HOST_URL=https://suunnittelu.beta.partio-ohjelma.fi
+SAML_METADATA_URL=https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php
+
+DB_HOST=localhost
+DB_USERNAME=postgres
+DB_PASSWORD=(password for the database)
+
+DB_NAME_DEV=tosudb
+DB_NAME_TEST=tosudb_test
+DB_NAME_PROD=tosudb_prod
+
+SECRET_KEY=(generate some secret key)
+```
+
+6. Install PM2, a process manager for Node.js applications:
 
 ```sh
 $ sudo npm install pm2@latest -g
 ```
 
-6. Start node process:
+7. Start node process:
 
 ```sh
 $ cd ~/tosu-backend-node
@@ -112,20 +139,20 @@ $ npm install
 $ pm2 start index.js
 ```
 
-7. Install NGINX, Reverse proxy and copy nginx.conf file:
+8. Install postgreSQL ([guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04))
+
+9. Install NGINX, Reverse proxy and copy nginx.conf file:
 
 ```sh
 $ sudo apt -y install nginx
 $ sudo cp /home/ubuntu/tosu-backend-node/nginx.conf /etc/nginx/sites-available/default
 ```
 
-8. Restart nginx:
+10. Restart nginx:
 
 ```sh
 sudo systemctl restart nginx
 ```
-
-#### `tosu-backend-node` is now deployed and running!
 
 ## Resources
 

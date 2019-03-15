@@ -8,7 +8,7 @@
     "start": "node index.js",
     "watch": "nodemon index.js",
     "lint": "eslint .",
-    "test": "NODE_ENV=test jest --verbose"
+    "test": "cross-env-shell NODE_ENV=test \"npx sequelize db:create; npx sequelize db:migrate && jest --verbose\""
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
     "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "google-auth-library": "^2.0.0",
