@@ -8,17 +8,12 @@ cache:
     - 'node_modules'
 addons:
   ssh_known_hosts: 18.197.93.24
-branches:
-  only:
-    - master
 before_install:
   - bash .scripts/install.sh
 install:
   - npm install
 before_script:
   - export CI=false
-  - psql -c 'create database tosudb_test;' -U postgres
-  - npx sequelize db:migrate --env test
 after_script:
   - bash .scripts/deploy.sh
 services:
