@@ -18,7 +18,7 @@ Tosu app backend made with Node.js
    `npm install`
 3. Add `.env` file to project root
 
-```
+```env
 NODE_ENV=development
 HOST_URL=
 SAML_METADATA_URL=
@@ -34,43 +34,37 @@ DB_NAME_PROD=tosudb_prod
 SECRET_KEY=superSecretKeyABC
 ```
 
-`SECRET_KEY` is used for cookies.  
-`HOST_URL` is used for SAML routes (can be left undefined for local development).  
-`SAML_METADATA_URL` is used for fetching the SAML metadata for the IdP.
+- `NODE_ENV` defines the type of environment `(production | development | test)` (`development` by default)
+- `SECRET_KEY` is used for cookies.
+- `HOST_URL` is used for SAML routes (can be left undefined for local development).
+- `SAML_METADATA_URL` is used for fetching the SAML metadata for the IdP.
 
 4. Install postgreSQL ([guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04))
-5. Access SQL prompt: `sudo -i -u postgres psql`
+5. Access SQL prompt: `sudo -i -u postgres psql` or just `psql`
 6. Create databases:
 
 ```sql
+-- For development
 CREATE DATABASE tosudb;
+
+-- For running tests
 CREATE DATABASE tosudb_test;
+
+-- For production (not necessary for local dev)
 CREATE DATABASE tosudb_prod;
 ```
 
-7. Exit SQL prompt: `\q`
-8. Configure database settings in `.env` if necessary
-9. Migrate models to the development and testing databases:
+7. Exit SQL prompt: `\q` or `exit`
+8. Configure database credentials in `.env` if necessary
+9. Migrate models to the development and testing databases  
+   `npx sequelize db:migrate`
 
-```sh
-# Execute in project root
-npx sequelize db:migrate --env development
-npx sequelize db:migrate --env test
-npx sequelize db:migrate --env production
-```
-
-Undoing migrations:
-
-```sh
-# Execute in project root
-npx sequelize db:migrate:undo:all --env development
-npx sequelize db:migrate:undo:all --env test
-npx sequelize db:migrate:undo:all --env production
-```
+   To undo migrations  
+   `npx sequelize db:migrate:undo:all`
 
 10. Start the server (2 options)
-    - Normal mode (frontend development):`npm start`
-    - Watch mode (backend development): `npm run watch`
+    - Static mode: `npm start`
+    - Watch mode (development): `npm run watch`
 
 ### Running tests
 
@@ -82,27 +76,56 @@ A report is printed to the console and an html report generated to /coverage.
 
 ## Deployment
 
-- Install node:  
-  `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
-  `sudo apt -y install nodejs`
+1. Get the unencrypted ssh key `tosu_node.pem`
+2. SSH to the server instance:
 
-- Clone the repo:  
-  `git clone git@github.com:partio-scout/tosu-backend-node.git`
+```sh
+$ chmod 600 tosu_node.pem
+$ ssh-add tosu_node.pem
+$ ssh ubuntu@suunnittelu.beta.partio-ohjelma.fi
+```
 
-- Install PM2, a process manager for Node.js applications:  
-  `sudo npm install pm2@latest -g`
+3. Install node:
 
-- Start node process:  
-  `cd ~/tosu-backend-node`  
-  `npm install`  
-  `pm2 start index.js`
+```sh
+$ curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+$ sudo apt -y install nodejs
+```
 
-- Install NGINX, Reverse proxy and copy nginx.conf file:  
-  `sudo apt -y install nginx`  
-  `sudo cp /home/ubuntu/tosu-backend-node/nginx.conf /etc/nginx/sites-available/default`
+4. Clone the repo:
 
-- Restart nginx:  
-  `sudo systemctl restart nginx`
+```sh
+$ git clone git@github.com:partio-scout/tosu-backend-node.git
+```
+
+5. Install PM2, a process manager for Node.js applications:
+
+```sh
+$ sudo npm install pm2@latest -g
+```
+
+6. Start node process:
+
+```sh
+$ cd ~/tosu-backend-node
+$ npm install
+$ pm2 start index.js
+```
+
+7. Install NGINX, Reverse proxy and copy nginx.conf file:
+
+```sh
+$ sudo apt -y install nginx
+$ sudo cp /home/ubuntu/tosu-backend-node/nginx.conf /etc/nginx/sites-available/default
+```
+
+8. Restart nginx:
+
+```sh
+sudo systemctl restart nginx
+```
+
+#### `tosu-backend-node` is now deployed and running!
 
 ## Resources
 

@@ -18,7 +18,7 @@ install:
 before_script:
   - export CI=false
   - psql -c 'create database tosudb_test;' -U postgres
-  - ./node_modules/.bin/sequelize db:migrate --env test
+  - npx sequelize db:migrate --env test
 after_script:
   - bash .scripts/deploy.sh
 services:
