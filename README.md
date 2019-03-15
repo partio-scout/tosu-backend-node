@@ -54,18 +54,18 @@ CREATE DATABASE tosudb_prod;
 
 ```sh
 # Execute in project root
-./node_modules/.bin/sequelize db:migrate --env development
-./node_modules/.bin/sequelize db:migrate --env test
-./node_modules/.bin/sequelize db:migrate --env production
+npx sequelize db:migrate --env development
+npx sequelize db:migrate --env test
+npx sequelize db:migrate --env production
 ```
 
 Undoing migrations:
 
 ```sh
 # Execute in project root
-./node_modules/.bin/sequelize db:migrate:undo:all --env development
-./node_modules/.bin/sequelize db:migrate:undo:all --env test
-./node_modules/.bin/sequelize db:migrate:undo:all --env production
+npx sequelize db:migrate:undo:all --env development
+npx sequelize db:migrate:undo:all --env test
+npx sequelize db:migrate:undo:all --env production
 ```
 
 10. Start the server (2 options)
