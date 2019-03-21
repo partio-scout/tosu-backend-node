@@ -3,8 +3,7 @@ const models = require('../domain/models')
 const verifyService = require('../services/verifyService')
 const scoutService = require('../services/scoutService')
 
-module.exports = function (config, passport) {
-
+module.exports = function(config, passport) {
   //  Login with GoogleIdToken sent from the client
   scoutRouter.post('/google/login', async (req, res) => {
     const idTokenString = req.body.Authorization
@@ -21,7 +20,8 @@ module.exports = function (config, passport) {
 
   // Called by the client to login
   // Calls the Identity Provider (partioID) to authenticate
-  scoutRouter.get('/login',
+  scoutRouter.get(
+    '/login',
     passport.authenticate(config.passport.strategy, {
       successRedirect: '/',
       failureRedirect: '/',
@@ -30,7 +30,8 @@ module.exports = function (config, passport) {
 
   // Identity Provider calls back to inform of successful authentication
   // Then req.isAuthenticated() can be used
-  scoutRouter.post(config.passport.saml.path,
+  scoutRouter.post(
+    config.passport.saml.path,
     passport.authenticate(config.passport.strategy, {
       failureRedirect: '/',
       failureFlash: true,
@@ -39,7 +40,8 @@ module.exports = function (config, passport) {
       console.log('user who logged in:', req.user)
 
       const membernumber = parseInt(req.user.membernumber)
-      if (isNaN(membernumber)) return res.status(500).send('membernumber is Nan')
+      if (isNaN(membernumber))
+        return res.status(500).send('membernumber is Nan')
 
       const scout = await scoutService.findOrCreateScoutByMemberNumber(req.user)
       var scoutInfo = { name: scout.name } // Send only necessary, harmless info to a client cookie
@@ -52,7 +54,7 @@ module.exports = function (config, passport) {
   // Called by frontend to log out. Also logs out from other partioid single sign out service providers.
   // Could not get to work without reinitializing samlStrategy:
   // https://github.com/bergie/passport-saml/issues/200
-  require('../utils/passport')(passport, config).then(function (samlStrategy) {
+  require('../utils/passport')(passport, config).then(function(samlStrategy) {
     scoutRouter.get('/logout', function(req, res) {
       if (req.user == null) {
         return res.redirect(config.localFrontend)
@@ -64,7 +66,7 @@ module.exports = function (config, passport) {
       req.user.saml.nameIDFormat = req.user.nameIDFormat
       req.user.id = req.user.saml.nameID
 
-      samlStrategy.logout(req, function(err, request){
+      samlStrategy.logout(req, function(err, request) {
         if (!err) {
           req.logout() // Logout locally
           res.redirect(request) // Redirect to the IdP Logout URL

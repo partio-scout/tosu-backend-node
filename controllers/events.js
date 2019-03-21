@@ -27,11 +27,12 @@ eventRouter.put('/:eventId', async (req, res) => {
   if (isNaN(eventId)) {
     return res.status(400).send('Invalid event id!')
   }
-  if (!await verifyService.scoutOwnsEvent(scout, eventId)) {
+  if (!(await verifyService.scoutOwnsEvent(scout, eventId))) {
     return res.status(403).send('You are not the owner of this event!')
   }
   const event = await eventService.updateEvent(eventId, req.body)
-  if (event.error) { //Should never really happen since verifyService should prevent all errors
+  if (event.error) {
+    //Should never really happen since verifyService should prevent all errors
     return res.status(400).send(event.error)
   }
   res.json(event)
@@ -44,16 +45,16 @@ eventRouter.post('/:eventId/activities', async (req, res) => {
   if (isNaN(eventId)) {
     return res.status(400).send('Invalid event id!')
   }
-  if (!await verifyService.scoutOwnsEvent(scout, eventId)){
+  if (!(await verifyService.scoutOwnsEvent(scout, eventId))) {
     return res.status(403).send('You are not the owner of this event!')
   }
   const activity = await eventService.addActivityToEvent(eventId, req.body)
-  if (activity.error){ //Should never really happen since verifyService should prevent all errors
+  if (activity.error) {
+    //Should never really happen since verifyService should prevent all errors
     return res.status(400).send(activity.error)
   }
   res.json(activity)
 })
-
 
 // Delete an event
 eventRouter.delete('/:eventId', async (req, res) => {
@@ -62,12 +63,13 @@ eventRouter.delete('/:eventId', async (req, res) => {
   if (isNaN(eventId)) {
     return res.status(400).send('Invalid event id!')
   }
-  if (!await verifyService.scoutOwnsEvent(scout, eventId)) {
+  if (!(await verifyService.scoutOwnsEvent(scout, eventId))) {
     return res.status(403).send('You are not the owner of this event!')
   }
   const event = await eventService.getEvent(eventId)
   const succeeded = await eventService.deleteEvent(eventId)
-  if (!succeeded) { // Should not happen
+  if (!succeeded) {
+    // Should not happen
     return res.status(400).send('The event was not deleted.')
   }
   res.json(event)

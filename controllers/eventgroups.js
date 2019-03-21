@@ -12,7 +12,8 @@ eventgroupRouter.delete('/:id', async (req, res) => {
     return res.status(404).send('Invalid event group id!')
   }
   const succeeded = await eventgroupService.deleteEventGroup(eventGroupId)
-  if (!succeeded) { // Should not happen
+  if (!succeeded) {
+    // Should not happen
     return res.status(404).send('The event group was not deleted.')
   }
   res.status(204).send()
