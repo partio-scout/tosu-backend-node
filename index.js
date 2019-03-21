@@ -18,6 +18,7 @@ const eventgroupRouter = require('./controllers/eventgroups')
 const eventRouter = require('./controllers/events')
 const scoutRouter = require('./controllers/scouts')
 const planRouter = require('./controllers/plans')
+const tosuRouter = require('./controllers/tosus')
 const activityBufferRouter = require('./controllers/activitybuffers')
 
 var corsOptions = {
@@ -28,9 +29,9 @@ var corsOptions = {
     'https://demo.kehatieto.fi',
     'https://kuksa.partio.fi',
     'https://partioid-test.partio.fi',
-    'https://id.partio.fi'
+    'https://id.partio.fi',
   ],
-  credentials: true
+  credentials: true,
 }
 
 app.use(cookieParser())
@@ -40,7 +41,7 @@ app.use(
     keys: [process.env.SECRET_KEY],
 
     // Cookie Options
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
   })
 )
 app.use(bodyParser.json())
@@ -65,7 +66,7 @@ const loggedIn = async (req, res, next) => {
   }
 }
 var options_sendfile = {
-  root: __dirname + '/build/'
+  root: __dirname + '/build/',
 }
 
 app.use('/activities', loggedIn)
@@ -79,6 +80,7 @@ app.use('/eventgroups', eventgroupRouter)
 app.use('/events', eventRouter)
 app.use('/scouts', scoutRouter(config, passport))
 app.use('/plans', planRouter)
+app.use('/tosus', tosuRouter)
 app.use('/activitybuffers', activityBufferRouter)
 
 app.use(middleware.error)
@@ -93,5 +95,5 @@ if (process.env.NODE_ENV !== 'test') {
 
 module.exports = {
   app,
-  server
+  server,
 }
