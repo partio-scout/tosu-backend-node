@@ -1,6 +1,7 @@
 const models = require('../domain/models')
 
-const CLIENT_ID = '1059818174105-9p207ggii6rt2mld491mdbhqfvor2poc.apps.googleusercontent.com'
+const CLIENT_ID =
+  '1059818174105-9p207ggii6rt2mld491mdbhqfvor2poc.apps.googleusercontent.com'
 
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(CLIENT_ID)
@@ -13,7 +14,7 @@ async function verifyId(token) {
   try {
     ticket = await client.verifyIdToken({
       idToken: token,
-      audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      audience: CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
       // Or, if multiple clients access the backend:
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
     })
@@ -31,7 +32,9 @@ async function verifyId(token) {
 
 // Check that scout owns the activity (activity.event/buffer.scoutId = scout.id)
 async function scoutOwnsActivity(scout, activityId) {
-  const activity = await models.Activity.findById(activityId, { include: [models.Event, models.ActivityBuffer] })
+  const activity = await models.Activity.findById(activityId, {
+    include: [models.Event, models.ActivityBuffer],
+  })
 
   if (!activity || !scout) {
     return false
@@ -48,44 +51,53 @@ async function scoutOwnsActivity(scout, activityId) {
 // Check that scout owns the event
 async function scoutOwnsEvent(scout, eventId) {
   const event = await models.Event.findById(eventId)
-  if (scout && event && event.scoutId === scout.id){
+  if (scout && event && event.scoutId === scout.id) {
     return true
   }
   return false
 }
 
-
-
 // Check that scout owns the plan
 async function scoutOwnsPlan(scout, planId) {
-  const plan = await models.Plan.findById(
-    planId,
-    {
-      include: [{
-        model : models.Activity,
-        include: [models.Event, models.ActivityBuffer]
-      }]
-    }
-  )
-  if (!scout || !plan || !plan.Activity){
+  const plan = await models.Plan.findById(planId, {
+    include: [
+      {
+        model: models.Activity,
+        include: [models.Event, models.ActivityBuffer],
+      },
+    ],
+  })
+  if (!scout || !plan || !plan.Activity) {
     return false
   }
   if (plan.Activity.Event && plan.Activity.Event.scoutId === scout.id) {
     return true
   }
-  if (plan.Activity.ActivityBuffer && plan.Activity.ActivityBuffer.scoutId === scout.id) {
+  if (
+    plan.Activity.ActivityBuffer &&
+    plan.Activity.ActivityBuffer.scoutId === scout.id
+  ) {
     return true
   }
   return false
 }
 
-// Checks weather the scout is logged in.
+/**
+ * Check that scout owns the Tosu
+ * @param scoutId - The ID of the scout
+ * @param tosuId - The ID of the Tosu
+ * @returns true if scout owns the Tosu, otherwise false
+ */
+const scoutOwnsTosu = (scoutId, tosuId) =>
+  models.Tosu.findByPk(tosuId).then(tosu => tosu.scoutId === scoutId)
+
+// Checks whether the scout is logged in.
 // TODO: Other checks than just querying database?
 async function isLoggedIn(scout) {
   if (!scout) {
     return false
   }
-  return await models.Scout.findById(scout.id) !== null
+  return (await models.Scout.findById(scout.id)) !== null
 }
 
 module.exports = {
@@ -93,5 +105,6 @@ module.exports = {
   scoutOwnsActivity,
   scoutOwnsEvent,
   scoutOwnsPlan,
+  scoutOwnsTosu,
   isLoggedIn,
 }
