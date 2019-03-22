@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Tosu.associate = models => {
     Tosu.hasMany(models.Event, { foreignKey: 'tosuId' })
-    Event.belongsTo(models.Scout, { foreignKey: 'scoutId' })
+    Tosu.hasMany(models.EventGroup, { foreignKey: 'tosuId' })
+    Tosu.belongsTo(models.Scout, { foreignKey: 'scoutId' })
   }
 
   return Tosu
