@@ -2,10 +2,10 @@ const models = require('../domain/models')
 const prepareService = require('./prepareService')
 
 // Returns a list of all scouts events
-async function getAllEvents(scoutId) {
+async function getAllEvents(tosuId) {
   const events = await models.Event.findAll({
     where: {
-      scoutId: { $eq: scoutId },
+      tosuId: { $eq: tosuId },
     },
   })
   return await prepareService.prepareEvents(events)
@@ -17,8 +17,7 @@ async function getEvent(eventId) {
 }
 
 //Creates a new event and returns it
-async function createEvent(scoutId, eventData) {
-  eventData.scoutId = scoutId
+async function createEvent(eventData) {
   try {
     const event = await models.Event.create(eventData)
     return await prepareService.prepareEvent(event)
@@ -34,7 +33,6 @@ async function updateEvent(eventId, eventData) {
     if (event === null) {
       return { error: 'Event was not found' }
     }
-    eventData.scoutId = event.scoutId
     const updated = await models.Event.update(eventData, {
       where: {
         id: { $eq: event.id },
@@ -86,7 +84,7 @@ async function deleteEvent(eventId) {
       return false
     }
   } catch (error) {
-    console.log('Error in deleting event: ', error)
+    console.log('Error while deleting event: ', error)
     return false
   }
 }

@@ -75,11 +75,11 @@ function parseKuksaEvents(kuksaEvents) {
   Params:
   - kuksaEvents: Assumed to be parsed already by getKuksaEventsByAgeGroup()
 */
-async function syncEvents(kuksaEvents, scoutId) {
+async function syncEvents(kuksaEvents, tosuId) {
   const syncedEvents = await models.Event.findAll({
     where: {
       kuksaEventId: { $ne: null },
-      scoutId: { $eq: scoutId },
+      tosuId: { $eq: tosuId },
     },
   })
   for (var i = 0; i < syncedEvents.length; i++) {
@@ -91,7 +91,7 @@ async function syncEvents(kuksaEvents, scoutId) {
     )
     if (correspondingKuksaEvent) {
       // Update
-      await updateEvent(tosuEvent, correspondingKuksaEvent)
+      await updateEvent(tosuEvent, correspondingKuksaEvent, tosuId)
       // Delete kuksa event from kuksaEvents to avoid passing duplicates to frontend
       deleteFromArray(correspondingKuksaEvent, kuksaEvents)
     } else {
@@ -100,7 +100,7 @@ async function syncEvents(kuksaEvents, scoutId) {
     }
   }
 
-  const tosuEvents = await eventService.getAllEvents(scoutId)
+  const tosuEvents = await eventService.getAllEvents(tosuId)
   var concattedEvents = []
   concattedEvents = kuksaEvents
     ? concattedEvents.concat(kuksaEvents)
@@ -111,7 +111,7 @@ async function syncEvents(kuksaEvents, scoutId) {
   return concattedEvents
 }
 
-async function updateEvent(tosuEvent, kuksaEvent) {
+async function updateEvent(tosuEvent, kuksaEvent, tosuId) {
   // Update by using database event's id as kuksaEvent's id.
   await eventService.updateEvent(tosuEvent.id, {
     title: kuksaEvent.title,
@@ -122,6 +122,7 @@ async function updateEvent(tosuEvent, kuksaEvent) {
     type: kuksaEvent.type,
     information: kuksaEvent.information,
     kuksaEventId: kuksaEvent.kuksaEventId,
+    tosuId: tosuId,
   })
 }
 

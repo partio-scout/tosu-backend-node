@@ -1,8 +1,12 @@
 const models = require('../domain/models')
 const bufferService = require('./activitybufferService')
 
-// Finds or creates a scout with given googleIdToken and returns it.
-async function findOrCreateScoutByGoogleToken(googleIdToken) {
+/**
+ * Find or create new scout using googleIdToken
+ * @param googleIdToken - Unique toke for the user
+ * @returns Instance of Scout model
+ */
+const findOrCreateScoutByGoogleToken = async googleIdToken => {
   const userId = googleIdToken.getPayload()['sub']
   const name = googleIdToken.getPayload()['name'] // TODO: Would be better to save first and last names separately
   return await findOrCreate({
@@ -16,7 +20,12 @@ async function findOrCreateScoutByGoogleToken(googleIdToken) {
   })
 }
 
-async function findOrCreateScoutByMemberNumber(user) {
+/**
+ * Find or create new scout using member number
+ * @param user - The member number of the scout
+ * @returns Instance of Scout model
+ */
+const findOrCreateScoutByMemberNumber = async user => {
   return await findOrCreate({
     where: {
       partioId: { $eq: user.membernumber },
@@ -28,18 +37,27 @@ async function findOrCreateScoutByMemberNumber(user) {
   })
 }
 
-async function findOrCreate(queryConditions) {
+/**
+ * Find the scout or create new one along with ActivityBuffer and first Tosu
+ * @param {*} queryConditions
+ * @returns Instance of Scout model
+ */
+const findOrCreate = async queryConditions => {
   const scout = await models.Scout.findOrCreate(queryConditions).spread(
     async (user, created) => {
       // user: first found result, created: whether user was created or found
-      // If the scout logged in for the first time, create buffer
+      // If the scout logged in for the first time, create buffer and first tosu
       if (created) {
         await bufferService.createBufferForScout(user)
+        await models.Tosu.create({
+          name: 'Yleinen',
+          scoutId: user.id,
+          selected: true,
+        })
       }
       return user
     }
   )
-
   return scout
 }
 

@@ -57,7 +57,7 @@ const select = (scoutId, tosuId) => {
     }
   ).catch(error => console.log(error))
   // Select the new Tosu
-  models.Tosu.update(
+  return models.Tosu.update(
     { selected: true },
     {
       where: {

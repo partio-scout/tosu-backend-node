@@ -89,7 +89,7 @@ async function scoutOwnsPlan(scout, planId) {
  * @returns true if scout owns the Tosu, otherwise false
  */
 const scoutOwnsTosu = (scoutId, tosuId) =>
-  models.Tosu.findByPk(tosuId).then(tosu => tosu.scoutId === scoutId)
+  models.Tosu.findById(tosuId).then(tosu => tosu.scoutId === scoutId)
 
 // Checks whether the scout is logged in.
 // TODO: Other checks than just querying database?
