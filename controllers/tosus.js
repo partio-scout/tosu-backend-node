@@ -2,19 +2,19 @@ const tosuRouter = require('express').Router()
 const verifyService = require('../services/verifyService')
 const tosuService = require('../services/tosuService')
 
-// Get all Tosus
-tosuRouter.get('', (req, res) =>
-  tosuService
+// Get all Tosus as an Array
+tosuRouter.get('', (req, res) => {
+  return tosuService
     .getAll(req.session.scout.id)
     .then(allTosus => res.status(200).json(allTosus))
-)
+})
 
 // Create new Tosu and return it
 tosuRouter.post('/:tosuName', (req, res) => {
   const scout = req.session.scout
   const tosuName = req.params.tosuName
-  if (isNaN(tosuName)) {
-    return res.status(400).send('Invalid Tosu name')
+  if (tosuName === '') {
+    return res.status(400).send('Tosu name can not be empty')
   }
   tosuService
     .create(scout.id, tosuName)
@@ -36,12 +36,12 @@ tosuRouter.put('/:tosuId', (req, res) => {
     .then(editedTosu => res.status(200).json(editedTosu))
 })
 
-// Change selected Tosu for a scout
+// Change selected Tosu
 tosuRouter.put('/select/:tosuId', (req, res) => {
   const scout = req.session.scout
   const tosuId = parseInt(req.params.tosuId)
   if (isNaN(tosuId)) {
-    return res.status(400).send('Invalid Tosu name')
+    return res.status(400).send('Invalid Tosu id')
   }
   if (!verifyService.scoutOwnsTosu(scout.id, tosuId)) {
     return res.status(403).send("You don't own this Tosu")

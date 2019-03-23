@@ -5,18 +5,25 @@ const kuksaService = require('../services/kuksaService')
 
 const AGE_GROUP = 'Tarpojat (12-14 v)'
 
-// Get a list of scouts events
-eventRouter.get('', async (req, res) => {
+// Get a list of Tosu events
+eventRouter.get('/:tosuId', async (req, res) => {
   const scout = req.session.scout
+  const tosuId = req.params.tosuId
+  if (isNaN(tosuId)) {
+    return res.status(400).send('Invalid event tosuId')
+  }
+  if (!(await verifyService.scoutOwnsTosu(scout.id, tosuId))) {
+    return res.status(403).send('You are not the owner of this tosu')
+  }
+
   const kuksaEvents = await kuksaService.getKuksaEventsByAgeGroup(AGE_GROUP)
-  const syncedEvents = await kuksaService.syncEvents(kuksaEvents, scout.id)
+  const syncedEvents = await kuksaService.syncEvents(kuksaEvents, tosuId)
   res.json(syncedEvents)
 })
 
 // Add a new event, return the added event
 eventRouter.post('', async (req, res) => {
-  const scout = req.session.scout
-  const event = await eventService.createEvent(scout.id, req.body)
+  const event = await eventService.createEvent(req.body)
   res.status(201).json(event)
 })
 
