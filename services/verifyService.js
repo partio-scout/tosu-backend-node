@@ -6,10 +6,14 @@ const CLIENT_ID =
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(CLIENT_ID)
 
-// Verify token as a GoogleIdToken.
-// Unsuccessful verification returns null.
-// https://developers.google.com/identity/sign-in/web/backend-auth
-async function verifyId(token) {
+/**
+ * Verify token as a GoogleIdToken.
+ * Unsuccessful verification returns null.
+ * https://developers.google.com/identity/sign-in/web/backend-auth
+ * @param {*} token Google token
+ * @returns Ticket or null
+ */
+const verifyId = async token => {
   let ticket = null
   try {
     ticket = await client.verifyIdToken({
@@ -31,15 +35,20 @@ async function verifyId(token) {
 }
 
 // Check that scout owns the activity (activity.event/buffer.scoutId = scout.id)
-async function scoutOwnsActivity(scout, activityId) {
+const scoutOwnsActivity = async (scout, activityId) => {
   const activity = await models.Activity.findById(activityId, {
-    include: [models.Event, models.ActivityBuffer],
+    include: [
+      {
+        model: models.Event,
+        include: [models.Tosu],
+      },
+      models.ActivityBuffer,
+    ],
   })
-
   if (!activity || !scout) {
     return false
   }
-  if (activity.Event && activity.Event.scoutId === scout.id) {
+  if (activity.Event && activity.Event.Tosu.scoutId === scout.id) {
     return true
   }
   if (activity.ActivityBuffer && activity.ActivityBuffer.scoutId === scout.id) {
@@ -49,16 +58,18 @@ async function scoutOwnsActivity(scout, activityId) {
 }
 
 // Check that scout owns the event
-async function scoutOwnsEvent(scout, eventId) {
-  const event = await models.Event.findById(eventId)
-  if (scout && event && event.scoutId === scout.id) {
+const scoutOwnsEvent = async (scout, eventId) => {
+  const event = await models.Event.findById(eventId, {
+    include: [models.tosuId],
+  })
+  if (scout && event && event.Tosu.scoutId === scout.id) {
     return true
   }
   return false
 }
 
 // Check that scout owns the plan
-async function scoutOwnsPlan(scout, planId) {
+const scoutOwnsPlan = async (scout, planId) => {
   const plan = await models.Plan.findById(planId, {
     include: [
       {
