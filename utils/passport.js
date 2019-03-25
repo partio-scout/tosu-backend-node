@@ -40,7 +40,7 @@ module.exports = function(passport, config) {
         return {
           logout: function(a, b) {
             return
-          }
+          },
         } // Stub for testing
       }
     })

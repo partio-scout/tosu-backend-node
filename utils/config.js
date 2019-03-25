@@ -12,16 +12,19 @@ module.exports = {
       path: '/login/callback',
       // callbackUrl and logoutCallbackUrl are configured at IdP side
       logoutCallback: '/logout/callback',
-      issuer: process.env.HOST_URL || 'https://suunnittelu.beta.partio-ohjelma.fi',
+      issuer:
+        process.env.HOST_URL || 'https://suunnittelu.beta.partio-ohjelma.fi',
       metadata: {
-        url: process.env.SAML_METADATA_URL || 'https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php',
+        url:
+          process.env.SAML_METADATA_URL ||
+          'https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php',
         timeout: process.env.SAML_METADATA_TIMEOUT || 30000,
         // TODO: Implement fileCache
         // backupStore: fileCache({
         //   basePath: process.env.SAML_METADATA_CACHE_DIR || os.tmpdir(),
         //   ns: process.env.SAML_ISSUER
         // })
-      }
-    }
-  }
+      },
+    },
+  },
 }

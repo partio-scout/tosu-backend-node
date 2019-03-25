@@ -15,5 +15,5 @@ const error = (request, response) => {
 
 module.exports = {
   error,
-  logger
+  logger,
 }

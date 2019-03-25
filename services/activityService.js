@@ -7,8 +7,8 @@ async function deleteActivity(activityId) {
   try {
     await models.Activity.destroy({
       where: {
-        id: { $eq: activityId }
-      }
+        id: { $eq: activityId },
+      },
     }).then(rowsDeleted => {
       if (rowsDeleted === 1) {
         return true
@@ -28,8 +28,8 @@ async function moveActivityFromEventToBuffer(activityId, scout) {
     const activity = await models.Activity.findById(activityId)
     const buffer = await models.ActivityBuffer.findOne({
       where: {
-        scoutId: { $eq: scout.id }
-      }
+        scoutId: { $eq: scout.id },
+      },
     })
 
     // Buffer or Activity not found.

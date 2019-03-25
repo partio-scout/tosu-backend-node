@@ -1,5 +1,3 @@
-![Domain Classes UML](cla.png)
-
 Used terms in classes and other possible names:
 
 ```
