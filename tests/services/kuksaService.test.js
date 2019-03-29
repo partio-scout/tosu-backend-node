@@ -6,9 +6,12 @@ var tosuEventsWithWrongTitle
 var tosuEvents
 var kuksaEvents
 var scout
+var tosu
+
 
 beforeEach(async () => {
   scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
+  tosu = await models.Tosu.create({ name:"tarpojat", scoutId: scout.id }) 
   const kuksaId1 = Math.floor(Math.random() * 1001)
   const kuksaId2 = Math.floor(Math.random() * 1001)
 
@@ -29,18 +32,18 @@ beforeEach(async () => {
   ]
 
   tosuEventsWithWrongTitle = []
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 1', kuksaEventId: kuksaId1, scoutId: scout.id}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
-  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 1', kuksaEventId: kuksaId1, tosuId: tosu.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 2', tosuId: tosu.id}))
+  tosuEventsWithWrongTitle.push(await models.Event.create({...eventData, title:'test 3', tosuId: tosu.id}))
 
   tosuEvents = []
-  tosuEvents.push(await models.Event.create({...eventData, title:'kuksa eventti 1', kuksaEventId: kuksaId1, scoutId: scout.id}))
-  tosuEvents.push(await models.Event.create({...eventData, title:'test 2', scoutId: scout.id}))
-  tosuEvents.push(await models.Event.create({...eventData, title:'test 3', scoutId: scout.id}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'kuksa eventti 1', kuksaEventId: kuksaId1, tosuId: tosu.id}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 2', tosuId: tosu.id}))
+  tosuEvents.push(await models.Event.create({...eventData, title:'test 3', tosuId: tosu.id}))
 })
 
 test('Sync title from kuksa event to tosu event, removes kuksa source event', async () => {
-  const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
+  const events = await kuksaService.syncEvents(kuksaEvents, tosu.id)
   tosuEventsWithWrongTitle[0].dataValues.title = 'kuksa eventti 1' // Expect to update 'test 1' to this title from kuksa
   kuksaEvents.splice(0, 1) // Remove 0th element (synced event's corresponding kuksa event, no duplicates allowed)
   expect(hasEvents(events, tosuEventsWithWrongTitle, kuksaEvents)).toBe(true)
@@ -48,7 +51,7 @@ test('Sync title from kuksa event to tosu event, removes kuksa source event', as
 
 test('Synced events of one scout do not affect synced events of other scouts', async () => {
   const kuksaEventsCopy = kuksaEvents.slice()
-  const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
+  const events = await kuksaService.syncEvents(kuksaEvents, tosu.id)
   const scout2 = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   const events2 = await kuksaService.syncEvents(kuksaEventsCopy, scout2.id)
   expect(events2.length).toBe(2) // Should be same as kuksaEvents
@@ -57,7 +60,7 @@ test('Synced events of one scout do not affect synced events of other scouts', a
 
 test('Event deleted in Kuksa is deleted in tosu as well', async () => {
   kuksaEvents.splice(0, 1) // Remove 0th element (synced event's corresponding kuksa event)
-  const events = await kuksaService.syncEvents(kuksaEvents, scout.id)
+  const events = await kuksaService.syncEvents(kuksaEvents, tosu.id)
   // Expect the corresponding tosu event to be removed as well (cheked by hasEvents())
   expect(hasEvents(events, tosuEvents, kuksaEvents)).toBe(true)
 })

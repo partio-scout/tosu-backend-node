@@ -8,12 +8,15 @@ require('../handleTestDatabase')
 var scout
 var cookie
 var eventData
+var tosu
+
 
 beforeEach(async () => {
   scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
+  tosu = await models.Tosu.create({ scoutId: scout.id, name:"tarpojat"})
   cookie = testUtils.createScoutCookieWithId(scout.id)
   eventData = {
-    scoutId: scout.id, 
+    tosuId: tosu.id, 
     startDate: '2500-10-10',
     endDate: '2501-10-10',
     startTime: '12:11:54',
@@ -28,20 +31,20 @@ test('Test get events', async () => {
   await models.Event.create(eventData)
   await models.Event.create(eventData)
 
-  await api.get('/events')
+  await api.get(`/events/${tosu.id}`)
     .set('cookie', [cookie])
     .expect('Content-Type', /json/)
     .then((result) => {
       expect(result.body.length).toBe(2)
-      expect(result.body[0].scoutId).toBe(scout.id)
-      expect(result.body[1].scoutId).toBe(scout.id)
+      expect(result.body[0].tosuId).toBe(tosu.id)
+      expect(result.body[1].tosuId).toBe(tosu.id)
       expect(result.body[0].title).toBe(eventData.title)
       expect(result.body[1].title).toBe(eventData.title)
     })
 })
 
 test('Test that no event are returned on get events when there are none.', async () => {
-  await api.get('/events')
+  await api.get(`/events/${tosu.id}`)
     .set('cookie', [cookie])
     .expect('Content-Type', /json/)
     .then((result) => {
@@ -62,7 +65,7 @@ test('Create an event', async () => {
   expect(result.body.endTime).toBe(eventData.endTime)
   expect(result.body.type).toBe(eventData.type)
   expect(result.body.information).toBe(eventData.information)
-  expect(result.body.scoutId).toBe(scout.id)
+  expect(result.body.tosuId).toBe(tosu.id)
   const eventId=result.body.id
 
   const dbEvent = await models.Event.findById(eventId)
@@ -74,7 +77,7 @@ test('Create an event', async () => {
   expect(dbEvent.endTime).toBe(eventData.endTime)
   expect(dbEvent.type).toBe(eventData.type)
   expect(dbEvent.information).toBe(eventData.information)
-  expect(dbEvent.scoutId).toBe(scout.id)
+  expect(dbEvent.tosuId).toBe(tosu.id)
 })
 
 test('Cannot get events when not logged in', async () => {
@@ -93,7 +96,7 @@ test('Update event', async () => {
       endTime: '21:51:33',
       type: 'Retki',
       information: 'eHGAOSGaoe gaEGo',
-      scoutId: scout.id
+      tosuId: tosu.id
     })
     .set('cookie', [cookie])
     .expect('Content-Type', /json/)
@@ -105,7 +108,7 @@ test('Update event', async () => {
   expect(result.body.endTime).toBe('21:51:33')
   expect(result.body.type).toBe('Retki')
   expect(result.body.information).toBe('eHGAOSGaoe gaEGo')
-  expect(result.body.scoutId).toBe(scout.id)
+  expect(result.body.tosuId).toBe(tosu.id)
   expect(result.body.activities.length).toBe(0)
   const eventId = result.body.id
 
@@ -117,14 +120,14 @@ test('Update event', async () => {
   expect(dbEvent.endTime).toBe('21:51:33')
   expect(dbEvent.type).toBe('Retki')
   expect(dbEvent.information).toBe('eHGAOSGaoe gaEGo')
-  expect(dbEvent.scoutId).toBe(scout.id)
+  expect(dbEvent.tosuId).toBe(tosu.id)
 })
 
 test('Cannot update an event that is not owned', async () => {
   const anotherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
-  eventData.scoutId=anotherScout.id
+  const anotherTosu = await models.Tosu.create({ scoutId:anotherScout.id, name:"Sudarit"})
+  eventData.tosuId = anotherTosu.id
   const event = await models.Event.create(eventData)
-
   await api.put('/events/'+event.id)
     .send({
       title: 'EGasg'
@@ -155,7 +158,8 @@ test('Test add activity to event', async () => {
 
 test('Cannot add activity to a event that is not owned', async () => {
   const anotherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
-  eventData.scoutId=anotherScout.id
+  const anotherTosu = await models.Tosu.create({scoutId:anotherScout.id, name: 'sudarit'})
+  eventData.tosuId=anotherTosu.id
   const event = await models.Event.create(eventData)
   await api.post('/events/'+event.id+'/activities')
     .set('cookie', [cookie])
@@ -181,7 +185,8 @@ test('Delete event', async () => {
 
 test('Cannot delete an event that is not owned', async () => {
   const anotherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
-  eventData.scoutId=anotherScout.id
+  const anotherTosu = await models.Tosu.create({ scoutId: anotherScout.id, name:'Sudarit'})
+  eventData.tosuId=anotherTosu.id
   const event = await models.Event.create(eventData)
 
   await api.delete('/events/'+event.id)
@@ -233,7 +238,7 @@ test('Activities and the plans of activities are returned on GET /events', async
     content: 'Do this and that',
     activityId: activity.id
   })
-  const result = await api.get('/events')
+  const result = await api.get(`/events/${tosu.id}`)
     .set('cookie', [cookie])
     .expect('Content-Type', /json/)
     .expect(200)

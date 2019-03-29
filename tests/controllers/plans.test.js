@@ -12,13 +12,14 @@ var eventData
 var event
 var activity
 var plan
-
+var tosu
 
 beforeEach(async () => {
   scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
-  cookie = testUtils.createScoutCookieWithId(scout.id)  
+  cookie = testUtils.createScoutCookieWithId(scout.id)
+  tosu = await models.Tosu.create({ scoutId: scout.id, name:'tarpojat'})
   eventData = {
-    scoutId: scout.id, 
+    tosuId: tosu.id, 
     startDate: '2500-10-10',
     endDate: '2501-10-10',
     startTime: '12:11:54',

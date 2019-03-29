@@ -12,13 +12,17 @@ var cookie
 var eventData
 var event
 var otherEvent
+var tosu
+var otherTosu
 
 beforeEach(async () => {
   scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
+  tosu = await models.Tosu.create({ scoutId: scout.id, name:'Tarpojat' })
   otherScout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
+  otherTosu = await models.Tosu.create({ scoutId:otherScout.id, name: 'sudarit'})
   cookie = testUtils.createScoutCookieWithId(scout.id)  
   eventData = {
-    scoutId: scout.id, 
+    tosuId: tosu.id, 
     startDate: '2500-10-10',
     endDate: '2501-10-10',
     startTime: '12:11:54',
@@ -28,7 +32,7 @@ beforeEach(async () => {
     information: 'kgeqwg aogqa olgao e',
   }
   event = await models.Event.create(eventData)
-  eventData.scoutId = otherScout.id
+  eventData.tosuId = otherTosu.id
   otherEvent = await models.Event.create(eventData)
   eventData.scoutId = scout.id
 })
