@@ -60,7 +60,7 @@ const scoutOwnsActivity = async (scout, activityId) => {
 // Check that scout owns the event
 const scoutOwnsEvent = async (scout, eventId) => {
   const event = await models.Event.findById(eventId, {
-    include: [models.tosuId],
+    include: [models.Tosu],
   })
   if (scout && event && event.Tosu.scoutId === scout.id) {
     return true
