@@ -2,23 +2,18 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-  - "stable"
+  - '11.10.1'
 cache:
   directories:
-  - "node_modules"
+    - 'node_modules'
 addons:
   ssh_known_hosts: 18.197.93.24
-branches:
-  only:
-  - master
 before_install:
-- bash .scripts/install.sh
+  - bash .scripts/install.sh
 install:
   - npm install
 before_script:
   - export CI=false
-  - psql -c 'create database tosudb_test;' -U postgres
-  - ./node_modules/.bin/sequelize db:migrate --env test
 after_script:
   - bash .scripts/deploy.sh
 services:

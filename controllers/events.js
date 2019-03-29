@@ -5,18 +5,25 @@ const kuksaService = require('../services/kuksaService')
 
 const AGE_GROUP = 'Tarpojat (12-14 v)'
 
-// Get a list of scouts events
-eventRouter.get('', async (req, res) => {
+// Get a list of Tosu events
+eventRouter.get('/:tosuId', async (req, res) => {
   const scout = req.session.scout
+  const tosuId = req.params.tosuId
+  if (isNaN(tosuId)) {
+    return res.status(400).send('Invalid event tosuId')
+  }
+  if (!(await verifyService.scoutOwnsTosu(scout.id, tosuId))) {
+    return res.status(403).send('You are not the owner of this tosu')
+  }
+
   const kuksaEvents = await kuksaService.getKuksaEventsByAgeGroup(AGE_GROUP)
-  const syncedEvents = await kuksaService.syncEvents(kuksaEvents, scout.id)
+  const syncedEvents = await kuksaService.syncEvents(kuksaEvents, tosuId)
   res.json(syncedEvents)
 })
 
 // Add a new event, return the added event
 eventRouter.post('', async (req, res) => {
-  const scout = req.session.scout
-  const event = await eventService.createEvent(scout.id, req.body)
+  const event = await eventService.createEvent(req.body)
   res.status(201).json(event)
 })
 
@@ -27,11 +34,12 @@ eventRouter.put('/:eventId', async (req, res) => {
   if (isNaN(eventId)) {
     return res.status(400).send('Invalid event id!')
   }
-  if (!await verifyService.scoutOwnsEvent(scout, eventId)) {
+  if (!(await verifyService.scoutOwnsEvent(scout, eventId))) {
     return res.status(403).send('You are not the owner of this event!')
   }
   const event = await eventService.updateEvent(eventId, req.body)
-  if (event.error) { //Should never really happen since verifyService should prevent all errors
+  if (event.error) {
+    //Should never really happen since verifyService should prevent all errors
     return res.status(400).send(event.error)
   }
   res.json(event)
@@ -44,16 +52,16 @@ eventRouter.post('/:eventId/activities', async (req, res) => {
   if (isNaN(eventId)) {
     return res.status(400).send('Invalid event id!')
   }
-  if (!await verifyService.scoutOwnsEvent(scout, eventId)){
+  if (!(await verifyService.scoutOwnsEvent(scout, eventId))) {
     return res.status(403).send('You are not the owner of this event!')
   }
   const activity = await eventService.addActivityToEvent(eventId, req.body)
-  if (activity.error){ //Should never really happen since verifyService should prevent all errors
+  if (activity.error) {
+    //Should never really happen since verifyService should prevent all errors
     return res.status(400).send(activity.error)
   }
   res.json(activity)
 })
-
 
 // Delete an event
 eventRouter.delete('/:eventId', async (req, res) => {
@@ -62,12 +70,13 @@ eventRouter.delete('/:eventId', async (req, res) => {
   if (isNaN(eventId)) {
     return res.status(400).send('Invalid event id!')
   }
-  if (!await verifyService.scoutOwnsEvent(scout, eventId)) {
+  if (!(await verifyService.scoutOwnsEvent(scout, eventId))) {
     return res.status(403).send('You are not the owner of this event!')
   }
   const event = await eventService.getEvent(eventId)
   const succeeded = await eventService.deleteEvent(eventId)
-  if (!succeeded) { // Should not happen
+  if (!succeeded) {
+    // Should not happen
     return res.status(400).send('The event was not deleted.')
   }
   res.json(event)

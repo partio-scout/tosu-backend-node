@@ -14,11 +14,11 @@ activityRouter.delete('/:activityId', async (req, res) => {
     return res.status(400).send('Invalid activity id!')
   }
 
-  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
+  if (!(await verifyService.scoutOwnsActivity(scout, activityId))) {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  if (! await activityService.deleteActivity(activityId)) {
+  if (!(await activityService.deleteActivity(activityId))) {
     console.log('Deleted activity with ID', activityId)
     res.send('Deleted')
   } else {
@@ -36,17 +36,20 @@ activityRouter.put('/:activityId/tobuffer', async (req, res) => {
     return res.status(400).send('Invalid activity id!')
   }
 
-  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
+  if (!(await verifyService.scoutOwnsActivity(scout, activityId))) {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  const movedActivity = await activityService.moveActivityFromEventToBuffer(activityId, scout)
+  const movedActivity = await activityService.moveActivityFromEventToBuffer(
+    activityId,
+    scout
+  )
 
   sendResponse(res, movedActivity)
 })
 
 // Move Activity from Buffer to Event
-activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
+activityRouter.put('/:activityId/toevent/:eventId', async (req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
   const eventId = parseInt(req.params.eventId)
@@ -55,17 +58,20 @@ activityRouter.put('/:activityId/toevent/:eventId', async(req, res) => {
     return res.status(400).send('Invalid activity or event id!')
   }
 
-  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
+  if (!(await verifyService.scoutOwnsActivity(scout, activityId))) {
     return res.status(403).send('You are not the owner of this activity.')
   }
 
-  const movedActivity = await activityService.moveActivityFromBufferToEvent(activityId, eventId)
+  const movedActivity = await activityService.moveActivityFromBufferToEvent(
+    activityId,
+    eventId
+  )
 
   sendResponse(res, movedActivity)
 })
 
 // Add Plan to Activity
-activityRouter.post('/:activityId/plans', async(req, res) => {
+activityRouter.post('/:activityId/plans', async (req, res) => {
   const scout = req.session.scout
   const activityId = parseInt(req.params.activityId)
   const plan = req.body
@@ -74,7 +80,7 @@ activityRouter.post('/:activityId/plans', async(req, res) => {
     return res.status(400).send('Invalid activity id!')
   }
 
-  if (! await verifyService.scoutOwnsActivity(scout, activityId)) {
+  if (!(await verifyService.scoutOwnsActivity(scout, activityId))) {
     return res.status(403).send('You are not the owner of this activity.')
   }
 

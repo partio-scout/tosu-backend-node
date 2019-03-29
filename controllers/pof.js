@@ -8,7 +8,7 @@ var makingPof = false
 
 pofRouter.get('/', async (req, res) => {
   res.json({
-    makingPof: makingPof
+    makingPof: makingPof,
   })
 })
 

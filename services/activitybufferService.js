@@ -29,12 +29,16 @@ async function addActivityToBuffer(activityData, scout) {
 
 // Finds the scout's buffer and returns it
 async function findByScout(scout) {
-  return await prepareService.prepareBuffer(await models.ActivityBuffer.findByScout(scout))
+  return await prepareService.prepareBuffer(
+    await models.ActivityBuffer.findByScout(scout)
+  )
 }
 
 // Creates a buffer for scout
 async function createBufferForScout(scout) {
-  return await prepareService.prepareBuffer(await models.ActivityBuffer.create({ scoutId: scout.id }))
+  return await prepareService.prepareBuffer(
+    await models.ActivityBuffer.create({ scoutId: scout.id })
+  )
 }
 
 module.exports = {

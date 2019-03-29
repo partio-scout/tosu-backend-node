@@ -12,11 +12,13 @@ Tosu app backend made with Node.js
 
 ### Installing
 
-1. Clone the repository `$ git clone git@github.com:partio-scout/tosu-backend-node.git`
-2. Install npm packages `$ npm install`
+1. Clone the repository  
+   `git clone git@github.com:partio-scout/tosu-backend-node.git`
+2. Install npm packages  
+   `npm install`
 3. Add `.env` file to project root
 
-```
+```env
 NODE_ENV=development
 HOST_URL=
 SAML_METADATA_URL=
@@ -32,43 +34,46 @@ DB_NAME_PROD=tosudb_prod
 SECRET_KEY=superSecretKeyABC
 ```
 
-`SECRET_KEY` is used for cookies.  
-`HOST_URL` is used for SAML routes (can be left undefined for local development).  
-`SAML_METADATA_URL` is used for fetching the SAML metadata for the IdP.
+- `NODE_ENV` defines the type of environment `(production | development | test)` (`development` by default)
+- `SECRET_KEY` is used for cookies.
+- `HOST_URL` is used for SAML routes (can be left undefined for local development).
+- `SAML_METADATA_URL` is used for fetching the SAML metadata for the IdP.
 
 4. Install postgreSQL ([guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04))
-5. Access SQL prompt: `sudo -i -u postgres psql`
-6. Create databases:
+5. Configure database credentials in `.env` if necessary
+6. Create local development database `npx sequelize db:create`
 
-```sql
-CREATE DATABASE tosudb;
-CREATE DATABASE tosudb_test;
-CREATE DATABASE tosudb_prod;
-```
+> **NOTE:** If the above command doesn't work create the database manually
+>
+> 1. Access SQL prompt using one of the following
+>
+> ```
+> $ psql
+> $ psql -u postgres
+> $ sudo -i -u postgres psql
+> ```
+>
+> 2. Create databases
+>
+> ```sql
+> -- For development
+> CREATE DATABASE tosudb;
+>
+> -- For running tests
+> CREATE DATABASE tosudb_test;
+> ```
+>
+> 3. Exit SQL prompt: `\q` or `exit`
 
-7. Exit SQL prompt: `\q`
-8. Configure database settings in `.env` if necessary
-9. Migrate models to the development and testing databases:
+7. Migrate models to the database  
+   `npx sequelize db:migrate`
 
-```sh
-# Execute in project root
-./node_modules/.bin/sequelize db:migrate --env development
-./node_modules/.bin/sequelize db:migrate --env test
-./node_modules/.bin/sequelize db:migrate --env production
-```
+   To undo migrations  
+   `npx sequelize db:migrate:undo:all`
 
-Undoing migrations:
-
-```sh
-# Execute in project root
-./node_modules/.bin/sequelize db:migrate:undo:all --env development
-./node_modules/.bin/sequelize db:migrate:undo:all --env test
-./node_modules/.bin/sequelize db:migrate:undo:all --env production
-```
-
-10. Start the server (2 options)
-    - Normal mode (frontend development):`npm start`
-    - Watch mode (backend development): `npm run watch`
+8. Start the server (2 options)
+   - Normal mode: `npm start`
+   - Hot reloading: `npm run watch`
 
 ### Running tests
 
@@ -80,7 +85,74 @@ A report is printed to the console and an html report generated to /coverage.
 
 ## Deployment
 
-> TODO: Add deployment instructions
+1. Get the unencrypted ssh key `tosu_node.pem`
+2. SSH to the server instance:
+
+```sh
+$ chmod 600 tosu_node.pem
+$ ssh-add tosu_node.pem
+$ ssh ubuntu@suunnittelu.beta.partio-ohjelma.fi
+```
+
+3. Install node:
+
+```sh
+$ curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+$ sudo apt -y install nodejs
+```
+
+4. Clone the repo:
+
+```sh
+$ git clone git@github.com:partio-scout/tosu-backend-node.git
+```
+
+5. Add `.env` file to project root
+
+```env
+NODE_ENV=production
+HOST_URL=https://suunnittelu.beta.partio-ohjelma.fi
+SAML_METADATA_URL=https://partioid-test.partio.fi/simplesaml/saml2/idp/metadata.php
+
+DB_HOST=localhost
+DB_USERNAME=postgres
+DB_PASSWORD=(password for the database)
+
+DB_NAME_DEV=tosudb
+DB_NAME_TEST=tosudb_test
+DB_NAME_PROD=tosudb_prod
+
+SECRET_KEY=(generate some secret key)
+```
+
+6. Install PM2, a process manager for Node.js applications:
+
+```sh
+$ sudo npm install pm2@latest -g
+```
+
+7. Start node process:
+
+```sh
+$ cd ~/tosu-backend-node
+$ npm install
+$ pm2 start index.js
+```
+
+8. Install postgreSQL ([guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04))
+
+9. Install NGINX, Reverse proxy and copy nginx.conf file:
+
+```sh
+$ sudo apt -y install nginx
+$ sudo cp /home/ubuntu/tosu-backend-node/nginx.conf /etc/nginx/sites-available/default
+```
+
+10. Restart nginx:
+
+```sh
+sudo systemctl restart nginx
+```
 
 ## Resources
 
