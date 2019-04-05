@@ -9,12 +9,14 @@ var event
 var buffer
 var activityInEvent
 var activityInBuffer
+var ownerTosu
 
 beforeEach(async () => {
   scoutOwner = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
   scoutImposter = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
+  ownerTosu = await models.Tosu.create({ scoutId: scoutOwner.id, name:'Tarpoja' })
   eventData = { 
-    scoutId: scoutOwner.id, 
+    tosuId: ownerTosu.id, 
     startDate: '2500-10-10',
     endDate: '2501-10-10',
     startTime: '00:00',

@@ -28,44 +28,13 @@ test('Scout cannot be created without googleid and partioid', async () => {
   expect(scout.isNull)
 })
 
-test('Scout can be assigned Events', async () => {
+test('Scout can be assigned Tosus', async () => {
   const scout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
-  const event1 = await models.Event.create({
-    scoutId: scout.id,
-    title: 'Let\'s go fishing!',
-    startDate: '2018-09-23',
-    endDate: '2018-09-23',
-    startTime: '17:46:22.33',
-    endTime: '18:44:05.795',
-    type: 'Retki',
-    information: 'Fishing fish',
-    eventGroupId: null,
-  })
-  const event2 = await models.Event.create({
-    scoutId: scout.id,
-    title: 'Let\'s go fishing!',
-    startDate: '2018-09-23',
-    endDate: '2018-09-23',
-    startTime: '17:46:22.33',
-    endTime: '18:44:05.795',
-    type: 'Retki',
-    information: 'Fishing fish',
-    eventGroupId: null,
-  })
-  const event3 = await models.Event.create({
-    scoutId: scout.id,
-    title: 'Let\'s go fishing!',
-    startDate: '2018-09-23',
-    endDate: '2018-09-23',
-    startTime: '17:46:22.33',
-    endTime: '18:44:05.795',
-    type: 'Retki',
-    information: 'Fishing fish',
-    eventGroupId: null,
-  })
+  const tosu1 = await models.Tosu.create({scoutId:scout.id, name:"tarpojat"})
+  const tosu2 = await models.Tosu.create({scoutId:scout.id, name:"sudarit"})
 
-  const fetchedScout = await models.Scout.findById(scout.id, { include: [models.Event] })
-  expect(fetchedScout.Events.length).toBe(3)
+  const fetchedScout = await models.Scout.findById(scout.id, { include: [models.Tosu] })
+  expect(fetchedScout.Tosus.length).toBe(2)
 })
 
 test('Scout can be assigned an ActivityBuffer', async () => {

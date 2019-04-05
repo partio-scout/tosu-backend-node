@@ -5,11 +5,13 @@ require('../handleTestDatabase')
 var scout
 var eventData
 var event
+var tosu
 
 beforeEach(async () => {
   scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
+  tosu = await models.Tosu.create({name:"Tarpojat", scoutId:scout.id})
   eventData = { 
-    scoutId: scout.id, 
+    tosuId: tosu.id, 
     startDate: '2500-10-10',
     endDate: '2501-10-10',
     startTime: '00:00',
@@ -22,7 +24,7 @@ beforeEach(async () => {
 })
 
 test('Get all events', async () => {
-  const events = await eventService.getAllEvents(scout.id)
+  const events = await eventService.getAllEvents(tosu.id)
   expect(events.length).toBe(1)
   expect(events[0].id).toBe(event.id)
 })
@@ -35,7 +37,7 @@ test('getAllEvents returns the activities of the event and the plans of the acti
     content: 'Do this and that',
     activityId: activity.id
   })
-  const events = await eventService.getAllEvents(scout.id)
+  const events = await eventService.getAllEvents(tosu.id)
   expect(events.length).toBe(1)
   expect(events[0].activities.length).toBe(1)
   expect(events[0].activities[0].id).toBe(activity.id)
@@ -45,7 +47,8 @@ test('getAllEvents returns the activities of the event and the plans of the acti
 
 test('Create an event', async () => {
   eventData.title='Asdf'
-  const newEvent = await eventService.createEvent(scout.id, eventData)
+  const newEvent = await eventService.createEvent(eventData)
+  console.log(newEvent)
   expect(newEvent.title).toBe('Asdf')
   expect(newEvent.activities.length).toBe(0)
   const dbEvent = await models.Event.findById(newEvent.id)

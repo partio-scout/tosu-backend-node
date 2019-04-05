@@ -48,7 +48,7 @@ const scoutOwnsActivity = async (scout, activityId) => {
   if (!activity || !scout) {
     return false
   }
-  if (activity.Event && activity.Event.Tosu.scoutId === scout.id) {
+  if (activity.Event && activity.Event.Tosu && activity.Event.Tosu.scoutId === scout.id) {
     return true
   }
   if (activity.ActivityBuffer && activity.ActivityBuffer.scoutId === scout.id) {
@@ -60,7 +60,7 @@ const scoutOwnsActivity = async (scout, activityId) => {
 // Check that scout owns the event
 const scoutOwnsEvent = async (scout, eventId) => {
   const event = await models.Event.findById(eventId, {
-    include: [models.tosuId],
+    include: [models.Tosu],
   })
   if (scout && event && event.Tosu.scoutId === scout.id) {
     return true
@@ -74,14 +74,14 @@ const scoutOwnsPlan = async (scout, planId) => {
     include: [
       {
         model: models.Activity,
-        include: [models.Event, models.ActivityBuffer],
+        include: [{model:models.Event, include: models.Tosu}, models.ActivityBuffer],
       },
     ],
   })
   if (!scout || !plan || !plan.Activity) {
     return false
   }
-  if (plan.Activity.Event && plan.Activity.Event.scoutId === scout.id) {
+  if (plan.Activity.Event && plan.Activity.Event.Tosu.scoutId === scout.id) {
     return true
   }
   if (

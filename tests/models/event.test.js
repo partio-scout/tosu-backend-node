@@ -159,11 +159,11 @@ test('Event can be assigned Activities', async () => {
   expect(fetchedEvent.Activities.length).toBe(2)
 })
 
-test('Event can be assigned to Scout', async () => {
+test('Event can be assigned to Tosu', async () => {
   const scout = await models.Scout.create({ partioId: '1234', name: 'PartioId' })
-  eventData.scoutId = scout.id
+  const tosu = await models.Tosu.create({ name:"tarpojat", scoutId:scout.id})
+  eventData.tosuId = tosu.id
   const event = await models.Event.create(eventData)
-
-  const fetchedEvent = await models.Event.findById(event.id, { include: [models.Scout] })
-  expect(fetchedEvent.Scout.id).toBe(scout.id)
+  const fetchedEvent = await models.Event.findById(event.id, { include: [models.Tosu] })
+  expect(fetchedEvent.Tosu.id).toBe(tosu.id)
 })
