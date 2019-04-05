@@ -40,7 +40,7 @@ const operatorsAliases = {
   $any: Op.any,
   $all: Op.all,
   $values: Op.values,
-  $col: Op.col,
+  $col: Op.col
 }
 
 module.exports = {
@@ -51,7 +51,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     operatorsAliases,
-    logging: false,
+    logging: false
   },
   test: {
     database: process.env.DB_NAME_TEST,
@@ -60,7 +60,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     logging: logSqlQueriesTests,
-    operatorsAliases,
+    operatorsAliases
   },
   production: {
     database: process.env.DB_NAME_PROD,
@@ -69,6 +69,15 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     operatorsAliases,
-    logging: false,
+    logging: false
   },
+  e2e: {
+    database: process.env.DB_NAME_E2ETEST,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    dialect: 'postgres',
+    operatorsAliases,
+    logging: false
+  }
 }
