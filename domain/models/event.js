@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Event.associate = models => {
     Event.belongsTo(models.EventGroup, { foreignKey: 'eventGroupId' })
-    Event.belongsTo(models.Tosu, { foreignKey: 'tosuId' })
+    Event.belongsTo(models.Tosu, { foreignKey: 'tosuId', allowNull: false })
     Event.hasMany(models.Activity, { foreignKey: 'eventId' })
   }
 
