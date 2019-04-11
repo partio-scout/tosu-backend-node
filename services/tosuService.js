@@ -1,5 +1,5 @@
 const models = require('../domain/models')
-
+const PDFDocument = require('pdfkit')
 /**
  * Get a list of Tosus belonging to the scout
  * @param scoutId - The ID of the scout
@@ -81,10 +81,35 @@ const remove = tosuId =>
     },
   }).catch(error => console.log(error))
 
+const pdf = (tosuId, res) => {
+  models.Tosu.find({where:{id:tosuId}, include: [
+   {model: models.Event, include:[models.Activity]}
+  ]}).then(tosu => {
+    const events = tosu.dataValues.Events.map( dbevent => dbevent.dataValues)
+    const doc = new PDFDocument
+    doc.pipe(res)
+    doc.fontSize(16)
+    doc.text(`Tomintasuunnitelma: ${tosu.dataValues.name}`)
+    doc.moveDown(1)
+    events.forEach( e => {
+      doc.fontSize(14)
+      doc.text(`${e.title}`)
+      doc.fontSize(10)
+      doc.text(`  ${e.type}`)
+      doc.text(`    ${e.startDate} - ${e.endDate}`)
+      doc.text(`    ${e.startTime} - ${e.endTime}`)
+      doc.moveDown(1) 
+    })
+    doc.end()
+    return doc
+  })  
+}
+
 module.exports = {
   getAll,
   create,
   update,
   select,
   remove,
+  pdf,
 }

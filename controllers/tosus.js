@@ -10,7 +10,7 @@ tosuRouter.get('', (req, res) => {
 })
 
 // Create new Tosu and return it
-tosuRouter.post('/:tosuName', (req, res) => {
+tosuRouter.post('/:tosuName', async (req, res) => {
   const scout = req.session.scout
   const tosuName = req.params.tosuName
   if (tosuName === '') {
@@ -22,13 +22,14 @@ tosuRouter.post('/:tosuName', (req, res) => {
 })
 
 // Edit a Tosu and return the new version
-tosuRouter.put('/:tosuId', (req, res) => {
+tosuRouter.put('/:tosuId', async (req, res) => {
   const scout = req.session.scout
   const tosuId = parseInt(req.params.tosuId)
   if (isNaN(tosuId)) {
     return res.status(400).send('Invalid Tosu name')
   }
-  if (!verifyService.scoutOwnsTosu(scout.id, tosuId)) {
+  const owns = await verifyService.scoutOwnsTosu(scout.id, tosuId)
+  if (!owns) {
     return res.status(403).send("You don't own this Tosu")
   }
   tosuService
@@ -37,13 +38,14 @@ tosuRouter.put('/:tosuId', (req, res) => {
 })
 
 // Change selected Tosu
-tosuRouter.put('/select/:tosuId', (req, res) => {
+tosuRouter.put('/select/:tosuId', async (req, res) => {
   const scout = req.session.scout
   const tosuId = parseInt(req.params.tosuId)
   if (isNaN(tosuId)) {
     return res.status(400).send('Invalid Tosu id')
   }
-  if (!verifyService.scoutOwnsTosu(scout.id, tosuId)) {
+  const owns = await verifyService.scoutOwnsTosu(scout.id, tosuId)
+  if (!owns) {
     return res.status(403).send("You don't own this Tosu")
   }
   tosuService
@@ -52,16 +54,33 @@ tosuRouter.put('/select/:tosuId', (req, res) => {
 })
 
 // Delete a Tosu
-tosuRouter.delete('/:tosuId', (req, res) => {
+tosuRouter.delete('/:tosuId', async (req, res) => {
   const scout = req.session.scout
+  if (!req.session.scout) return res.status(401).send('Authorization needed')
   const tosuId = parseInt(req.params.tosuId)
   if (isNaN(tosuId)) {
     return res.status(400).send('Invalid Tosu id')
   }
-  if (!verifyService.scoutOwnsTosu(scout.id, tosuId)) {
+  const owns = await verifyService.scoutOwnsTosu(scout.id, tosuId)
+  if (!owns) {
     return res.status(403).send("You don't own this Tosu")
   }
   tosuService.remove(tosuId).then(() => res.status(204).send())
+})
+
+tosuRouter.get('/pdf/:tosuId', async (req, res) => {
+  const scout = req.session.scout
+  if (!scout) return res.status(401).send('Authorization needed')
+  const tosuId = parseInt(req.params.tosuId)
+  if (isNaN(tosuId)) {
+    return res.status(400).send('Invalid Tosu id')
+  }
+  const owns = await verifyService.scoutOwnsTosu(scout.id, tosuId)
+  if (!owns) {
+    return res.status(403).send("You don't own this Tosu")
+  } else {
+    tosuService.pdf(tosuId, res)
+  }
 })
 
 module.exports = tosuRouter
