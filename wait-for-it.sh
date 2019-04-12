@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+#   Use this script to test if a given TCP host/port are available
 # The MIT License (MIT)
 # Copyright (c) 2016 Giles Hall
 
@@ -20,8 +22,7 @@
 # SOFTWARE.
 
 
-#!/usr/bin/env bash
-#   Use this script to test if a given TCP host/port are available
+
 
 WAITFORIT_cmdname=${0##*/}
 
