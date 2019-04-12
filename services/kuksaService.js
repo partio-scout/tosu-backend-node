@@ -11,7 +11,7 @@ function getEventApi() {
   if (process.env.NODE_ENV === 'production') {
     return EVENT_API_BASE_PRODUCTION + EVENT_API
   } else if (process.env.NODE_ENV === 'development') {
-    return EVENT_API_BASE_STAGING + EVENT_API
+    return EVENT_API_BASE_PRODUCTION + EVENT_API
   } else {
     return ''
   }
