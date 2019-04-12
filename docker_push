@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --pasword-stdin
+docker push tosuapp/tosu-backend
