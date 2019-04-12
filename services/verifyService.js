@@ -99,8 +99,10 @@ const scoutOwnsPlan = async (scout, planId) => {
  * @param tosuId - The ID of the Tosu
  * @returns true if scout owns the Tosu, otherwise false
  */
-const scoutOwnsTosu = (scoutId, tosuId) =>
-  models.Tosu.findById(tosuId).then(tosu => tosu.scoutId === scoutId)
+const scoutOwnsTosu = async (scoutId, tosuId) => {
+  const tosu = await models.Tosu.findById(tosuId)
+  return tosu.scoutId === scoutId
+}
 
 // Checks whether the scout is logged in.
 // TODO: Other checks than just querying database?
