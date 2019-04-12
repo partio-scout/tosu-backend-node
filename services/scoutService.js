@@ -37,6 +37,27 @@ const findOrCreateScoutByMemberNumber = async user => {
     }
   })
 }
+/**
+ * Deletes a scout by using it's member number
+ * @param {*} id partioId of scout
+ */
+async function deleteScoutByMemberNumber(id) {
+  try {
+    const rowsDeleted = await models.Scout.destroy({
+      where: {
+        partioId: { $eq: id }
+      }
+    })
+    if (rowsDeleted === 1) {
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log('Error while deleting scout: ', error)
+    return false
+  }
+}
 
 /**
  * Find the scout or create new one along with ActivityBuffer and first Tosu
@@ -64,5 +85,6 @@ const findOrCreate = async queryConditions => {
 
 module.exports = {
   findOrCreateScoutByGoogleToken,
-  findOrCreateScoutByMemberNumber
+  findOrCreateScoutByMemberNumber,
+  deleteScoutByMemberNumber
 }

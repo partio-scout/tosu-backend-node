@@ -48,6 +48,20 @@ module.exports = function(config, passport) {
     res.redirect(config.localFrontend)
   })
 
+  scoutRouter.delete('/:scoutId', async (req, res) => {
+    const scoutId = parseInt(req.params.scoutId)
+    console.log('ID: ', scoutId)
+    if (isNaN(scoutId)) {
+      return res.status(400).send('Invalid id!')
+    }
+    const succeeded = await scoutService.deleteScoutByMemberNumber(scoutId)
+    if (!succeeded) {
+      // Should not happen
+      return res.status(400).send('The scout was not deleted.')
+    }
+    return res.status(200).send()
+  })
+
   scoutRouter.post(
     config.passport.saml.path,
     passport.authenticate(config.passport.strategy, {
