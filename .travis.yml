@@ -10,7 +10,7 @@ addons:
   ssh_known_hosts: 18.197.93.24
 before_install:
   - bash .scripts/install.sh
-  - docker build -t tosuapp/tosu-backend
+  - docker build -t tosuapp/tosu-backend .
 install:
   - npm install
 deploy:
