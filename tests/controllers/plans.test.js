@@ -15,9 +15,6 @@ var plan
 var tosu
 
 beforeEach(async () => {
-  await models.Scout.remove({})
-  await models.Event.remove({})
-  await models.Tosu.remove({})
   scout = await models.Scout.create({
     googleId: 'googleiidee',
     name: 'GoogleId'
