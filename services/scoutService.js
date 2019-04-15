@@ -11,12 +11,12 @@ const findOrCreateScoutByGoogleToken = async googleIdToken => {
   const name = googleIdToken.getPayload()['name'] // TODO: Would be better to save first and last names separately
   return await findOrCreate({
     where: {
-      googleId: { $eq: userId },
+      googleId: { $eq: userId }
     },
     defaults: {
       googleId: userId,
-      name: name,
-    },
+      name: name
+    }
   })
 }
 
@@ -26,15 +26,37 @@ const findOrCreateScoutByGoogleToken = async googleIdToken => {
  * @returns Instance of Scout model
  */
 const findOrCreateScoutByMemberNumber = async user => {
+  console.log('käyttäjä:', user)
   return await findOrCreate({
     where: {
-      partioId: { $eq: user.membernumber },
+      partioId: { $eq: user.membernumber }
     },
     defaults: {
       partioId: user.membernumber,
-      name: user.firstname + ' ' + user.lastname, // TODO: Would be better to save first and last names separately
-    },
+      name: user.firstname + ' ' + user.lastname // TODO: Would be better to save first and last names separately
+    }
   })
+}
+/**
+ * Deletes a scout by using it's member number
+ * @param {*} id partioId of scout
+ */
+async function deleteScoutByMemberNumber(id) {
+  try {
+    const rowsDeleted = await models.Scout.destroy({
+      where: {
+        partioId: { $eq: id }
+      }
+    })
+    if (rowsDeleted === 1) {
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log('Error while deleting scout: ', error)
+    return false
+  }
 }
 
 /**
@@ -52,7 +74,7 @@ const findOrCreate = async queryConditions => {
         await models.Tosu.create({
           name: 'Yleinen',
           scoutId: user.id,
-          selected: true,
+          selected: true
         })
       }
       return user
@@ -64,4 +86,5 @@ const findOrCreate = async queryConditions => {
 module.exports = {
   findOrCreateScoutByGoogleToken,
   findOrCreateScoutByMemberNumber,
+  deleteScoutByMemberNumber
 }

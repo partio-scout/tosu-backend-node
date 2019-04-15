@@ -10,7 +10,13 @@ var scout
 var cookie
 
 beforeEach(async () => {
-  scout = await models.Scout.create({ googleId: 'googleiidee', name: 'GoogleId' })
+  await models.Scout.remove({})
+  await models.Event.remove({})
+  await models.Tosu.remove({})
+  scout = await models.Scout.create({
+    googleId: 'googleiidee',
+    name: 'GoogleId'
+  })
   cookie = testUtils.createScoutCookieWithId(scout.id)
 })
 
@@ -62,15 +68,19 @@ test('Get buffer when scout has no buffer', async () => {
 })
 
 test('Buffer is not returned when not logged in (no session)', async () => {
-  await api
-    .get('/activitybuffers')
-    .expect(403)
+  await api.get('/activitybuffers').expect(403)
 })
 
 test('Returned buffer has activities and id', async () => {
   const buffer = await models.ActivityBuffer.create({ scoutId: scout.id })
-  const activity1 = await models.Activity.create({ guid: 'auh', activityBufferId: buffer.id })
-  const activity2 = await models.Activity.create({ guid: 'sudh', activityBufferId: buffer.id })
+  const activity1 = await models.Activity.create({
+    guid: 'auh',
+    activityBufferId: buffer.id
+  })
+  const activity2 = await models.Activity.create({
+    guid: 'sudh',
+    activityBufferId: buffer.id
+  })
 
   const response = await api
     .get('/activitybuffers')

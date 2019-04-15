@@ -12,7 +12,7 @@ module.exports = function(config, passport) {
     if (!idToken) {
       return res.status(403).send('Unable to verify idToken')
     }
-
+    console.log('ID Token: ', idToken)
     const scout = await scoutService.findOrCreateScoutByGoogleToken(idToken)
     req.session.scout = scout
     res.json(scout)
@@ -24,17 +24,49 @@ module.exports = function(config, passport) {
     '/login',
     passport.authenticate(config.passport.strategy, {
       successRedirect: '/',
-      failureRedirect: '/',
+      failureRedirect: '/'
     })
   )
 
   // Identity Provider calls back to inform of successful authentication
   // Then req.isAuthenticated() can be used
+  scoutRouter.get('/testuser', async (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(404)
+    }
+    const scoutObject = {
+      membernumber: '12345',
+      firstname: 'Teppo',
+      lastname: 'Testaaja'
+    }
+    const scout = await scoutService.findOrCreateScoutByMemberNumber(
+      scoutObject
+    )
+    var scoutInfo = { name: 'Teppo Testaaja' } // Send only necessary, harmless info to a client cookie
+    req.session.scout = scout
+    res.cookie('scout', JSON.stringify(scoutInfo), { maxAge: 7200000 }) // 2 hours
+    res.redirect(config.localFrontend)
+  })
+
+  scoutRouter.delete('/:scoutId', async (req, res) => {
+    const scoutId = parseInt(req.params.scoutId)
+    console.log('ID: ', scoutId)
+    if (isNaN(scoutId)) {
+      return res.status(400).send('Invalid id!')
+    }
+    const succeeded = await scoutService.deleteScoutByMemberNumber(scoutId)
+    if (!succeeded) {
+      // Should not happen
+      return res.status(400).send('The scout was not deleted.')
+    }
+    return res.status(200).send()
+  })
+
   scoutRouter.post(
     config.passport.saml.path,
     passport.authenticate(config.passport.strategy, {
       failureRedirect: '/',
-      failureFlash: true,
+      failureFlash: true
     }),
     async (req, res) => {
       console.log('user who logged in:', req.user)
