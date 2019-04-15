@@ -10,14 +10,21 @@ addons:
   ssh_known_hosts: 18.197.93.24
 before_install:
   - bash .scripts/install.sh
+  - docker build -t tosuapp/tosu-backend .
 install:
   - npm install
+deploy:
+    provider: script
+    script: bash docker_push
+    on:
+        branch: master
 before_script:
   - export CI=false
 after_script:
   - bash .scripts/deploy.sh
 services:
   - postgresql
+  - docker
 env:
   global:
     - SECRET_KEY=keyForRunningTesting
