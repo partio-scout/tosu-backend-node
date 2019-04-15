@@ -50,7 +50,6 @@ module.exports = function(config, passport) {
 
   scoutRouter.delete('/:scoutId', async (req, res) => {
     const scoutId = parseInt(req.params.scoutId)
-    console.log('ID: ', scoutId)
     if (isNaN(scoutId)) {
       return res.status(400).send('Invalid id!')
     }
@@ -83,9 +82,10 @@ module.exports = function(config, passport) {
     }
   )
 
-  // Called by frontend to log out. Also logs out from other partioid single sign out service providers.
-  // Could not get to work without reinitializing samlStrategy:
-  // https://github.com/bergie/passport-saml/issues/200
+  /**
+   * Called by frontend to log out. Also logs out from other partioid single sign out service providers.
+   * Could not get to work without reinitializing samlStrategy:
+   * https://github.com/bergie/passport-saml/issues/200 */
   require('../utils/passport')(passport, config).then(function(samlStrategy) {
     scoutRouter.get('/logout', function(req, res) {
       if (req.user == null) {
